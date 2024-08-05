@@ -1,0 +1,156 @@
+.recommendations-section{
+    width: 100%;
+
+    &__heading{
+        display: flex;
+        flex-direction: column;
+        gap: 6px
+    }
+
+    &__info{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px 40px;
+        border-radius: 15px;
+        background-color: white;
+        margin: 25px 0;
+
+        &__inner{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid #E8E8E8;
+            color:#202224;
+            
+                .text{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 0;
+                    margin: 10px 0 0 100px;
+                }
+
+        }
+    }
+}
+
+
+
+
+
+// progress bar css 
+.radial-01 {
+    float: left;
+    position: relative;
+    width: 75px;
+    height: 70px;
+    text-align: center;
+    background-color: red;
+    border-radius: 100%;
+  }
+  .radial-01 p {
+      position: absolute;
+      left: -25px;
+      bottom: -55px;
+      z-index: 50;
+      width: 150px;
+  }
+  .radial-01 .radial-01-number {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      background-color: #fff;
+      border-radius: 100%;
+    //   padding-top: 41px;
+      z-index: 20;
+  }
+  .radial-01 .radial-01-number {
+    font-size: 25px;
+    padding-top: 20px;
+  }
+  .radial-01 .radial-01-number .radial-01-syb {
+    font-size: 20px;
+  }
+  .radial-01 > span.radial-01-border-r:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #ccc;
+    border-radius: 100%;
+    z-index: 5;
+  }
+  .radial-01 > span.radial-01-border-r:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #1E5EFF;
+    border-radius: 100%;
+    z-index: 10;
+    clip: rect(0px,110px,120px,60px);
+  }
+  .radial-01 > span.radial-01-border-l:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #ccc;
+    border-radius: 100%;
+    z-index: 5;
+  }
+  .radial-three-quarters > span.radial-01-border-l:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #1E5EFF;
+    border-radius: 100%;
+    z-index: 10;
+    clip: rect(60px,120px,120px,0px);
+  }
+  
+  .radial-whole > span.radial-01-border-l:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #008cba;
+    border-radius: 100%;
+    z-index: 10;
+    clip: rect(0px,120px,120px,0px);
+  }
+  
+  .radial-ninty > span.radial-01-border-l:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: #008cba;
+    border-radius: 100%;
+    z-index: 10;
+    clip: rect(60px,120px,120px,0px);
+    transform: rotate(60deg);
+  }

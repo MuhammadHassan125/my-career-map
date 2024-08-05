@@ -1,0 +1,71 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* overflow-x: hidden; */
+}
+
+.nunito-sans {
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.link-class {
+  text-decoration: none;
+}
+
+.inter-font {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.main__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 23px;
+  }
+}
+
+@media screen and (max-width: 786px) {
+  .main__heading{
+    flex-direction: column;
+    align-items: start;
+    gap: 10px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px !important ;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2B303466; 
+  border-radius: 10px;
+  
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #5B708B; 
+  cursor: grab;
+}
+
+.active{
+  background-color: #3749A6;
+  color:white;
+  transition: 0.3s all ease;
+}

@@ -1,0 +1,190 @@
+.map-section{
+    width: 100%;
+    height: auto;
+
+    &__btn-div{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        p{
+            color:#5B708B;
+            font-size: 14px;
+        }
+    }
+    &__btn{
+        width: auto;
+        border-radius: 10px;
+        background-color: #E8E8E8;
+        border: none;
+        padding: 10px 20px;
+        color: #5B708B;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        &:hover{
+            background-color: #D9D9D9;
+        }
+    }
+
+    &__map-div{
+        margin: 40px 0;
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+// second component scss 
+
+.gpt-section{
+    width: 100%;
+    height: auto;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px 40px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    display: flex;
+    justify-content: space-between;
+
+    &__left{
+        width: 48%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .gpt-section__skills-div{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            button{
+                border-radius: 20px;
+                color: #3749A6;
+                border: 1px solid #EDEDEE;
+                background-color: #F9FAFC;
+                padding: 5px 8px;
+            }
+        }
+
+        h5{
+            color: #5B708B;
+            font-size: 20px;
+        }
+
+        h2{
+            color: #3749A6;
+            font-size: 30px;
+        }
+        p{
+            color: #354E70;
+            font-size: 15px;
+        }
+        // .gpt-section__btn-div{
+        //     display: flex;
+        //     flex-direction: column-reverse;
+        //     // align-items: center;
+        //     justify-content: flex-start !important;
+        //     background-color: red;
+        //     gap: 20px;
+
+        //     div{
+        //         width: 50%;
+
+        //         .gpt-section__btn{
+        //             background-color: #3749A6;        
+        //             color: white;
+        //             width: 100%;    
+        //             border: none;
+        //             outline: none;
+        //             border-radius: 6px;
+        //             padding: 10px 0;
+        //             margin-top: 15px;
+
+        //             &:hover{
+        //                 opacity: 0.9;
+        //                 cursor: pointer;
+        //             }
+        //         }
+        //     }
+        // }
+
+        .gpt-section__bottom-div{
+            display: flex;
+            flex-direction: column-reverse  ;
+            gap: 10px;
+            margin-top: 20px;
+
+            button{
+                background-color: #3749A6;        
+                            color: white;
+                            width: 40%;    
+                            border: none;
+                            outline: none;
+                            border-radius: 6px;
+                            padding: 10px 0;
+                            margin-top: 15px;
+        
+                            &:hover{
+                                opacity: 0.9;
+                                cursor: pointer;
+                            }
+            }
+        }
+    }
+
+    &__right{
+        width: 48%;
+        transition: all 0.3s ease;
+
+            &.minimized {
+                height: 50px; // adjust height as needed
+                overflow: hidden;
+        
+                .gpt-section__content {
+                    display: none;
+                }
+            }
+
+
+            h4{
+                color: #354E70;
+                font-size: 1rem;
+                // margin-bottom: 10px;
+            }
+        .gpt-section__heading{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            div{
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .gpt-section__close{
+                border: 1px solid #EDEDEE;
+                color: #5B708B;
+                border-radius: 10px;
+                padding: 5px;
+                cursor: pointer;
+            }
+    }
+
+  .description-details{
+    padding: 20px 0;
+    font-family: 'Inter', sans-serif;
+
+
+    p{
+        color: #354E70;
+        font-size: 15px;
+        margin-top: 10px;
+    }
+  }
+}
+}
