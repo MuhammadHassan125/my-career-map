@@ -1,0 +1,15 @@
+.primary-btn {
+    width: auto;
+    border-radius: 10px;
+    background-color: #3749A6;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.9;
+    }
+}

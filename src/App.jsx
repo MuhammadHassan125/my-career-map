@@ -1,11 +1,13 @@
-import Layout from "./pages/Layout"
+import { BrowserRouter } from "react-router-dom"
+import Layout from "./Layouts/MainLayout"
+import Router from "./Components/Router"
 
 function App() {
 
   return (
-    <>
-    {/* <Layout/> */}
-    </>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   )
 }
 
