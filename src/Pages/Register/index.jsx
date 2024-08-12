@@ -3,16 +3,21 @@ import './index.scss'
 import PrimaryInput from '../../Components/PrimaryInput';
 import PrimaryBtn from '../../Components/PrimaryBtn';
 import { Link, useNavigate } from 'react-router-dom';
+import InstagramBtn from '../../Components/Auth/SocialLinks/Login/InstagramBtn';
+import GoogleBtn from '../../Components/Auth/SocialLinks/Login/GoogleBtn';
+import FacebookBtn from '../../Components/Auth/SocialLinks/Login/FacebookBtn';
+import LinkedinBtn from '../../Components/Auth/SocialLinks/Login/LinkedinBtn';
+import OutlookBtn from '../../Components/Auth/SocialLinks/Login/OutlookBtn';
 
 const socialIcons = [
-  { id: 2, src: "/images/google.png", alt: "google", link: "https://www.google.com" },
-  { id: 2, src: "/images/outlook.png", alt: "google", link: "https://www.outlook.com" },
-  { id: 1, src: "/images/linkedin.png", alt: "facebook", link: "https://www.linkedin.com" },
-  { id: 1, src: "/images/facebook.png", alt: "facebook", link: "https://www.facebook.com" },
-  { id: 3, src: "/images/instagram.png", alt: "twitter", link: "https://www.instagram.com" },
+  // { id: 2, src: "/images/google.png", alt: "google", link: "https://www.google.com" },
+  // { id: 2, src: "/images/outlook.png", alt: "google", link: "https://www.outlook.com" },
+  // { id: 1, src: "/images/linkedin.png", alt: "facebook", link: "https://www.linkedin.com" },
+  // { id: 1, src: "/images/facebook.png", alt: "facebook", link: "https://www.facebook.com" },
+  // { id: 3, src: "/images/instagram.png", alt: "twitter", link: "https://www.instagram.com" },
 ];
 
-const Register = () => {
+const Register = () => {  
   const navigate = useNavigate();
 
   const handleSubmit = () => {
@@ -33,14 +38,37 @@ const Register = () => {
 
           {/* social media icons  */}
           <div className='signup-social-icons'>
-            {socialIcons.map((socialIcon) => (
+            {/* {socialIcons.map((socialIcon) => (
               <div
+                className='social-icons-div'
                 onClick={() => window.open(socialIcon.link)}
               >
                 <img key={socialIcon.id} src={socialIcon.src} alt={socialIcon.alt}
                 />
               </div>
-            ))}
+            ))} */}
+
+            <div className='social-icons-div'>
+            <OutlookBtn/>
+            </div>
+          
+
+          <div className='social-icons-div'>
+            <LinkedinBtn/>
+            </div>
+            
+<div className='social-icons-div'>
+            {/* <GoogleBtn/> */}
+            <FacebookBtn/>
+            </div>
+            <div className='social-icons-div'>
+            <GoogleBtn/>
+            </div>
+            
+            <div className='social-icons-div'>
+            <InstagramBtn/>
+            </div>
+            
           </div>
 
           <div className="or-div">

@@ -97,7 +97,7 @@
     margin: 12px 0;
     gap: 8px;
 
-    div {
+    .social-icons-div{
         width: 32%;
         border: #E8E8E8 1px solid;
         display: flex;
@@ -113,6 +113,11 @@
 
         img {
             width: 23px;
+        }
+
+        button{
+            background-color: white !important;
+            box-shadow: none !important;
         }
     }
 }
@@ -152,3 +157,11 @@
 
 
 }
+.custom-instagram-btn {
+    background-color: none !important;
+    padding: 10px 20px !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+  }
+  
