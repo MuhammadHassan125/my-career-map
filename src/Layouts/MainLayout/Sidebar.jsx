@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './index.scss';
+import { Snackbar } from '../../Utils/SnackbarUtils';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -10,14 +11,15 @@ const Sidebar = () => {
     { id: 3, name: "Add Path", link: "/map-single-path" },
     { id: 4, name: "Documents", link: "/documents" },
     { id: 5, name: "All Paths", link: "/path" },
-    // { id: 6, name: "Select Map", link: "/map-selected-path" },
-    { id: 7, name: "Profile", link: "" },
+    { id: 6, name: "Profile", link: "/profile" },
     { id: 8, name: "Settings", link: "" },
   ];
 
   const handleLogout = () => {
     localStorage.removeItem('user-visited-dashboard');
     navigate('/login');
+    Snackbar('Logout successfully', { variant: 'success' });
+
   }
 
   return (

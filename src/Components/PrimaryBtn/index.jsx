@@ -1,9 +1,13 @@
 import React from 'react'
 import './index.scss'
 
-const index = ({ text, onClick }) => {
+const index = ({ text, onSubmit, onClick }) => {
   return (
-    <button className="primary-btn" onClick={onClick}>{text}</button>
+    <button 
+    className="primary-btn" type='submit' 
+    onSubmit={onSubmit}
+    onClick={onClick}
+    >{text}</button>
   )
 }
 

@@ -1,9 +1,11 @@
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   /* overflow-x: hidden; */
 }
+
 
 .nunito-sans {
   font-family: "Nunito Sans", sans-serif;
@@ -13,6 +15,7 @@
 
 .link-class {
   text-decoration: none;
+  color: #202224;
 }
 
 .inter-font {
@@ -21,6 +24,9 @@
   font-style: normal;
 }
 
+.error{
+  color: red;
+}
 .main__heading {
   display: flex;
   align-items: center;

@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import Login from '../Pages/Login'
 import Register from '../Pages/Register'
+import ForgetPassword from '../Pages/ForgotPassword'
 import MainLayout from '../Layouts/MainLayout'
 import Dashboard from '../Pages/Dashboard'
 import Documents from '../Pages/Documents'
@@ -14,6 +15,9 @@ import Path from '../Pages/Path'
 import ListCareerPath from '../Pages/ListCareerPath'
 import GuestRoute from "./GuestRoute"
 import AuthRoute from "./AuthRoute"
+import ResetPassword from "../Pages/ResetPassword"
+import VerifyOtp from "../Pages/VerifyOtp"
+import Profile from "../Pages/Profile"
 
 const Router = () => {
   return (
@@ -21,6 +25,9 @@ const Router = () => {
       <Route element={<GuestRoute />}>
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
+        <Route path="forget-password" element={<ForgetPassword/>}/>
+        <Route path="reset-password" element={<ResetPassword/>}/>
+        <Route path="verify-otp" element={<VerifyOtp/>}/>
       </Route>
       <Route element={<AuthRoute />}>
         <Route element={<MainLayout />}>
@@ -34,6 +41,7 @@ const Router = () => {
           <Route path='map-selected-path' element={<MapSelectedPath />} />
           <Route path='path' element={<Path />} />
           <Route path='list-career-path' element={<ListCareerPath />} />
+          <Route path='profile' element={<Profile/>}/>
         </Route>
       </Route>
     </Routes>

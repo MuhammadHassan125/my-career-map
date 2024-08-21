@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc -b && vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -17,6 +17,9 @@
     "@greatsumini/react-facebook-login": "^3.3.3",
     "@mui/material": "^5.16.6",
     "@react-oauth/google": "^0.12.1",
+    "axios": "^1.7.3",
+    "mui-one-time-password-input": "^2.0.3",
+    "notistack": "^3.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
@@ -25,6 +28,7 @@
     "react-microsoft-login": "^2.0.1",
     "react-router-dom": "^6.26.0",
     "react-slick": "^0.30.2",
+    "react-toastify": "^10.0.5",
     "reactjs-social-login": "^2.6.3",
     "slick-carousel": "^1.8.1"
   },
@@ -37,6 +41,7 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "sass": "^1.77.8",
+    "typescript": "^5.5.4",
     "vite": "^5.3.4"
   }
 }

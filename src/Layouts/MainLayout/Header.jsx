@@ -11,13 +11,16 @@ import { useNavigate } from 'react-router-dom';
 import { LuMenu } from "react-icons/lu";
 import Drawer from '@mui/material/Drawer';
 import { NavLink } from 'react-router-dom';
+import { Snackbar } from '../../Utils/SnackbarUtils';
+import {useUser} from '../../context/context';
+
 const Header = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const open = Boolean(anchorEl);
 
     const navigate = useNavigate();
-
+    const {user} = useUser();
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -52,6 +55,7 @@ const Header = () => {
     const handleLogout = () => {
         localStorage.removeItem('user-visited-dashboard');
         navigate('/login');
+        Snackbar('Logout successfully', { variant: 'success' });
     }
     return (
         <>
@@ -75,7 +79,7 @@ const Header = () => {
 
                     <Avatar alt="Travis Howard" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-VQAt_Jdn00BF0-hh3QGNhplTP3Tnp8J1nw&s" />
                     <div className='inter-font'>
-                        <h3>Albert Flores</h3>
+                        <h3>{user?.data?.username}</h3>
                         <h5>Admin</h5>
                     </div>
 
