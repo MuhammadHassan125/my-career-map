@@ -25,8 +25,8 @@ const InstagramBtn = () => {
   };
 
   return (
-    <div 
-      onClick={handleLogin} 
+    <div
+      onClick={handleLogin}
       style={{
         borderRadius: '5px',
         cursor: 'pointer',
