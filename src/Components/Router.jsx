@@ -18,6 +18,7 @@ import AuthRoute from "./AuthRoute"
 import ResetPassword from "../Pages/ResetPassword"
 import VerifyOtp from "../Pages/VerifyOtp"
 import Profile from "../Pages/Profile"
+import Upload from '../Upload'
 
 const Router = () => {
   return (
@@ -33,6 +34,7 @@ const Router = () => {
         <Route element={<MainLayout />}>
           <Route path='/' element={<Dashboard />} index={true} />
           <Route path='documents' element={<Documents />} />
+          <Route path='upload' element={<Upload />} />
           <Route path='documents-upload' element={<UploadDocuments />} />
           <Route path='recommendations' element={<Recommendations />} />
           <Route path='map-career' element={<MapCareer />} />

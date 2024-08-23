@@ -1,25 +1,36 @@
 import React from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 import { Snackbar } from '../../../../Utils/SnackbarUtils'; // Adjust the path as needed
 
 const GoogleBtn = () => {
   const login = useGoogleLogin({
     onSuccess: async (codeResponse) => {
-      console.log('Authorization Code:', codeResponse.code);
-
       try {
-        // Send the authorization code to the backend
-        const response = await axios.post('http://192.168.18.194:8001/api/google-login', {
-          code: codeResponse.code
+        const authorizationCode = codeResponse.code;
+        console.log('Authorization Code:', authorizationCode);
+
+        const response = await fetch('http://192.168.18.194:8001/api/google-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ authorizationCode }),
         });
 
-        console.log('Backend Response:', response.data);
+        const data = await response.json();
+        console.log('Backend Response:', data);
 
-        // Optionally, handle the backend response (e.g., store JWT token, user info, etc.)
-        Snackbar('Google login successful. You are logged in.', { variant: 'success' });
+        if (response.ok && data.status) {
+          // localStorage.setItem('jwtToken', data.data.token);
+          localStorage.setItem('user-visited-dashboard', data.data.token); // Update localStorage here
+
+          Snackbar('Google login successful.', { variant: 'success' });
+          window.location.href = '/'; // Redirect to main page
+        } else {
+          Snackbar(`Google login failed: ${data.message || 'Unknown error'}`, { variant: 'error' });
+        }
       } catch (error) {
-        console.error('Error sending authorization code to backend:', error);
+        console.error('Google OAuth error:', error);
         Snackbar('Google login failed. Please try again.', { variant: 'error' });
       }
     },
@@ -31,7 +42,15 @@ const GoogleBtn = () => {
   });
 
   return (
-    <button onClick={() => login()} style={{ backgroundColor: 'white', border: 'none', outline: 'none', cursor: 'pointer' }}>
+    <button
+      onClick={() => login()}
+      style={{
+        backgroundColor: 'white',
+        border: 'none',
+        outline: 'none',
+        cursor: 'pointer',
+      }}
+    >
       <img src='/images/google.png' alt='Google' />
     </button>
   );

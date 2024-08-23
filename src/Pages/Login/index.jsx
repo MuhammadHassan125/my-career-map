@@ -22,27 +22,27 @@ const socialIcons = [
 const Login = () => {
   const navigate = useNavigate();
   const { data, setData, errors, post } = useFire({ email: '', password: '' });
-  
+
   const handleLogin = (e) => {
     e.preventDefault();
-       post({
-        url: `${baseURL}/login`,
-        onSuccess: (res) => {
-          console.log('Login Success', res);
-          if (res.data.data.AuthToken || res.data.status === true) {
-            localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
-            Snackbar(res.data.message, { variant: 'success' });
-            navigate('/');
-          }else{
-            Snackbar(errors || "Login Failed", { variant: 'error' });
-            }
-        },
-
-        onError: (err) => {
-          console.log('Login Error', err);
-          Snackbar(err.message, { variant: 'error' });
+    post({
+      url: `${baseURL}/login`,
+      onSuccess: (res) => {
+        console.log('Login Success', res);
+        if (res.data.data.AuthToken || res.data.status === true) {
+          localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
+          Snackbar(res.data.message, { variant: 'success' });
+          navigate('/');
+        } else {
+          Snackbar(errors || "Login Failed", { variant: 'error' });
         }
-      });
+      },
+
+      onError: (err) => {
+        console.log('Login Error', err);
+        Snackbar(err.message, { variant: 'error' });
+      }
+    });
 
   };
 
@@ -109,24 +109,24 @@ const Login = () => {
             ))}
           </div> */}
 
-      <div className='signup-social-icons'>
-             <div className='social-icons-div'>
-                <GoogleBtn/>
-              </div>
-             <div className='social-icons-div'>
-                <OutlookBtn/>
-             </div>
-             <div className='social-icons-div'>
-                <LinkedinBtn/>
-              </div>
-              <div className='social-icons-div'>
-                <FacebookBtn/>
-              </div>
-              <div className='social-icons-div'>
-                <InstagramBtn/>
-              </div>
+          <div className='signup-social-icons'>
+            <div className='social-icons-div'>
+              <GoogleBtn />
+            </div>
+            <div className='social-icons-div'>
+              <OutlookBtn />
+            </div>
+            <div className='social-icons-div'>
+              <LinkedinBtn />
+            </div>
+            <div className='social-icons-div'>
+              <FacebookBtn />
+            </div>
+            <div className='social-icons-div'>
+              <InstagramBtn />
+            </div>
 
-      </div>
+          </div>
 
           <div className='create-account'>
             <p>Don't have an account?
