@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       }}
     >
       <SnackbarUtilsConfigurator/>
-      <GoogleOAuthProvider clientId="724896608785-4bujbfo5qlolkherlm858lum6hbo3ubg.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="744833461193-oo0p312obtqth8ejpiju5asuckofe1qk.apps.googleusercontent.com">
         <App />
       </GoogleOAuthProvider>
     </SnackbarProvider>

@@ -5,7 +5,7 @@ const msalConfig = {
   auth: {
     clientId: "1ce1e5f88a4142a48341ed824c0bcf01",
     redirectUri: window.location.origin,
-    authority: "https://login.microsoftonline.com/{your_tenant_id}"
+    authority: "https://login.microsoftonline.com/your_tenant_id"
   }
 };
 
@@ -26,17 +26,25 @@ const OutlookBtn = () => {
 
     try {
       const loginResponse = await msal.loginPopup({
-        scopes: ["https://graph.microsoft.com/.default"]
+        scopes: ["https://outlook.office.com/.default"]
       });
-      const accessToken = await loginResponse.accessToken;
+      const account = loginResponse.account;
+      const response = await msal.acquireTokenSilent({
+        scopes: ["https://outlook.office.com/.default"],
+        account: account
+      });
+      const accessToken = response.accessToken;
 
       // Send accessToken to your backend
-      const response = await fetch('http://localhost:4000/api/outlook-login', {
+      const backendResponse = await fetch('http://localhost:4000/api/outlook-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ accessToken })
       });
-      const data = await response.json();
+      if (!backendResponse.ok) {
+        throw new Error(`Error sending access token to backend: ${backendResponse.statusText}`);
+      }
+      const data = await backendResponse.json();
       console.log('Login successful', data);
     } catch (error) {
       console.error('Outlook Login Error:', error.message);

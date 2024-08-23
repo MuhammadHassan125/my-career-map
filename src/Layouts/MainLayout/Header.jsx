@@ -7,12 +7,12 @@ import Avatar from '@mui/material/Avatar';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LuMenu } from "react-icons/lu";
 import Drawer from '@mui/material/Drawer';
 import { NavLink } from 'react-router-dom';
 import { Snackbar } from '../../Utils/SnackbarUtils';
-import {useUser} from '../../context/context';
+import { useUser } from '../../context/context';
 
 const Header = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -20,7 +20,7 @@ const Header = () => {
     const open = Boolean(anchorEl);
 
     const navigate = useNavigate();
-    const {user} = useUser();
+    const { user } = useUser();
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -31,6 +31,14 @@ const Header = () => {
 
     const handleNavigateLogin = () => {
         navigate('/login');
+    };
+
+    const handleNavigateProfile = () => {
+        navigate('/profile');
+    };
+
+    const handleNavigateDashboard = () => {
+        navigate('/');
     };
 
     const toggleDrawer = (open) => (event) => {
@@ -47,7 +55,7 @@ const Header = () => {
         { id: 4, name: "Documents", link: "/documents" },
         { id: 5, name: "Paths", link: "/path" },
         { id: 6, name: "Select Map", link: "/map-selected-path" },
-        { id: 7, name: "Profile", link: "" },
+        { id: 7, name: "Profile", link: "/profile" },
         { id: 8, name: "Settings", link: "" },
         { id: 9, name: "Logout", link: "/login" }
     ];
@@ -77,7 +85,9 @@ const Header = () => {
                     {/* menu drawer */}
                     <LuMenu className='menu-icon' style={{ fontSize: "23px", color: "#3D42DF", cursor: "pointer" }} onClick={toggleDrawer(true)} />
 
-                    <Avatar alt="Travis Howard" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-VQAt_Jdn00BF0-hh3QGNhplTP3Tnp8J1nw&s" />
+                    <Avatar alt="Travis Howard"
+                        src={user?.data?.profile_picture}
+                    />
                     <div className='inter-font'>
                         <h3>{user?.data?.username}</h3>
                         <h5>Admin</h5>
@@ -94,8 +104,8 @@ const Header = () => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleNavigateDashboard}> Dashboard</MenuItem>
+                            <MenuItem onClick={handleNavigateProfile}> Profile</MenuItem>
                             <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </Menu>
                     </div>

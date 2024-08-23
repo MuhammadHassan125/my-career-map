@@ -18,7 +18,10 @@ import AuthRoute from "./AuthRoute"
 import ResetPassword from "../Pages/ResetPassword"
 import VerifyOtp from "../Pages/VerifyOtp"
 import Profile from "../Pages/Profile"
-
+import ProfileLayout from "../Layouts/ProfileLayout"
+import PaymentCheckout from "../Pages/PaymentCheckout"
+import CancelCheckout from "../Pages/PaymentCheckout/CancelCheckout"
+import Success from "../Pages/PaymentCheckout/SuccessCheckout"
 const Router = () => {
   return (
     <Routes>
@@ -42,6 +45,13 @@ const Router = () => {
           <Route path='path' element={<Path />} />
           <Route path='list-career-path' element={<ListCareerPath />} />
           <Route path='profile' element={<Profile/>}/>
+          <Route path='payment-checkout' element={<PaymentCheckout/>}/>
+          <Route path='/cancel' element={<CancelCheckout/>}/>
+          <Route path='/success' element={<Success/>}/>
+        </Route>
+
+        <Route element={<ProfileLayout/>}>
+            <Route path='profile' element={<Profile/>} index={true}/>
         </Route>
       </Route>
     </Routes>

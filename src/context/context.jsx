@@ -27,7 +27,10 @@ const UserProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        gettingProfileInfo();
+        const authToken = localStorage.getItem('user-visited-dashboard');
+        if (authToken) {
+            gettingProfileInfo();
+        }
     }, []);
     return (
         <Context.Provider value={{user, setUser, gettingProfileInfo}}>

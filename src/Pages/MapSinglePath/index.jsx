@@ -5,9 +5,14 @@ import { MdOutlineClose } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import './index.scss'
 import { useNavigate } from 'react-router-dom';
+import PremiumModel from '../../Components/PremiumModel';
 
 
 const MapSinglePath = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <React.Fragment>
       <main className='map-section'>
@@ -22,7 +27,7 @@ const MapSinglePath = () => {
               <BiExport style={{ fontSize: "18px" }} />
               Export your Training PDF
             </button>
-            <PrimaryBtn text={"Add Path"} />
+            <PrimaryBtn text={"Add Path"} onClick={handleOpen}/>
           </div>
         </div>
 
@@ -33,6 +38,8 @@ const MapSinglePath = () => {
         <GPTComponent />
 
       </main>
+
+      <PremiumModel open={open} handleClose={handleClose} />
     </React.Fragment>
   )
 }

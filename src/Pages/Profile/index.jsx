@@ -13,7 +13,8 @@ import Modal from '@mui/material/Modal';
 import { Button } from '@mui/material';
 import PrimaryInput from '../../Components/PrimaryInput/index';
 import PrimaryBtn from '../../Components/PrimaryBtn/index';
-
+import axios from 'axios';
+import ChangePassword from './ChangePassword';
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 30,
     height: 30,
@@ -38,69 +39,71 @@ const style = {
 const Profile = () => {
     const { user, gettingProfileInfo } = useUser();
     const [open, setOpen] = React.useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadMessage, setUploadMessage] = useState('');
+    const [newUsername, setNewUsername] = useState(user?.data?.username);
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    const [newUsername, setNewUsername] = useState(user?.data?.username);
 
     const handleUsernameChange = (event) => {
         setNewUsername(event.target.value);
     };
 
-    const handleFileUpload = async (event) => {
+    const handleFileChange = async (event) => {
         const file = event.target.files[0];
+        setSelectedFile(file);
+
         if (file) {
-            const reader = new FileReader();
-
-            reader.onloadend = async () => {
-                const base64String = reader.result.split(',')[1];
-
-                try {
-                    await Fire.post({
-                        url: `${baseURL}/update-profile-picture`,
-                        data: {
-                            profilePictureUrl: base64String,
-                        },
-                        onSuccess: (res) => {
-                            Snackbar(res.message || "Profile picture updated successfully", { variant: 'success' });
-                        },
-                        onError: (err) => {
-                            Snackbar(err.error || "Error updating profile picture", { variant: 'error' });
-                        },
-                    });
-                } catch (error) {
-                    console.error('Profile update error:', error);
-                    Snackbar("Error updating profile picture", { variant: 'error' });
-                }
-            };
-
-            reader.readAsDataURL(file);
+            await handleUpload(file);
         }
     };
+    const handleUpload = async () => {
+        console.log('upload picture ')
+        if (!selectedFile) {
+            setUploadMessage('Please select a file first');
+            return;
+        }
+        const token = localStorage.getItem('user-visited-dashboard');
+        if (!token) {
+            console.log('User not authenticated');
+            return;
+        }
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        try {
+            const response = await axios.post(`${baseURL}/update-profile-picture`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setUploadMessage(response.data.message);
+            Snackbar(response.data.message, { variant: 'success' });
+        } catch (error) {
+            setUploadMessage('Error uploading file');
+            Snackbar(error.response.data.error, { variant: 'error' });
+        }
+    };
+
 
     const handleUpdateUsername = (event) => {
         event.preventDefault();
 
         Fire.put({
-            url:`${baseURL}/update-username`,
-            data:{
-                newUsername
-            },
-
-            onSuccess:(res) => {
-                console.log(res, 'res')
-                Snackbar(res.data.message || "done", {variant:"success"});
+            url: `${baseURL}/update-username`,
+            data: { newUsername },
+            onSuccess: (res) => {
+                Snackbar(res.data.message || "Username updated successfully", { variant: "success" });
                 gettingProfileInfo();
             },
-
             onError: (err) => {
-                console.log(err);
-                Snackbar(err.error, {variant:"error"});
+                Snackbar(err.error || "Failed to update username", { variant: "error" });
             }
         });
 
         handleClose();
-    }
+    };
 
     return (
         <React.Fragment>
@@ -123,14 +126,14 @@ const Profile = () => {
                                             id="upload-avatar"
                                             type="file"
                                             style={{ display: 'none' }}
-                                            onChange={handleFileUpload}
+                                            onChange={handleFileChange}
                                         />
                                     </label>
                                 }
                             >
                                 <Avatar
                                     alt={user?.data?.username}
-                                    src={user?.data?.profilePictureUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-VQAt_Jdn00BF0-hh3QGNhplTP3Tnp8J1nw&s"}
+                                    src={user?.data?.profile_picture}
                                     style={{ width: "70px", height: '70px' }}
                                 />
                             </Badge>
@@ -141,7 +144,7 @@ const Profile = () => {
                             <p>Your profile details.</p>
                             <Button
                                 variant='contained'
-                                sx={{ height: '24px', width: 'auto', fontSize: '14px', padding: '5px' }}
+                                sx={{ height: '24px', width: 'auto', fontSize: '14px', padding: '5px', textTransform:'capitalize', backgroundColor:"rgb(55, 73, 166)" }}
                                 onClick={handleOpen}
                             >Update Username
                             </Button>
@@ -159,10 +162,20 @@ const Profile = () => {
                         <h4>Username:</h4>
                         <p>{user?.data?.username}</p>
                     </div>
+
+                    <hr />
+                    <div style={{
+                        width: "50%", marginTop: "40px",
+                        margin: "0 auto", backgroundColor: "red", display: "flex", justifyContent: "center", alignContent: "center"
+                    }}>
+                        <ChangePassword />
+                    </div>
                 </div>
+
             </div>
 
 
+            {/* modal for update username */}
             <div>
                 <Modal
                     open={open}
@@ -171,33 +184,28 @@ const Profile = () => {
                     aria-describedby="modal-modal-description"
                 >
                     <form onSubmit={handleUpdateUsername}>
-                    <Box sx={style}>
-                        <Typography id="modal-modal-title" variant="h6" component="h3">
-                            Update Username:
-                        </Typography>
-                        <div style={{ width: "100%", marginBottom: '10px' }}>
-                            <PrimaryInput type="text"
-                                value={newUsername}
-                                placeholder={user?.data?.username}
-                                onChange={handleUsernameChange}
-                            />
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h3">
+                                Update Username:
+                            </Typography>
+                            <div style={{ width: "100%", marginBottom: '10px' }}>
+                                <PrimaryInput
+                                    type="text"
+                                    value={newUsername}
+                                    placeholder={user?.data?.username}
+                                    onChange={handleUsernameChange}
+                                />
+                            </div>
 
-                        </div>
-
-                        <div style={{display:'flex', gap:'10px', marginTop:"20px"}}>
-                            <PrimaryBtn text={'Cancel'}
-                                onClick={handleClose} />
-                            <PrimaryBtn text={'Update'} type="submit"/>
-                        </div>
-
-                    </Box>
+                            <div style={{ display: 'flex', gap: '10px', marginTop: "20px" }}>
+                                <PrimaryBtn text={'Cancel'} onClick={handleClose} />
+                                <PrimaryBtn text={'Update'} type="submit" />
+                            </div>
+                        </Box>
                     </form>
-
                 </Modal>
             </div>
         </React.Fragment>
-
-
     );
 };
 

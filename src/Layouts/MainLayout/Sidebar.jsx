@@ -11,7 +11,7 @@ const Sidebar = () => {
     { id: 3, name: "Add Path", link: "/map-single-path" },
     { id: 4, name: "Documents", link: "/documents" },
     { id: 5, name: "All Paths", link: "/path" },
-    { id: 6, name: "Profile", link: "/profile" },
+    // { id: 6, name: "Profile", link: "/profile" },
     { id: 8, name: "Settings", link: "" },
   ];
 

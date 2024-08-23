@@ -11,9 +11,10 @@ const FacebookBtn = () => {
     }
 
     const { accessToken } = response;
+    console.log('Facebook access token:', accessToken);
     console.log('Facebook access token:', accessToken);    
     // Example of sending the token to your backend directly
-    fetch('http://localhost:4000/api/facebook-login', {
+    fetch(`${baseURL}/facebook-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ accessToken })
