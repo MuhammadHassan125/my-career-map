@@ -28,15 +28,14 @@ const Router = () => {
       <Route element={<GuestRoute />}>
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
-        <Route path="forget-password" element={<ForgetPassword/>}/>
-        <Route path="reset-password" element={<ResetPassword/>}/>
-        <Route path="verify-otp" element={<VerifyOtp/>}/>
+        <Route path="forget-password" element={<ForgetPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
+        <Route path="verify-otp" element={<VerifyOtp />} />
       </Route>
       <Route element={<AuthRoute />}>
         <Route element={<MainLayout />}>
           <Route path='/' element={<Dashboard />} index={true} />
           <Route path='documents' element={<Documents />} />
-          <Route path='upload' element={<Upload />} />
           <Route path='documents-upload' element={<UploadDocuments />} />
           <Route path='recommendations' element={<Recommendations />} />
           <Route path='map-career' element={<MapCareer />} />
@@ -45,14 +44,14 @@ const Router = () => {
           <Route path='map-selected-path' element={<MapSelectedPath />} />
           <Route path='path' element={<Path />} />
           <Route path='list-career-path' element={<ListCareerPath />} />
-          <Route path='profile' element={<Profile/>}/>
-          <Route path='payment-checkout' element={<PaymentCheckout/>}/>
-          <Route path='/cancel' element={<CancelCheckout/>}/>
-          <Route path='/success' element={<Success/>}/>
+          <Route path='profile' element={<Profile />} />
+          <Route path='payment-checkout' element={<PaymentCheckout />} />
+          <Route path='/cancel' element={<CancelCheckout />} />
+          <Route path='/success' element={<Success />} />
         </Route>
 
-        <Route element={<ProfileLayout/>}>
-            <Route path='profile' element={<Profile/>} index={true}/>
+        <Route element={<ProfileLayout />}>
+          <Route path='profile' element={<Profile />} index={true} />
         </Route>
       </Route>
     </Routes>
