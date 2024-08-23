@@ -14,6 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { data, setData, errors, post } = useFire({ email: '', password: '' });
 
+
   const handleLogin = (e) => {
     e.preventDefault();
     post({

@@ -10,18 +10,18 @@ import UserProvider from './context/context.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-  <UserProvider>
-    <SnackbarProvider maxSnack={3} autoHideDuration={3000}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-    >
-      <SnackbarUtilsConfigurator/>
-      <GoogleOAuthProvider clientId="744833461193-oo0p312obtqth8ejpiju5asuckofe1qk.apps.googleusercontent.com">
-        <App />
-      </GoogleOAuthProvider>
-    </SnackbarProvider>
-        </UserProvider>
+    <UserProvider>
+      <SnackbarProvider maxSnack={3} autoHideDuration={3000}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <SnackbarUtilsConfigurator />
+        <GoogleOAuthProvider clientId="340870224305-5gog304bjqa2maj42vt59f2ek85utv66.apps.googleusercontent.com">
+          <App />
+        </GoogleOAuthProvider>
+      </SnackbarProvider>
+    </UserProvider>
   </React.StrictMode>,
 )
