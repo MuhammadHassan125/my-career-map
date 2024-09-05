@@ -15,6 +15,7 @@ import PrimaryInput from '../../Components/PrimaryInput/index';
 import PrimaryBtn from '../../Components/PrimaryBtn/index';
 import axios from 'axios';
 import ChangePassword from './ChangePassword';
+
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 30,
     height: 30,
@@ -58,6 +59,7 @@ const Profile = () => {
             await handleUpload(file);
         }
     };
+    
     const handleUpload = async () => {
         console.log('upload picture ')
         if (!selectedFile) {
@@ -80,6 +82,7 @@ const Profile = () => {
             });
             setUploadMessage(response.data.message);
             Snackbar(response.data.message, { variant: 'success' });
+            gettingProfileInfo();
         } catch (error) {
             setUploadMessage('Error uploading file');
             Snackbar(error.response.data.error, { variant: 'error' });

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IoEyeOutline } from "react-icons/io5";
 import { IoCheckmarkSharp } from "react-icons/io5";
 import './index.scss';
+import { baseURL } from '../../Fire/useFire';
+import Fire from '../../Fire/Fire';
 
 const ListCareerPath = () => {
 
   const [selectedId, setSelectedId] = React.useState(null);
-
+  const [listData, setListData] = React.useState([]);
   const handleSelect = (id) => {
     setSelectedId(selectedId === id ? null : id);
   };
@@ -19,6 +21,22 @@ const ListCareerPath = () => {
     { id: 5, name: "Course title or details" }
   ];
 
+  useEffect(() => {
+      Fire.get({
+        url:`${baseURL}/get-skills-for-user`,
+
+        onSuccess: (res) => {
+          // console.log(res, "skills")
+          setListData(res?.data?.data)
+        },
+
+        onError: (err) => {
+          console.log(err)
+        }
+      })
+  }, [])
+  
+
   return (
     <React.Fragment>
       <main className='list-section'>
@@ -27,7 +45,7 @@ const ListCareerPath = () => {
         </div>
 
         <div className='list-section__content'>
-          {data.map((item) => (
+          {listData.map((item) => (
             <div
               key={item.id}
               className='list-section__content__div'
@@ -43,7 +61,7 @@ const ListCareerPath = () => {
                 >
                   {selectedId === item.id ? <IoCheckmarkSharp style={{ color: 'white' }} /> : null}
                 </button>
-                <p style={{ color: selectedId === item.id ? 'white' : '#5B708B' }}>{item.name}</p>
+                <p style={{ color: selectedId === item.id ? 'white' : '#5B708B' }}>{item.title}</p>
               </div>
 
               <div

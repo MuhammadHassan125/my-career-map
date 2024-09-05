@@ -6,6 +6,10 @@ import { IoIosArrowDown } from "react-icons/io";
 import './index.scss'
 import { useNavigate } from 'react-router-dom';
 import PremiumModel from '../../Components/PremiumModel';
+import { useUser } from '../../context/context';
+import { GrAttachment } from "react-icons/gr";
+import { MdOutlineKeyboardVoice } from "react-icons/md";
+import SinglePathMap from './SinglePathMap';
 
 
 const MapSinglePath = () => {
@@ -13,6 +17,11 @@ const MapSinglePath = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate('/documents-upload')
+  }
   return (
     <React.Fragment>
       <main className='map-section'>
@@ -27,12 +36,17 @@ const MapSinglePath = () => {
               <BiExport style={{ fontSize: "18px" }} />
               Export your Training PDF
             </button>
-            <PrimaryBtn text={"Add Path"} onClick={handleOpen}/>
+            {/* for subscription  */}
+            {/* <PrimaryBtn text={"Add Path"} onClick={handleOpen}/> */}
+
+            {/* for navigating to documents  */}
+            <PrimaryBtn text={"Add Path & Cv"} onClick={handleNavigate}/>
           </div>
         </div>
 
         <div className='map-section__map-div'>
-          <img src={"/images/single-path.png"} alt="map" />
+          {/* <img src={"/images/single-path.png"} alt="map" /> */}
+          <SinglePathMap/>
         </div>
 
         <GPTComponent />
@@ -45,61 +59,81 @@ const MapSinglePath = () => {
 }
 
 const GPTComponent = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isMinimized, setIsMinimized] = useState(false);
 
+  const { gettingSkillsData, getTitle, getDescription } = useUser();
+  console.log(getTitle, "my-title");
+
+
   const handleToggle = () => {
-    setIsMinimized(!isMinimized);
+      setIsMinimized(!isMinimized);
   };
   return (
-    <main className='gpt-section'>
-      {/* left sales executive  */}
-      <div className='gpt-section__left'>
-        <h5>Details</h5>
-        <h2>Sales Executive</h2>
-        <div className='gpt-section__skills-div'>
-          <button>Skill necessary</button>
-          <button>Skill necessary</button>
-          <button>Skill necessary</button>
-        </div>
-        <div className='gpt-section__bottom-div'>
-          <button onClick={() => navigate('/list-career-path')}>
-            Get Started
-          </button>
-          <p><strong>Next Role:</strong>Sales Team Lead</p>
-        </div>
-      </div>
+      <main className='gpt-section'>
+          {/* left sales executive  */}
+          <div className='gpt-section__left'>
+              <h5>Details</h5>
+                  <h2>{getTitle}</h2> 
+             
+              <div className='gpt-section__skills-div'>
+                  {Array.isArray(gettingSkillsData) && gettingSkillsData.length > 0 ? (
+                      gettingSkillsData.map((skills, i) => <button key={i}>{skills.title}</button>)
+                  ) : (
+                      <p>No details available</p>
+                  )}
 
-
-
-      {/* right  section  */}
-      <div className={`gpt-section__right ${isMinimized ? 'minimized' : ''}`}>
-        <div className='gpt-section__heading'>
-          <div>
-            {
-              isMinimized
-                ? <h4>See Description Details Blue Line</h4>
-                : <h3>Blue Line</h3>
-            }
-
-
+              </div>
+                  <p>{getDescription}</p> 
+            
+              <div className='gpt-section__btn-div'>
+                  <div>
+                      <button className='gpt-section__btn' onClick={() => navigate('/list-career-path')}>Get Started</button>
+                  </div>
+                  <div>
+                      <p><strong>Next Role:</strong>Sales Team Lead</p>
+                  </div>
+              </div>
           </div>
 
-          <div className='gpt-section__close' onClick={handleToggle}>
-            {isMinimized ? <IoIosArrowDown style={{ fontSize: "20px" }} /> : <MdOutlineClose style={{ fontSize: "20px" }} />}
-          </div>
-        </div>
+          {/* right cpt section  */}
 
-        {!isMinimized && (
-          <div className='description-details'>
-            <h4>Description Details</h4>
-            <p>
-              Lorem ipsum dolor sit amet consectetur. Ligula venenatis in ipsum ut. Senectus imperdiet elementum libero aliquet. Egestas sit a lobortis tellus diam. Consectetur etiam pellentesque elit pulvinar sed proin faucibus. Adipiscing amet orci urna amet sem massa. Mauris vel nibh massa tincidunt lectus quam rhoncus. Magna ac mi risus dui sem ut non eu pharetra. Leo viverra morbi commodo sed. Purus at elit diam adipiscing. Nunc vel libero odio eleifend non at commodo. Consectetur etiam pellentesque elit pulvinar sed proin faucibus.
-            </p>
+
+          <div className={`gpt-section__right ${isMinimized ? 'minimized' : ''}`}>
+              <div className='gpt-section__heading'>
+                  <div>
+                      <img src="/images/gpt.png" alt='gpt' />
+                      <h2>Chat GPT</h2>
+                  </div>
+
+                  <div className='gpt-section__close' onClick={handleToggle}>
+                      {isMinimized ? <IoIosArrowDown style={{ fontSize: "20px" }} /> : <MdOutlineClose style={{ fontSize: "20px" }} />}
+                  </div>
+              </div>
+
+              {!isMinimized && (
+                  <div className='gpt-section__content'>
+                      <div className='content__inner'>
+                          <div className='innder-right__txt'>
+                              <img src='/images/clear.png' alt='clear' />
+                              New dialog
+                          </div>
+
+                          <div className='search__box'>
+                              <div>
+                                  <GrAttachment style={{ fontSize: "20px" }} />
+                                  <input type='text' placeholder='Search' />
+                                  <MdOutlineKeyboardVoice style={{ fontSize: "25px" }} />
+                                  <button>
+                                      <img src='/images/sent.png' alt='sent' />
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              )}
           </div>
-        )}
-      </div>
-    </main>
+      </main>
   )
 }
 

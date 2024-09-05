@@ -49,13 +49,10 @@ const Header = () => {
     };
 
     const sidebarItems = [
-        { id: 1, name: "Dashboard", link: "/dashboard" },
+        { id: 1, name: "Dashboard", link: "/" },
         { id: 2, name: "Career", link: "/map-career" },
         { id: 3, name: "Add Path", link: "/map-single-path" },
-        { id: 4, name: "Documents", link: "/documents" },
-        { id: 5, name: "Paths", link: "/path" },
-        { id: 6, name: "Select Map", link: "/map-selected-path" },
-        { id: 7, name: "Profile", link: "/profile" },
+        { id: 5, name: "All Paths", link: "/path" },
         { id: 8, name: "Settings", link: "" },
         { id: 9, name: "Logout", link: "/login" }
     ];
@@ -86,7 +83,8 @@ const Header = () => {
                     <LuMenu className='menu-icon' style={{ fontSize: "23px", color: "#3D42DF", cursor: "pointer" }} onClick={toggleDrawer(true)} />
 
                     <Avatar alt="Travis Howard"
-                        src={user?.data?.profile_picture}
+                        // src={user?.data?.profile_picture}
+                        src={'https://media.istockphoto.com/id/1278978817/photo/portrait-of-happy-mature-man-smiling.jpg?s=612x612&w=0&k=20&c=GPniKSszzPgprveN7sCT5mb-_L3-RSlGAOAsmoDaafw='}
                     />
                     <div className='inter-font'>
                         <h3>{user?.data?.username}</h3>

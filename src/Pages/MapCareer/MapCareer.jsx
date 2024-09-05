@@ -7,6 +7,8 @@ import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import './index.scss'
 import { useNavigate } from 'react-router-dom';
+import UserDetailsMap from './UserDetailsMap';
+import { useUser } from '../../context/context';
 
 
 const MapCareer = () => {
@@ -28,11 +30,9 @@ const MapCareer = () => {
                     </div>
                 </div>
 
-                <div className='map-section__map-div'>
-                    <img src={"/images/map.png"} alt="map" />
-                </div>
+                <UserDetailsMap />
 
-                <GPTComponent />
+                {/* <GPTComponent /> */}
 
             </main>
         </React.Fragment>
@@ -43,6 +43,10 @@ const GPTComponent = () => {
     const navigate = useNavigate();
     const [isMinimized, setIsMinimized] = useState(false);
 
+    const { gettingSkillsData, getTitle, getDescription } = useUser();
+    console.log(getTitle, "my-title");
+
+
     const handleToggle = () => {
         setIsMinimized(!isMinimized);
     };
@@ -51,15 +55,18 @@ const GPTComponent = () => {
             {/* left sales executive  */}
             <div className='gpt-section__left'>
                 <h5>Details</h5>
-                <h2>Sales Executive</h2>
+                    <h2>{getTitle}</h2> 
+               
                 <div className='gpt-section__skills-div'>
-                    <button>Skill necessary</button>
-                    <button>Skill necessary</button>
-                    <button>Skill necessary</button>
+                    {Array.isArray(gettingSkillsData) && gettingSkillsData.length > 0 ? (
+                        gettingSkillsData.map((skills, i) => <button key={i}>{skills.title}</button>)
+                    ) : (
+                        <p>No details available</p>
+                    )}
+
                 </div>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur. Ligula venenatis in ipsum ut. Senectus imperdiet elementum libero aliquet. Egestas sit a lobortis tellus diam. Consectetur etiam pellentesque elit pulvinar sed proin faucibus. Adipiscing amet orci urna amet sem massa.
-                </p>
+                    <p>{getDescription}</p> 
+              
                 <div className='gpt-section__btn-div'>
                     <div>
                         <button className='gpt-section__btn' onClick={() => navigate('/list-career-path')}>Get Started</button>

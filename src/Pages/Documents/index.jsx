@@ -73,9 +73,9 @@ const Documents = () => {
                 {/* heading  */}
                 <div className='main__heading'>
                     <h2>
-                        Listing CV's
+                        All Paths
                     </h2>
-                    <PrimaryBtn onClick={Onnavigate} text="Upload New CV" />
+                    <PrimaryBtn onClick={Onnavigate} text="Add path or Cv" />
                 </div>
 
                 <DataGrid columns={columns} data={data} heading={"Uploaded CV's"} dropdown={"October"} />

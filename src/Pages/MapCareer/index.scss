@@ -30,12 +30,13 @@
         }
     }
 
-    &__map-div{
-        margin: 40px 0;
+    &__map-div-career-path{
+        margin: 60px 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 50vh;
+        // height: 30vh;
+        overflow: visible;
     }
 }
 
@@ -59,6 +60,7 @@
 
         .gpt-section__skills-div{
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: 10px;
 

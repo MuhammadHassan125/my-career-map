@@ -9,11 +9,12 @@ import OutlookBtn from '../../Components/Auth/SocialLinks/Login/OutlookBtn';
 import LinkedinBtn from '../../Components/Auth/SocialLinks/Login/LinkedinBtn';
 import FacebookBtn from '../../Components/Auth/SocialLinks/Login/FacebookBtn';
 import InstagramBtn from '../../Components/Auth/SocialLinks/Login/InstagramBtn';
+import {useUser} from '../../context/context';
 
 const Login = () => {
   const navigate = useNavigate();
   const { data, setData, errors, post } = useFire({ email: '', password: '' });
-
+  const { gettingProfileInfo, handleLoginSuccess } = useUser();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -22,9 +23,10 @@ const Login = () => {
       onSuccess: (res) => {
         console.log('Login Success', res);
         if (res.data.data.AuthToken || res.data.status === true) {
-          localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
+          handleLoginSuccess(res.data.data.AuthToken);
           Snackbar(res.data.message, { variant: 'success' });
           navigate('/');
+           gettingProfileInfo();
         } else {
           Snackbar(errors || "Login Failed", { variant: 'error' });
         }
@@ -38,7 +40,7 @@ const Login = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setData(name, value);
+    setData(name, value); 
   };
 
   return (

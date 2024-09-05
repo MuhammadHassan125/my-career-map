@@ -36,11 +36,11 @@ const Router = () => {
         <Route element={<MainLayout />}>
           <Route path='/' element={<Dashboard />} index={true} />
           <Route path='documents' element={<Documents />} />
-          <Route path='upload' element={<Upload />} />
+          {/* <Route path='upload' element={<Upload />} /> */}
           <Route path='documents-upload' element={<UploadDocuments />} />
           <Route path='recommendations' element={<Recommendations />} />
           <Route path='map-career' element={<MapCareer />} />
-          <Route path='map-single-path' element={<MapSinglePath />} />
+          <Route path='map-career/:id' element={<MapSinglePath />} />
           <Route path='map-zoom' element={<MapZoom />} />
           <Route path='map-selected-path' element={<MapSelectedPath />} />
           <Route path='path' element={<Path />} />

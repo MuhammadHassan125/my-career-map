@@ -1,82 +1,40 @@
 import React from 'react'
 import './index.scss';
-import DataGrid from '../../Components/DashboardComponents/DataGrid/DataGrid';
+import UploadDataGrid from '../UploadDocuments/UploadDataGrid';
 
 const columns = [
-    { Header: "Path", accessor: "Path" },
-    { Header: "Step", accessor: "Step" },
-    { Header: "Date - Time", accessor: "Date" },
-    { Header: "Points", accessor: "Points" },
-    { Header: "Session Duration", accessor: "Session" },
-    { Header: "Status", accessor: "Status" },
-];
-
-const data = [
-    {
-        id: 1,
-        Path: "Sales Rep",
-        Step: "Senior Sales Rep",
-        Date: "12.09.2019 - 12.53 PM",
-        Points: "423",
-        Session: "36 hours",
-        Status: (
-            <button style={{
-                backgroundColor: '#00B69B', border: 'none', outline: 'none',
-                color: 'white', borderRadius: '10px', padding: '3px 10px', cursor: "pointer"
-            }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-            >
-                Active User
-            </button>
-        ),
-    },
-    {
-        id: 2,
-        Path: "Sales Rep",
-        Step: "Sales Executive",
-        Date: "12.09.2019 - 12.53 PM",
-        Points: "423",
-        Session: "42 hours",
-        Status: (
-
-            <button style={{
-                backgroundColor: '#FCBE2D', border: 'none', outline: 'none',
-                color: 'white', borderRadius: '10px', padding: '3px 10px', cursor: "pointer"
-            }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-            >
-                Possible Path
-            </button>),
-    },
-    {
-        id: 1,
-        Path: "Sales Rep",
-        Step: "Sales Executive",
-        Date: "12.09.2019 - 12.53 PM",
-        Points: "423",
-        Session: "16 hours",
-        Status: (
-            <button style={{
-                backgroundColor: '#FD5454', border: 'none', outline: 'none',
-                color: 'white', borderRadius: '10px', padding: '3px 10px', cursor: "pointer"
-            }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-            >
-                Different Career
-            </button>
-        ),
-    },
-];
+    { Header: "Id", accessor: "id" },
+    { Header: "Prompt", accessor: "prompt" },
+    { Header: "File Path", accessor: "file" },
+    { Header: "Skills", accessor: "total_skill_count" },
+  {
+      Header: "Status",
+      accessor: "status",
+      Cell: ({ value }) => (
+        <button style={{
+          backgroundColor: value === 'analyzed' ? '#00B69B' : 'grey',
+          border: 'none',
+          outline: 'none',
+          color: 'white',
+          borderRadius: '10px',
+          padding: '3px 10px',
+          cursor: 'pointer',
+        }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+        >
+          {value.charAt(0).toUpperCase() + value.slice(1)}
+        </button>
+      )
+    },  { Header: "", accessor: "Btn" },
+  ];
 
 const Path = () => {
     return (
         <React.Fragment>
             <main className='path-section'>
-                <h2>List</h2>
-                <DataGrid columns={columns} data={data} heading={"Path Details"} dropdown={"October"} />
+                <h2>All Path List</h2>
+                <UploadDataGrid columns={columns} heading={"Path Details"} dropdown={"October"} />
             </main>
         </React.Fragment>
     )

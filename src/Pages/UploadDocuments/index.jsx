@@ -1,7 +1,6 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useState, useEffect } from 'react';
 import './index.scss';
-import HeadingBtn from '../../Components/DashboardComponents/DataGrid/HeadingBtn';
+import { TextField, InputAdornment } from '@mui/material';
 import DataGrid from '../../Components/DashboardComponents/DataGrid/DataGrid';
 import { MdOutlineClose } from "react-icons/md";
 import Backdrop from '@mui/material/Backdrop';
@@ -12,62 +11,44 @@ import Typography from '@mui/material/Typography';
 import { IoMdClose } from "react-icons/io";
 import { Button } from '@mui/material';
 import { IoCheckmarkSharp } from "react-icons/io5";
-import { useNavigate } from 'react-router-dom';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import { BiSolidSend } from "react-icons/bi";
+import { Snackbar } from '../../Utils/SnackbarUtils';
+import Fire from '../../Fire/Fire';
+import { baseURL } from '../../Fire/useFire';
+import FileUpload from './FileUpload';
+import UploadDataGrid from './UploadDataGrid';
+import { useUser } from '../../context/context';
 
 const columns = [
-  { Header: "File Name", accessor: "Path" },
-  { Header: "Date", accessor: "Date" },
-  { Header: "Status", accessor: "Status" },
-  { Header: "Skills", accessor: "Skills" },
-  { Header: "", accessor: "Btn" },
-];
-
-const data = [
-  {
-    id: 1,
-    Path: "designer-resume.pdf",
-    Date: "12-09-2024",
-    Skills: "4",
-    Status: (
+  { Header: "Id", accessor: "id" },
+  { Header: "Prompt", accessor: "prompt" },
+  { Header: "File Path", accessor: "file" },
+  { Header: "Skills", accessor: "total_skill_count" },
+{
+    Header: "Status",
+    accessor: "status",
+    Cell: ({ value }) => (
       <button style={{
-        backgroundColor: '#00B69B', border: 'none', outline: 'none',
-        color: 'white', borderRadius: '10px', padding: '3px 10px', cursor: "pointer"
+        backgroundColor: value === 'analyzed' ? '#00B69B' : 'grey',
+        border: 'none',
+        outline: 'none',
+        color: 'white',
+        borderRadius: '10px',
+        padding: '3px 10px',
+        cursor: 'pointer',
       }}
         onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
         onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
       >
-        Scanned
+        {value.charAt(0).toUpperCase() + value.slice(1)}
       </button>
-    ),
-    Btn: (
-      <p>Analyze Again</p>
     )
-  },
-  {
-    id: 2,
-    Path: "Sales Rep",
-    Date: "12.09.2019 - 12.53 PM",
-    Skills: "2",
-    Status: (
-      <button style={{
-        backgroundColor: '#E8E8E8', border: 'none', outline: 'none',
-        borderRadius: '10px', padding: '3px 10px', cursor: "pointer"
-      }}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-      >
-        Pending
-      </button>),
-    Btn: (
-      <button
-        style={{ backgroundColor: '#3749A6', border: 'none', outline: 'none', color: 'white', borderRadius: '5px', padding: '5px 10px', cursor: "pointer" }}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-      >Analyze Again</button>
-    )
-  },
+  },  { Header: "", accessor: "Btn" },
 ];
-
 
 const style = {
   position: 'absolute',
@@ -85,11 +66,23 @@ const style = {
 
 const UploadDocuments = () => {
 
-  const navigate = useNavigate();
+  const {data} = useUser();
+  // const [tableData, setTableData] = useState();
+
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState('1');
+  const [prompt, setPrompt] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handlePrompt = (event) => {
+    setPrompt(event.target.value);
+  };
 
   const handleSuccess = (value) => {
     setSuccess(value);
@@ -98,6 +91,8 @@ const UploadDocuments = () => {
   const handleClose = () => {
     setSuccess(false);
   };
+
+  // setTableData(mappedData); 
 
   useEffect(() => {
     if (success) {
@@ -116,11 +111,32 @@ const UploadDocuments = () => {
 
       return () => handleCloseModal();
     }
-  })
+  });
 
-  const handleNavigate = () => {
-    navigate('/dashboard')
-  }
+  const handlePromptSubmit = (event) => {
+    event.preventDefault();
+
+    Fire.post({
+      url: `${baseURL}/create-path`,
+      data: {
+        prompt: prompt
+      },
+
+      onSuccess: (res) => {
+        console.log('create path successfully', res);
+        Snackbar(res.data.message, { variant: 'success' });
+        setPrompt('');
+        data();
+      },
+
+      onError: (err) => {
+        console.log(err);
+        Snackbar(err.error, { variant: 'error' });
+      }
+    });
+
+  };
+
   return (
     <React.Fragment>
       <main className='documents-upload__section'>
@@ -133,68 +149,106 @@ const UploadDocuments = () => {
             />
           </div>
         )}
-        <div className='main__heading'>
-          <h2>Upload Documents</h2>
-          <HeadingBtn text={"Done"} onClick={handleNavigate} />
-        </div>
-        <FileUpload onUploadSuccess={handleSuccess} />
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={open}
-          onClose={handleCloseModal}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{
-            backdrop: {
-              timeout: 500,
-            },
-          }}
-        >
-          <Fade in={open}>
-            <Box sx={style}>
-              <IoMdClose
-                onClick={handleCloseModal}
-                style={{ float: "right", cursor: "pointer", fontSize: "20px", marginTop: "-20px" }} />
-              <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-              }}>
-                <Box
-                  sx={{
-                    padding: "18px 20px ",
-                    borderRadius: "50%",
-                    backgroundColor: "#ECF2FF",
-                    marginBottom: "10px",
-                    color: "#1E5EFF",
-                    fontWeight: "800",
-                    fontSize: "18px"
-                  }}>
-                  <IoCheckmarkSharp />
-                </Box>
-                <Typography id="transition-modal-title" variant="h5" component="h2" sx={{ fontWeight: "600" }}>
-                  Import Successfull
-                </Typography>
-                <Typography id="transition-modal-description" sx={{ fontSize: "15px" }}>
-                  Added 5 new skills to your path
-                </Typography>
+        <Box sx={{ width: '100%', typography: 'body1' }}>
+          <TabContext value={value}>
+            <Box>
 
-                <Button
-                  onClick={handleCloseModal}
-                  sx={{
-                    backgroundColor: "#3749A6", color: 'white', fontSize: "12px", mt: 2, padding: "8px 25px",
-                    '&:hover': {
-                      backgroundColor: "#2e3a8c",
-                    },
-                  }}
-                >Continue</Button>
-              </Box>
+              <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ padding: '0 25px' }}>
+
+                <Tab label="Add Path" value="1" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} />
+                <Tab label="Upload CV" value="2" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} />
+              </TabList>
             </Box>
-          </Fade>
-        </Modal>
-        <DataGrid columns={columns} data={data} heading={"Uploaded Documents"} dropdown={"October"} />
+
+            <TabPanel value="1">
+              <TextField
+                id="outlined-multiline-static"
+                label="Enter Your Prompt"
+                onChange={handlePrompt}
+                name="prompt"
+                value={prompt}
+                multiline
+                rows={6}
+                defaultValue=""
+                sx={{ width: '100%', height: '100%', position: 'relative' }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <BiSolidSend                          
+                      style={{ cursor: 'pointer', position: 'absolute', bottom: 8, right: 15, fontSize:'20px' }}
+                      onClick={handlePromptSubmit}
+                      />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </TabPanel>
+
+            <TabPanel value="2">
+              <FileUpload onUploadSuccess={handleSuccess}/>
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={open}
+                onClose={handleCloseModal}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                  backdrop: {
+                    timeout: 500,
+                  },
+                }}
+              >
+                <Fade in={open}>
+                  <Box sx={style}>
+                    <IoMdClose
+                      onClick={handleCloseModal}
+                      style={{ float: "right", cursor: "pointer", fontSize: "20px", marginTop: "-20px" }} />
+                    <Box sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      textAlign: 'center',
+                    }}>
+                      <Box
+                        sx={{
+                          padding: "18px 20px ",
+                          borderRadius: "50%",
+                          backgroundColor: "#ECF2FF",
+                          marginBottom: "10px",
+                          color: "#1E5EFF",
+                          fontWeight: "800",
+                          fontSize: "18px"
+                        }}>
+                        <IoCheckmarkSharp />
+                      </Box>
+                      <Typography id="transition-modal-title" variant="h5" component="h2" sx={{ fontWeight: "600" }}>
+                        Import Successfull
+                      </Typography>
+                      <Typography id="transition-modal-description" sx={{ fontSize: "15px" }}>
+                        Added 5 new skills to your path
+                      </Typography>
+
+                      <Button
+                        onClick={handleCloseModal}
+                        sx={{
+                          backgroundColor: "#3749A6", color: 'white', fontSize: "12px", mt: 2, padding: "8px 25px",
+                          '&:hover': {
+                            backgroundColor: "#2e3a8c",
+                          },
+                        }}
+                      >Continue</Button>
+                    </Box>
+                  </Box>
+                </Fade>
+              </Modal>
+            </TabPanel>
+
+          </TabContext>
+        </Box>
+
+        <UploadDataGrid columns={columns} heading={"Uploaded Documents"} dropdown={"October"} />
+
       </main>
     </React.Fragment>
   );
@@ -202,25 +256,3 @@ const UploadDocuments = () => {
 
 export default UploadDocuments;
 
-const FileUpload = ({ onUploadSuccess }) => {
-  const onDrop = useCallback((acceptedFiles) => {
-    // Handle the files
-    console.log(acceptedFiles);
-    onUploadSuccess(true);
-  }, [onUploadSuccess]);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  return (
-    <div className='file-upload__section' {...getRootProps()}>
-      <input {...getInputProps()} />
-      <img src='/images/upload.png' alt='upload' />
-      <p>
-        {isDragActive ?
-          'Drop the files here...' :
-          'Drop your document here to upload.'
-        }
-      </p>
-    </div>
-  );
-};

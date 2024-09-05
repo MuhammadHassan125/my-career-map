@@ -10,7 +10,7 @@ const VerifyOtp = () => {
   const navigate = useNavigate();
 
   const [otp, setOtp] = useState('');
-  const [timer, setTimer] = useState(600); // Start with 1 minute (60 seconds)
+  const [timer, setTimer] = useState(600); 
   const [showResend, setShowResend] = useState(false);
 
   // Start the countdown timer
@@ -20,9 +20,9 @@ const VerifyOtp = () => {
         setTimer(timer - 1);
       }, 1000);
 
-      return () => clearTimeout(countdown); // Clear the timeout if the component unmounts
+      return () => clearTimeout(countdown); 
     } else {
-      setShowResend(true); // Show the resend option when timer hits 0
+      setShowResend(true); 
     }
   }, [timer]);
 

@@ -3,15 +3,34 @@ import './index.scss';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import DataGrid from '../../Components/DashboardComponents/DataGrid/DataGrid';
+import UploadDataGrid from '../UploadDocuments/UploadDataGrid';
 
 const columns = [
-    { Header: "Path", accessor: "Path" },
-    { Header: "Step", accessor: "Step" },
-    { Header: "Date - Time", accessor: "Date" },
-    { Header: "Session Duration", accessor: "Session" },
-    { Header: "Status", accessor: "Status" },
-];
+    { Header: "Id", accessor: "id" },
+    { Header: "Prompt", accessor: "prompt" },
+    { Header: "File Path", accessor: "file" },
+    { Header: "Skills", accessor: "total_skill_count" },
+  {
+      Header: "Status",
+      accessor: "status",
+      Cell: ({ value }) => (
+        <button style={{
+          backgroundColor: value === 'analyzed' ? '#00B69B' : 'grey',
+          border: 'none',
+          outline: 'none',
+          color: 'white',
+          borderRadius: '10px',
+          padding: '3px 10px',
+          cursor: 'pointer',
+        }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+        >
+          {value.charAt(0).toUpperCase() + value.slice(1)}
+        </button>
+      )
+    },  { Header: "", accessor: "Btn" },
+  ];
 
 const data = [
     {
@@ -92,7 +111,7 @@ const Dashboard = () => {
         <main className='dashboard-section'>
             <h2>Dashboard</h2>
             <DashboardCards />
-            <DataGrid columns={columns} data={data} heading={"Path Details"} dropdown={"October"} />
+            <UploadDataGrid columns={columns} heading={"Path Details"} dropdown={"October"} />
         </main>
     )
 }

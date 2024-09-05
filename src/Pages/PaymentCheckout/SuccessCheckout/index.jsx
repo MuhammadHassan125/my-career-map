@@ -18,22 +18,7 @@ const Success = () => {
                     if (!token) {
                         throw new Error('User not authenticated');
                     }
-
-                    // The subscriptionId is not needed here since we handle it on the server side
-                    // const response = await axios.post(`${API_URL}/api/confirm-subscription`, {
-                    //     sessionId
-                    // }, {
-                    //     headers: {
-                    //         'Authorization': `Bearer ${token}`
-                    //     }
-                    // });
-                    // // Adjust this to correctly check the response
-                    // if (response.status === 200 && response.data.success) {
-                    //     alert('Subscription confirmed successfully!');
-                    // } else {
-                    //     alert('Failed to confirm subscription');
-                    // }
-
+                    
                     Fire.post({
                         url: `${baseURL}/confirm-subscription`,
                         data: {
