@@ -9,7 +9,6 @@ import UserProvider from './context/context.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
     <UserProvider>
       <SnackbarProvider maxSnack={3} autoHideDuration={3000}
         anchorOrigin={{
@@ -23,5 +22,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </GoogleOAuthProvider>
       </SnackbarProvider>
     </UserProvider>
-  </React.StrictMode>,
 )

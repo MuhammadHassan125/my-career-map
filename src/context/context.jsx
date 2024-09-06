@@ -39,6 +39,7 @@ const UserProvider = ({ children }) => {
       headers: { Authorization: `Bearer ${authToken}` },
       onSuccess: (res) => {
         setData(res.data.data.result);
+        console.log(res.data.data.result);
       },
       onError: (err) => {
         console.log(err);
@@ -75,6 +76,7 @@ const UserProvider = ({ children }) => {
         singlePathData,
         setSinglePathData,
         handleLoginSuccess,
+        getUploadDataList
       }}
     >
       {children}

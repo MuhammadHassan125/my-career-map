@@ -54,7 +54,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 50px;
+    padding: 0 20px;
 }
 
 .search-bar {
@@ -79,7 +79,7 @@
     flex-direction: row;
     align-items: center;
     gap: 20px;
-
+    margin-right: 10px;
     div {
         line-height: 15px;
         align-items: baseline;

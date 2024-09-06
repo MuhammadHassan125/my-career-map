@@ -10,6 +10,7 @@ import { useUser } from '../../context/context';
 import { GrAttachment } from "react-icons/gr";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import SinglePathMap from './SinglePathMap';
+import AddPathComponent from '../../Components/AddPathComponent';
 
 
 const MapSinglePath = () => {
@@ -19,9 +20,9 @@ const MapSinglePath = () => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate('/documents-upload')
-  }
+//   const handleNavigate = () => {
+//     navigate('/documents-upload')
+//   }
   return (
     <React.Fragment>
       <main className='map-section'>
@@ -40,7 +41,8 @@ const MapSinglePath = () => {
             {/* <PrimaryBtn text={"Add Path"} onClick={handleOpen}/> */}
 
             {/* for navigating to documents  */}
-            <PrimaryBtn text={"Add Path & Cv"} onClick={handleNavigate}/>
+            {/* <PrimaryBtn text={"Add Path & Cv"} onClick={handleNavigate}/> */}
+            <AddPathComponent/>
           </div>
         </div>
 

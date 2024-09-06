@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import PrimaryBtn from '../../Components/PrimaryBtn'
 import { BiExport } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
 import { GrAttachment } from "react-icons/gr";
@@ -9,9 +8,12 @@ import './index.scss'
 import { useNavigate } from 'react-router-dom';
 import UserDetailsMap from './UserDetailsMap';
 import { useUser } from '../../context/context';
+import AddPathComponent from '../../Components/AddPathComponent';
 
 
 const MapCareer = () => {
+   
+
     return (
         <React.Fragment>
             <main className='map-section'>
@@ -26,7 +28,8 @@ const MapCareer = () => {
                             <BiExport style={{ fontSize: "18px" }} />
                             Export your Training PDF
                         </button>
-                        <PrimaryBtn text={"Add Path"} />
+                        {/* <PrimaryBtn text={"Add Path"} onClick={handleNavigate} /> */}
+                        <AddPathComponent/>
                     </div>
                 </div>
 

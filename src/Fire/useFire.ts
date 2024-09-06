@@ -7,6 +7,7 @@ import Fire from "./Fire";
 
 // server ip
 export const baseURL = "http://64.23.166.88:4000/api";
+export const  AnalyzeURL = "http://64.23.166.88:3500";
 
 const useFire = <T extends Record<string, any> = {}>(initialState: T = {} as T, initialProcessing?: boolean) => {
     type StateKeyType = keyof typeof initialState;

@@ -22,6 +22,7 @@
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+
 }
 
 .error{
@@ -34,9 +35,30 @@
   margin-bottom: 20px;
 
   h2 {
-    font-size: 23px;
+    font-size: 20px;
   }
 }
+
+*{
+  /* font-size: 13px !important; */
+}
+
+li{
+  font-size: 14px !important;
+}
+
+h2{
+  font-size: 20px !important;
+}
+
+h3{
+  font-size: 18px !important;
+}
+
+h5{
+  font-size: 14px !important;
+}
+
 
 @media screen and (max-width: 786px) {
   .main__heading {

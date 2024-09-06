@@ -36,7 +36,6 @@ const Fetch = (options: FetchOptions) => {
     const headers: AxiosHeaders = new AxiosHeaders();
 
     token && headers.set('Authorization', `Bearer ${token}`)
-    console.log(options)
     headers.set('Accept', 'application/json');
     options.method !== 'get' && headers.set('Content-Type', 'application/json');
 
@@ -55,8 +54,10 @@ const Fetch = (options: FetchOptions) => {
     })
         .then((res) => options.onSuccess && options.onSuccess(res))
         .catch((err) => {
-            err.response.status === 401 && localStorage.removeItem(apiKeyName);
-            options.onError && options.onError(err.response.data.error, err.response);
+            if (err.hasOwnProperty('response')) {
+                err.response.status === 401 && localStorage.removeItem(apiKeyName);
+                options.onError && options.onError(err.response.data.error, err.response);
+            }
         })
         .finally(() => options.onFinish && options.onFinish())
 }

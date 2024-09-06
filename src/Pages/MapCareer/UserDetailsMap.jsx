@@ -8,8 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const UserDetailsMap = () => {
     const [pathDetailsArray, setPathDetailsArray] = React.useState([]);
-    const {setGettingSkillsData, setGetTitle, setGetDescription, setSinglePathData} = useUser();
-
+    const { setGettingSkillsData, setGetTitle, setGetDescription, setSinglePathData } = useUser();
     const navigate = useNavigate();
     const svgRefs = useRef([]);
 
@@ -17,10 +16,11 @@ const UserDetailsMap = () => {
         Fire.get({
             url: `${baseURL}/get-details-with-path`,
             onSuccess: (res) => {
-                console.log(res?.data?.data, "path details");
                 const pathDetailsArray = res?.data?.data;
 
-                const formattedPathDetails = pathDetailsArray.map((pathDetails, i) => {
+                const formattedPathDetails = pathDetailsArray.map((pathDetails) => {
+                    if(pathDetails.status !== 'pending') {
+                        
                     const nodes = [];
                     const links = [];
 
@@ -31,8 +31,8 @@ const UserDetailsMap = () => {
                             description: step.description,
                             skills: step.skills,
                             steps: step,
-                            x: Math.random() * 960,
-                            y: Math.random() * 500,
+                            x: index *  50,
+                            y: 100,
                             color: pathDetails.color,
                         });
 
@@ -44,8 +44,9 @@ const UserDetailsMap = () => {
                         }
                     });
 
-                    return { nodes, links };
-                });
+                    return { id:pathDetails.id,nodes, links };
+                    }
+                }).filter(pathDetails => pathDetails !== undefined);
 
                 setPathDetailsArray(formattedPathDetails);
             },
@@ -54,10 +55,9 @@ const UserDetailsMap = () => {
                 Snackbar(err?.error);
             }
         });
-    };
+    }; 
 
     useEffect(() => {
-        // Fetching path details 
         gettingPathDetails();
     }, []);
 
@@ -65,7 +65,7 @@ const UserDetailsMap = () => {
         if (pathDetailsArray.length === 0) return;
 
         const width = 1000;
-        const height = 400;
+        const height = 200;
 
         pathDetailsArray.forEach((pathDetails, i) => {
             const svg = d3.select(svgRefs.current[i])
@@ -83,27 +83,26 @@ const UserDetailsMap = () => {
                 .append("line")
                 .style("stroke-width", 4.8)
                 .style("stroke", '#5B708B')
-                .attr("stroke-line", "5,5");
+                .attr("stroke", "5,5")
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
 
             const node = svg.append("g")
                 .selectAll("circle")
                 .data(pathDetails.nodes)
                 .enter()
                 .append("circle")
-                .attr("r", 7)
+                .attr("r", (d, index) => index === 0 ? 10 : 7) 
                 .attr("fill", d => d.color)
-                .attr("stroke", "#fff")
-                .attr("stroke-width", 0.5)
+                .attr("stroke", (d, index) => index === pathDetails.nodes.length - 1 ? "red" : "#fff") // Red stroke for end node
+                .attr("stroke-width", 1.5)
                 .on('click', (e, d) => {
-                    // console.log(d.skills, "getting steps");
-                    // console.log(d.title, "getting title");
                     setGettingSkillsData(d.skills);
                     setGetTitle(d.title);
                     setGetDescription(d.description);
-
-                    console.log(d.steps, "my-steps");
-                    setSinglePathData(d.steps)
-                    // navigate('/map-single-path')
+                    setSinglePathData(d.steps);
                 });
 
             const nodeText = svg.append("g")
@@ -115,44 +114,48 @@ const UserDetailsMap = () => {
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "central")
                 .style("fill", "#000")
-                .style("font-size", "11px");
+                .style("font-size", "8.8px")
+
 
             function ticked() {
                 link
-                    .attr("x1", d => d.source.x = Math.max(20, Math.min(width - 20, d.source.x)))
-                    .attr("y1", d => d.source.y = Math.max(20, Math.min(height - 40, d.source.y)))
-                    .attr("x2", d => d.target.x = Math.max(20, Math.min(width - 20, d.target.x)))
-                    .attr("y2", d => d.target.y = Math.max(20, Math.min(height - 40, d.target.y)));
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
 
                 node
-                    .attr("cx", d => d.x = Math.max(20, Math.min(width - 20, d.x)))
-                    .attr("cy", d => d.y = Math.max(20, Math.min(height - 60, d.y)));
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
 
                 nodeText
                     .attr("x", d => d.x)
-                    .attr("y", d => d.y - 10);
+                    .attr("y", d => d.y - 18);
             }
 
             const simulation = d3.forceSimulation(pathDetails.nodes)
-                .force("link", d3.forceLink(pathDetails.links).id(d => d.id).distance(100))
+                .force("link", d3.forceLink(pathDetails.links).id(d => d.id).distance(80))
                 .force("charge", d3.forceManyBody().strength(-300))
                 .force("center", d3.forceCenter(width / 2, height / 2))
                 .on("tick", ticked);
 
-
             return () => {
                 svg.selectAll("*").remove();
+                tooltip.remove();
             };
+
         });
 
     }, [pathDetailsArray]);
 
     return (
-        <div className="map-section____map-div-career-path" style={{ marginBottom:'40px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
-            {pathDetailsArray.map((_, i) => (
-                <div key={i} style={{  display:'flex', alignItems: 'center', justifyContent: 'center', position:'relative' }}>
+        <div className="map-section____map-div-career-path" style={{ marginBottom: '40px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            {pathDetailsArray.map((_,i) => (
+                <div key={i} style={{backgroundColor:"white", borderRadius:"10px", marginBottom:"10px", display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
+                    boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px"
+                 }}>
                     <svg ref={el => svgRefs.current[i] = el}></svg>
-                    <div style={{position:"absolute", top:'0', bottom:'0', left:'0', right:'0'}} onClick={() =>navigate('/map-career/20',{state:_})}></div>
+                    <div style={{position:"absolute", top:'0', bottom:'0', left:'0', right:'0', cursor:'pointer'}} onClick={() =>navigate(`/map-career/${_.id}`)}></div>
                 </div>
             ))}
         </div>

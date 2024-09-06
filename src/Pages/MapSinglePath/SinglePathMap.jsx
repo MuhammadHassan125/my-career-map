@@ -1,22 +1,25 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { useUser } from "../../context/context";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Fire from "../../Fire/Fire";
+import { baseURL } from "../../Fire/useFire";
 
 const SinglePathMap = () => {
-    const { setGettingSkillsData, setGetTitle, setGetDescription } = useUser();
     const svgRef = useRef(null);
+    const d3SVGRef = useRef(null);
     const location = useLocation();
-    const navigate = useNavigate(); // Import useNavigate
+    const navigate = useNavigate();
+    const params = useParams();
 
-    useEffect(() => {
-        if (!location.state) return;
+    const {setGetTitle, setGetDescription, setGettingSkillsData} = useUser();
 
+    const createMap = (nodes, links) => {
         const width = 1000;
         const height = 300;
-        const nodeSpacing = 150; // Adjust this value to space nodes horizontally
+        const nodeSpacing = 150;
 
-        const svg = d3.select(svgRef.current)
+        d3SVGRef.current = d3.select(svgRef.current)
             .attr("width", width)
             .attr("height", height);
 
@@ -24,16 +27,12 @@ const SinglePathMap = () => {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        const nodes = location.state.nodes;
-        const links = location.state.links;
-
-        // Set initial positions for nodes
         nodes.forEach((node, i) => {
-            node.x = i * nodeSpacing + 100; // Horizontal positioning
-            node.y = height / 2; // Center vertically
+            node.x = i * nodeSpacing + 100;
+            node.y = height / 2;
         });
 
-        const link = svg.append("g")
+        const link = d3SVGRef.current.append("g")
             .selectAll("line")
             .data(links)
             .enter()
@@ -46,7 +45,7 @@ const SinglePathMap = () => {
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y);
 
-        const node = svg.append("g")
+        const node = d3SVGRef.current.append("g")
             .selectAll("circle")
             .data(nodes)
             .enter()
@@ -55,13 +54,14 @@ const SinglePathMap = () => {
             .attr("fill", d => d.color)
             .attr("stroke", "#fff")
             .attr("stroke-width", 0.5)
+            .style("cursor", "pointer")
             .on('click', (e, d) => {
                 setGettingSkillsData(d.skills);
                 setGetTitle(d.title);
                 setGetDescription(d.description);
             });
 
-        const nodeText = svg.append("g")
+        const nodeText = d3SVGRef.current.append("g")
             .selectAll("text")
             .data(nodes)
             .enter()
@@ -70,7 +70,7 @@ const SinglePathMap = () => {
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "central")
             .style("fill", "#000")
-            .style("font-size", "11px")
+            .style("font-size", "8.8px")
             .attr("x", d => d.x)
             .attr("y", d => d.y - 10);
 
@@ -87,7 +87,7 @@ const SinglePathMap = () => {
 
             nodeText
                 .attr("x", d => d.x)
-                .attr("y", d => d.y - 10);
+                .attr("y", d => d.y - 15);
         }
 
         const simulation = d3.forceSimulation(nodes)
@@ -96,11 +96,53 @@ const SinglePathMap = () => {
             .force("center", d3.forceCenter(width / 2, height / 2))
             .on("tick", ticked);
 
+    }
+
+    const getSinglePathData = (params) => {
+        Fire.get({
+            url: `${baseURL}/get-single-path/${params}`,
+            onSuccess: (res) => {
+                const path = res.data.data.formatResult[0];
+
+                const nodes = [];
+                const links = [];
+
+                path.steps.map((step, index) => {
+                    nodes.push({
+                        id: step.id,
+                        title: step.title,
+                        description: step.description,
+                        skills: step.skills,
+                        steps: step,
+                        x: index * 200 + 50,
+                        y: 200,
+                        color: path.color,
+                    })
+                    if (index > 0) {
+                        links.push({
+                            source: path.steps[index - 1].id,
+                            target: step.id,
+                        });
+                    }
+                });
+                console.log(nodes, links, 'ttttttttttttttttttttttt');
+                createMap(nodes, links);
+            },
+            onError: (res) => {
+                console.log(res);
+                Snackbar(res?.error);
+            }
+        })
+    };
+
+
+    useEffect(() => {
+
+        getSinglePathData(params?.id);
         return () => {
-            svg.selectAll("*").remove();
-            tooltip.remove();
+            d3SVGRef.current && d3SVGRef.current.selectAll("*").remove();
         };
-    }, [location.state, navigate]);
+    }, []);
 
     return (
         <div className="map-section____map-div-career-path" style={{ display: 'flex', justifyContent: 'center' }}>

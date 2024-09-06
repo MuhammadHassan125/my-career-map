@@ -76,7 +76,7 @@ const Header = () => {
 
                 <div className='header-icons-right'>
                     <Badge color="error" badgeContent={6}>
-                        <IoMdNotifications style={{ fontSize: "23px", color: "#3D42DF", cursor: "pointer" }} />
+                        <IoMdNotifications style={{ fontSize: "23px !important", color: "#3D42DF", cursor: "pointer" }} />
                     </Badge>
 
                     {/* menu drawer */}
