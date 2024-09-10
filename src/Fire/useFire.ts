@@ -9,18 +9,18 @@ import Fire from "./Fire";
 export const baseURL = "http://64.23.166.88:4000/api";
 export const  AnalyzeURL = "http://64.23.166.88:3500";
 
-const useFire = <T extends Record<string, any> = {}>(initialState: T = {} as T, initialProcessing?: boolean) => {
+const useFire = <T extends Record<string, any> = Record<string, any>>(initialState: T, initialProcessing?: boolean) => {
     type StateKeyType = keyof typeof initialState;
 
     const [data, setData] = useState<typeof initialState>(initialState);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Record<StateKeyType, any> | Record<string, any>>({});
     const [processing, setProcessing] = useState(initialProcessing ?? false);
 
     const handleData = (key: keyof typeof initialState | object, value?: string) => {
-        setData({
-            ...data,
-            ...(value ? { [key as StateKeyType]: value } : key as object)
-        });
+        setData(value !== undefined
+            ? { ...data, [key as StateKeyType]: value }
+            : typeof key === 'object' ? { ...data, ...key } : { ...data }
+        );
     }
 
     const reset = (...fields: StateKeyType[]) => {
@@ -43,7 +43,7 @@ const useFire = <T extends Record<string, any> = {}>(initialState: T = {} as T, 
         setErrors(
             errors => ({
                 ...errors,
-                ...(value ? { [key]: value } : key as any),
+                ...(value ? { [key]: value } : { key: '' }),
             })
         )
     }
