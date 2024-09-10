@@ -5,13 +5,16 @@ import useFire, { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import Fire from '../../Fire/Fire';
-
+import { useUser } from '../../context/context';
+import Loading from '../../Components/Loading';
 const VerifyOtp = () => {
   const navigate = useNavigate();
 
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(600); 
   const [showResend, setShowResend] = useState(false);
+
+  const {setLoading } = useUser();
 
   // Start the countdown timer
   useEffect(() => {
@@ -30,9 +33,10 @@ const VerifyOtp = () => {
     setOtp(value);
   };
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    setLoading(true);
     Fire.post({
       url: `${baseURL}/verify-otp`,
       data: {
@@ -43,14 +47,17 @@ const VerifyOtp = () => {
         console.log('OTP Verified Successfully', res);
         Snackbar(res.data.message, { variant: 'success' });
         navigate('/reset-password');
+        setLoading(false);
       },
 
       onError: (error) => {
         console.log(error);
         Snackbar(error.error, { variant: 'error' });
+        setLoading(false);
       }
     });
   };
+
 
   const handleResendOtp = () => {
     Snackbar("Resent your OTP", { variant: 'warning' });
@@ -61,6 +68,7 @@ const VerifyOtp = () => {
 
   return (
     <>
+    <Loading/>
       <main className="register-section">
         <form className="login-form" onSubmit={handleSubmit} style={{ paddingTop: '50px', paddingBottom: '50px' }}>
           <div className="login-form-heading">
@@ -88,15 +96,6 @@ const VerifyOtp = () => {
             </div>
 
           )}
-
-
-          {/* <div className='login-account'>
-            <p>
-              <Link to="/forget-password" className='link-class'>
-                <span> Go back to Forget Password?</span>
-              </Link>
-            </p>
-          </div> */}
         </form>
       </main>
     </>

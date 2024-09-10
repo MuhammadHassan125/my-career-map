@@ -1,28 +1,18 @@
-import React, { useState } from 'react'
-import PrimaryBtn from '../../Components/PrimaryBtn'
+import React, { useEffect, useState } from 'react'
 import { BiExport } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import './index.scss'
 import { useNavigate } from 'react-router-dom';
-import PremiumModel from '../../Components/PremiumModel';
 import { useUser } from '../../context/context';
 import { GrAttachment } from "react-icons/gr";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import SinglePathMap from './SinglePathMap';
 import AddPathComponent from '../../Components/AddPathComponent';
-
-
 const MapSinglePath = () => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const navigate = useNavigate();
-
-//   const handleNavigate = () => {
-//     navigate('/documents-upload')
-//   }
+  
   return (
     <React.Fragment>
       <main className='map-section'>
@@ -37,25 +27,17 @@ const MapSinglePath = () => {
               <BiExport style={{ fontSize: "18px" }} />
               Export your Training PDF
             </button>
-            {/* for subscription  */}
-            {/* <PrimaryBtn text={"Add Path"} onClick={handleOpen}/> */}
-
-            {/* for navigating to documents  */}
-            {/* <PrimaryBtn text={"Add Path & Cv"} onClick={handleNavigate}/> */}
             <AddPathComponent/>
           </div>
         </div>
 
         <div className='map-section__map-div'>
-          {/* <img src={"/images/single-path.png"} alt="map" /> */}
           <SinglePathMap/>
         </div>
 
         <GPTComponent />
 
       </main>
-
-      <PremiumModel open={open} handleClose={handleClose} />
     </React.Fragment>
   )
 }

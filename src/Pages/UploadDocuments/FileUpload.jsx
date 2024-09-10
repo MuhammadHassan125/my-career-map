@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { baseURL } from "../../Fire/useFire";
 import { Snackbar } from "../../Utils/SnackbarUtils";
 import { useUser } from "../../context/context";
+import Loading from "../../Components/Loading";
 
 const FileUpload = ({ onUploadSuccess }) => {
     const [file, setFile] = useState(null);
-    const {data} = useUser();
+    const {data, setLoading} = useUser();
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -21,6 +22,7 @@ const FileUpload = ({ onUploadSuccess }) => {
             const formData = new FormData();
             formData.append('file', file);
             try {
+                setLoading(true);
                 const response = await axios.post(`${baseURL}/create-path`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -31,8 +33,10 @@ const FileUpload = ({ onUploadSuccess }) => {
                 onUploadSuccess();
                 setFile(null); 
                 data();
+                setLoading(false);
             } catch (error) {
                 Snackbar(`Error uploading file: ${error.error || error.message}`, {variant: 'error'});
+                setLoading(false);
             }
         }
     };
@@ -44,6 +48,8 @@ const FileUpload = ({ onUploadSuccess }) => {
     }, [file]);
 
     return (
+        <>
+        <Loading/>
         <div className='file-upload__section'>
             <img src='/images/upload.png' alt='upload' />
             <label style={{border:'1px solid grey', borderRadius:'10px', padding:'5px 10px'}}>
@@ -56,6 +62,8 @@ const FileUpload = ({ onUploadSuccess }) => {
             </label>
             {file && <p>{file.name}</p>} 
         </div>
+        </>
+
     );
 };
 

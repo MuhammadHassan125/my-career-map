@@ -76,18 +76,21 @@ const Header = () => {
 
                 <div className='header-icons-right'>
                     <Badge color="error" badgeContent={6}>
-                        <IoMdNotifications style={{ fontSize: "23px !important", color: "#3D42DF", cursor: "pointer" }} />
+                        <IoMdNotifications style={{ fontSize: "23px", color: "#3D42DF", cursor: "pointer" }} />
                     </Badge>
 
                     {/* menu drawer */}
                     <LuMenu className='menu-icon' style={{ fontSize: "23px", color: "#3D42DF", cursor: "pointer" }} onClick={toggleDrawer(true)} />
 
                     <Avatar alt="Travis Howard"
-                        // src={user?.data?.profile_picture}
                         src={'https://media.istockphoto.com/id/1278978817/photo/portrait-of-happy-mature-man-smiling.jpg?s=612x612&w=0&k=20&c=GPniKSszzPgprveN7sCT5mb-_L3-RSlGAOAsmoDaafw='}
                     />
                     <div className='inter-font'>
-                        <h3>{user?.data?.username}</h3>
+                        <h3>
+                            {
+                                user?.data?.username ? (user?.data?.username.length > 8 ? `${user?.data?.username.substring(0, 8)}..` : user?.data?.username) : 'Guest'
+                            }
+                        </h3>
                         <h5>Admin</h5>
                     </div>
 

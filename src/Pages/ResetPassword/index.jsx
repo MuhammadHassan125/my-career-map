@@ -4,12 +4,12 @@ import PrimaryBtn from '../../Components/PrimaryBtn';
 import { Link, useNavigate } from 'react-router-dom';
 import useFire, { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
-
-
+import {useUser} from '../../context/context';
+import Loading from '../../Components/Loading';
 const ResetPassword = () => {
   const navigate = useNavigate();
 
-
+  const {setLoading} = useUser();
   const { data, setData, post, errors, onSuccess, onError } = useFire({
     email: '',
     newPassword: '',
@@ -18,17 +18,20 @@ const ResetPassword = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     post({
       url: `${baseURL}/reset-password`,
       onSuccess: (res) => {
         console.log(res)
         Snackbar(res.data.message, { variant: 'success' });
         navigate('/login');
+        setLoading(false);
       },
 
       onError: (err) => {
         console.log(err);
         Snackbar(err.error, { variant: 'error' });
+        setLoading(false);
       }
     });
   };
@@ -43,6 +46,7 @@ const ResetPassword = () => {
 
   return (
     <>
+    <Loading/>
       <main className="register-section">
         {/* register form  */}
         <form className="login-form" onSubmit={handleSubmit} style={{ paddingTop: '50px', paddingBottom: '50px' }}>

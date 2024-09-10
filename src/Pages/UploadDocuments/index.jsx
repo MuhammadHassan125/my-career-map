@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './index.scss';
 import { TextField, InputAdornment } from '@mui/material';
-import DataGrid from '../../Components/DashboardComponents/DataGrid/DataGrid';
 import { MdOutlineClose } from "react-icons/md";
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
@@ -22,6 +21,8 @@ import { baseURL } from '../../Fire/useFire';
 import FileUpload from './FileUpload';
 import UploadDataGrid from './UploadDataGrid';
 import { useUser } from '../../context/context';
+import Loading from '../../Components/Loading';
+import { useNavigate } from 'react-router-dom';
 
 const columns = [
   { Header: "Id", accessor: "id" },
@@ -66,8 +67,7 @@ const style = {
 
 const UploadDocuments = () => {
 
-  const {data} = useUser();
-  // const [tableData, setTableData] = useState();
+  const {data, setLoading, setCheckSubscription} = useUser();
 
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -75,6 +75,8 @@ const UploadDocuments = () => {
   const [prompt, setPrompt] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -92,7 +94,26 @@ const UploadDocuments = () => {
     setSuccess(false);
   };
 
-  // setTableData(mappedData); 
+  const checkSubscription = () => {
+    setLoading(true);
+    Fire.get({
+      url: `${baseURL}/check-user-subscription`,
+
+      onSuccess: (res) => {
+        setLoading(false);
+
+        if (res?.data?.Subscription_Status === false) {
+          navigate(-1, { state: setCheckSubscription(false)  });
+        }return;
+
+      },
+
+      onError: (err) => {
+        console.log(err)
+        setLoading(false);
+      }
+    })
+  };
 
   useEffect(() => {
     if (success) {
@@ -101,6 +122,7 @@ const UploadDocuments = () => {
       }, 4000);
       return () => clearTimeout(timer);
     }
+    checkSubscription();
   }, [success]);
 
   useEffect(() => {
@@ -115,7 +137,7 @@ const UploadDocuments = () => {
 
   const handlePromptSubmit = (event) => {
     event.preventDefault();
-
+    setLoading(true);
     Fire.post({
       url: `${baseURL}/create-path`,
       data: {
@@ -127,11 +149,13 @@ const UploadDocuments = () => {
         Snackbar(res.data.message, { variant: 'success' });
         setPrompt('');
         data();
+        setLoading(false);
       },
 
       onError: (err) => {
         console.log(err);
         Snackbar(err.error, { variant: 'error' });
+        setLoading(false);
       }
     });
 
@@ -139,6 +163,7 @@ const UploadDocuments = () => {
 
   return (
     <React.Fragment>
+      <Loading/>
       <main className='documents-upload__section'>
         {success && (
           <div className='success__message'>

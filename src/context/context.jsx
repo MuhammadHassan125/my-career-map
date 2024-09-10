@@ -8,9 +8,18 @@ const Context = createContext();
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [data, setData] = useState([]);
+
+  // checking the status of subscription 
+  const [checkSubscription, setCheckSubscription] = useState(true);
+
   const [singlePathData, setSinglePathData] = useState([]);
   const [authToken, setAuthToken] = useState(localStorage?.getItem('user-visited-dashboard'));
 
+
+  // loading state 
+  const [loading, setLoading] = useState(false);
+
+  // getting details through map 
   const [gettingSkillsData, setGettingSkillsData] = useState(null);
   const [getTitle, setGetTitle] = useState(null);
   const [getDescription, setGetDescription] = useState(null);
@@ -76,7 +85,11 @@ const UserProvider = ({ children }) => {
         singlePathData,
         setSinglePathData,
         handleLoginSuccess,
-        getUploadDataList
+        getUploadDataList,
+        setCheckSubscription,
+        checkSubscription,
+        loading,
+        setLoading
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiExport } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
 import { GrAttachment } from "react-icons/gr";
@@ -10,9 +10,7 @@ import UserDetailsMap from './UserDetailsMap';
 import { useUser } from '../../context/context';
 import AddPathComponent from '../../Components/AddPathComponent';
 
-
 const MapCareer = () => {
-   
 
     return (
         <React.Fragment>
@@ -28,8 +26,7 @@ const MapCareer = () => {
                             <BiExport style={{ fontSize: "18px" }} />
                             Export your Training PDF
                         </button>
-                        {/* <PrimaryBtn text={"Add Path"} onClick={handleNavigate} /> */}
-                        <AddPathComponent/>
+                        <AddPathComponent />
                     </div>
                 </div>
 
@@ -38,6 +35,7 @@ const MapCareer = () => {
                 {/* <GPTComponent /> */}
 
             </main>
+
         </React.Fragment>
     )
 }
@@ -58,8 +56,8 @@ const GPTComponent = () => {
             {/* left sales executive  */}
             <div className='gpt-section__left'>
                 <h5>Details</h5>
-                    <h2>{getTitle}</h2> 
-               
+                <h2>{getTitle}</h2>
+
                 <div className='gpt-section__skills-div'>
                     {Array.isArray(gettingSkillsData) && gettingSkillsData.length > 0 ? (
                         gettingSkillsData.map((skills, i) => <button key={i}>{skills.title}</button>)
@@ -68,8 +66,8 @@ const GPTComponent = () => {
                     )}
 
                 </div>
-                    <p>{getDescription}</p> 
-              
+                <p>{getDescription}</p>
+
                 <div className='gpt-section__btn-div'>
                     <div>
                         <button className='gpt-section__btn' onClick={() => navigate('/list-career-path')}>Get Started</button>

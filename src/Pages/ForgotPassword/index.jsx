@@ -4,28 +4,33 @@ import PrimaryBtn from '../../Components/PrimaryBtn';
 import { Link, useNavigate } from 'react-router-dom';
 import useFire, { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
+import { useUser } from '../../context/context';
+import Loading from '../../Components/Loading';
+
 const ForgotPassword = () => {
+  
   const navigate = useNavigate();
-
-
+  const {setLoading} = useUser();
   const { data, setData, post, errors, onSuccess } = useFire({
     email: '',
   });
 
   const handleSubmit = (event) => {
+    setLoading(true);
     event.preventDefault();
     post({
       url: `${baseURL}/request-for-otp`,
-
       onSuccess: (res) => {
         console.log('forget password successfully', res);
         Snackbar(res.data.data.message, { variant: 'success' });
         navigate('/verify-otp');
+        setLoading(false);
       },
 
       onError: (err) => {
         console.log('forget password error', err);
         Snackbar(err.error || "forget password Failed", { variant: 'error' });
+        setLoading(false);
       }
     });
 
@@ -42,6 +47,7 @@ const ForgotPassword = () => {
 
     return (
       <>
+      <Loading/>
         <main className="register-section">
           {/* register form  */}
           <form className="login-form" onSubmit={handleSubmit} style={{paddingTop: '50px', paddingBottom: '50px'}}>
