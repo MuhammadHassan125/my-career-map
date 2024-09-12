@@ -30,8 +30,8 @@ export interface SubmitOptions extends FireOptions {
 }
 
 const Fetch = (options: FetchOptions) => {
-    const apiKeyName = 'app-key'
-    const token = localStorage.getItem(apiKeyName);
+    // const apiKeyName = 'app-key'
+    const token = localStorage.getItem('user-visited-dashboard');
 
     const headers: AxiosHeaders = new AxiosHeaders();
 
@@ -54,7 +54,7 @@ const Fetch = (options: FetchOptions) => {
     })
         .then((res) => options.onSuccess && options.onSuccess(res))
         .catch((err) => {
-            err.response.status === 401 && localStorage.removeItem(apiKeyName);
+            err.response.status === 401 && localStorage.removeItem("user-visited-dashboard");
             options.onError && options.onError(err.response.data.error, err.response);
         })
         .finally(() => options.onFinish && options.onFinish())
