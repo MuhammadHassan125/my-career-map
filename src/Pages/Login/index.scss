@@ -56,7 +56,7 @@
     flex-direction: column;
     width: 100%;
     margin: 15px 0;
-    font-size: 15px;
+    font-size: 14px;
 
     div {
         display: flex;
@@ -64,7 +64,7 @@
         justify-content: space-between;
 
         span {
-            font-size: 15px;
+            font-size: 13px;
         }
     }
 }
@@ -77,6 +77,7 @@
 
     span {
         color: #202224;
+        font-size: 14px;
     }
 }
 
@@ -124,10 +125,11 @@
 
 .create-account {
     text-align: center;
-
+    font-size: 14px;
     span {
         color: #3749A6;
         margin-left: 5px;
+        font-size: 14px;
         font-weight: 600;
 
         &:hover {
