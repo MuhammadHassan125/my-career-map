@@ -20,7 +20,9 @@ const AddPathComponent = () => {
 
   useEffect(() => {
     if(checkSubscription === false){
-      handleOpen();
+      // handleOpen();
+      navigate('/documents-upload');
+
     } else {setCheckSubscription(true);}
   }, []);
 

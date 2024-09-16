@@ -3,7 +3,7 @@ import { useState } from "react";
 import Fire from "./Fire";
 
 // local ip
-// export const baseURL = "http://192.168.1.119:8001/api";
+// export const baseURL = "http://192.168.18.194:8001/api";
 
 // server ip
 export const baseURL = "http://64.23.166.88:4000/api";

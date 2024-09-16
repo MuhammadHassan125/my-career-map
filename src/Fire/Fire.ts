@@ -54,8 +54,12 @@ const Fetch = (options: FetchOptions) => {
     })
         .then((res) => options.onSuccess && options.onSuccess(res))
         .catch((err) => {
-            err.response.status === 401 && localStorage.removeItem("user-visited-dashboard");
-            options.onError && options.onError(err.response.data.error, err.response);
+            if(err.response){
+                err.response.status === 401 && localStorage.removeItem("user-visited-dashboard");
+                options.onError && options.onError(err.response.data.error, err.response);
+            }else{
+                throw new Error(err);
+            }
         })
         .finally(() => options.onFinish && options.onFinish())
 }

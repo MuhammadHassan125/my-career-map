@@ -101,9 +101,9 @@ const UploadDocuments = () => {
 
       onSuccess: (res) => {
         setLoading(false);
-
+        data();
         if (res?.data?.Subscription_Status === false) {
-          navigate(-1, { state: setCheckSubscription(false)  });
+          // navigate(-1, { state: setCheckSubscription(true)  });
         }return;
 
       },
@@ -148,8 +148,8 @@ const UploadDocuments = () => {
         console.log('create path successfully', res);
         Snackbar(res.data.message, { variant: 'success' });
         setPrompt('');
-        data();
         setLoading(false);
+        data();
       },
 
       onError: (err) => {

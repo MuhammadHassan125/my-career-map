@@ -13,6 +13,10 @@ const MapSinglePath = () => {
 
   const navigate = useNavigate();
   
+  const contentHandler = (data) => {
+    console.log(data, 'ffffffffffffffffffffffffffffff')
+  }
+  
   return (
     <React.Fragment>
       <main className='map-section'>
@@ -32,7 +36,7 @@ const MapSinglePath = () => {
         </div>
 
         <div className='map-section__map-div'>
-          <SinglePathMap/>
+          <SinglePathMap contentHandler={contentHandler}/>
         </div>
 
         <GPTComponent />
@@ -48,11 +52,14 @@ const GPTComponent = () => {
 
   const { gettingSkillsData, getTitle, getDescription } = useUser();
   console.log(getTitle, "my-title");
+  console.log(getDescription, 'description')
+
 
 
   const handleToggle = () => {
       setIsMinimized(!isMinimized);
   };
+
   return (
       <main className='gpt-section'>
           {/* left sales executive  */}
