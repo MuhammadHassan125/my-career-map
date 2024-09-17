@@ -2,7 +2,7 @@
 import * as d3 from 'd3';
 
 const calculatePositions = (steps, centerY, depth = 0, branchIndex = 0, parentIndex = 0, parentX = 0) => {
-    const nodeDistance = 100; 
+    const nodeDistance = 138; 
     const branchDistance = 50; 
 
     return steps.map((step, index) => {
@@ -203,7 +203,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .attr('y', d => d.y - 12)
         .attr('text-anchor', 'middle')
         .attr('fill', 'black')
-        .style('font-size', '12px')
+        .style('font-size', '9px')
         .text(d => d.title);
 };
 
