@@ -1,4 +1,3 @@
-
 import * as d3 from 'd3';
 
 const calculatePositions = (steps, centerY, depth = 0, branchIndex = 0, parentIndex = 0, parentX = 0) => {
@@ -37,12 +36,12 @@ const processSteps = (steps, width, height, color, branchIndex = 0, parent = nul
             id: step.id,
             title: step.title,
             description: step.description,
-            skills:step.skills,
+            skills: step.skills,
             x: step.x,
             y: step.y,
             color: color,
         });
-        if (parent && index == 0) {
+        if (parent && index === 0) {
             links.push({
                 source: parent.id,
                 target: step.id,
@@ -66,15 +65,15 @@ const processSteps = (steps, width, height, color, branchIndex = 0, parent = nul
                     links: subLinks,
                     branches: subBranches
                 } = processSteps(branch.steps, width, height, branch.color, branchIndex, step, index, depth + 1, step.x);
-                nodes.push(...subNodes)
-                links.push(...subLinks)
-                branches.push(...subBranches)
+                nodes.push(...subNodes);
+                links.push(...subLinks);
+                branches.push(...subBranches);
             });
         }
     });
 
-    return { nodes, links, branches }
-}
+    return { nodes, links, branches };
+};
 
 const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, setGettingSkillsData) => {
     if (!svg) throw new Error('svg required as HTMLElement');
@@ -94,42 +93,36 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .transition()
         .duration(1000)
         .attr('x2', d => nodes.find(n => n.id === d.target).x)
-        .attr('y2', d => nodes.find(n => n.id === d.target).y)
-    const firstNode = nodes[0]; 
+        .attr('y2', d => nodes.find(n => n.id === d.target).y);
 
-    nodes.forEach((node, index) => {
-        if (index === nodes.length - 1 || index === 0) {
-            svg.append('circle')
-                .attr('r', 8)
-                .attr('cx', node.x)
-                .attr('cy', node.y)
-                .attr('fill', node.color)
-                .on('mouseover', function () {
-                    d3.select(this)
-                        .transition()
-                        .duration(200)
-                        .attr('r', 12);
-                })
-                .on('mouseout', function () {
-                    d3.select(this)
-                        .transition()
-                        .duration(200)
-                        .attr('r', 8);
-                })
-                .on('click', (e,d) => {
-                    console.log(firstNode.title);
-                })
-                .append('title')
-                .text(firstNode.title);
+    const wrapText = (svg, text, x, y) => {
+        const lineHeight = 12;
+        const words = text.split(' ');
+
+        const maxWordsPerLine = 2;
+        const lines = [];
+
+        for (let i = 0; i < words.length; i += maxWordsPerLine) {
+            lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
         }
-    });
+
+        lines.forEach((line, i) => {
+            svg.append('text')
+                .attr('x', x)
+                .attr('y', y + i * lineHeight + -10) 
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'black')
+                .style('font-size', '9px')
+                .text(line);
+        });
+    };
 
     svg.selectAll('line.node-line')
-        .data(nodes.slice(1)) 
+        .data(nodes.slice(1))
         .enter().append('line')
         .attr('class', 'node-line')
         .attr('x1', d => d.x)
-        .attr('y1', d => d.y - 8) 
+        .attr('y1', d => d.y - 8)
         .attr('x2', d => d.x)
         .attr('y2', d => d.y)
         .attr('stroke', d => d.color)
@@ -138,14 +131,16 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             console.log(d);
         });
 
-    branches.forEach(branch => {
-        const lastNode = nodes.find(n => n.id === branch.steps[branch.steps.length - 1].id);
+    // Add circles to the starting and ending nodes of the entire map
+    const firstNode = nodes[0];
+    const lastNode = nodes[nodes.length - 1];
 
+    [firstNode, lastNode].forEach(node => {
         svg.append('circle')
             .attr('r', 8)
-            .attr('cx', lastNode.x)
-            .attr('cy', lastNode.y)
-            .attr('fill', lastNode.color)
+            .attr('cx', node.x)
+            .attr('cy', node.y)
+            .attr('fill', node.color)
             .on('mouseover', function () {
                 d3.select(this)
                     .transition()
@@ -159,12 +154,41 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                     .attr('r', 8);
             })
             .on('click', (e, d) => {
-                setGetTitle(lastNode.title)
-                setGetDescription(lastNode.description)
-                setGettingSkillsData(lastNode.skills)
-                })
+                setGetTitle(node.title);
+                setGetDescription(node.description);
+                setGettingSkillsData(node.skills);
+            })
             .append('title')
-            .text(lastNode.title);
+            .text(node.title);
+    });
+
+    branches.forEach(branch => {
+        const lastBranchNode = nodes.find(n => n.id === branch.steps[branch.steps.length - 1].id);
+
+        svg.append('circle')
+            .attr('r', 8)
+            .attr('cx', lastBranchNode.x)
+            .attr('cy', lastBranchNode.y)
+            .attr('fill', lastBranchNode.color)
+            .on('mouseover', function () {
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr('r', 12);
+            })
+            .on('mouseout', function () {
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr('r', 8);
+            })
+            .on('click', (e, d) => {
+                setGetTitle(lastBranchNode.title);
+                setGetDescription(lastBranchNode.description);
+                setGettingSkillsData(lastBranchNode.skills);
+            })
+            .append('title')
+            .text(lastBranchNode.title);
     });
 
     svg.selectAll('path.branch')
@@ -198,13 +222,11 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
 
     svg.selectAll('text')
         .data(nodes)
-        .enter().append('text')
-        .attr('x', d => d.x)
-        .attr('y', d => d.y - 12)
-        .attr('text-anchor', 'middle')
-        .attr('fill', 'black')
-        .style('font-size', '9px')
-        .text(d => d.title);
+        .enter().append('g')
+        .each(function (d) {
+            const g = d3.select(this);
+            wrapText(g, d.title, d.x, d.y - 12);
+        });
 };
 
 export default DrawBranch;
