@@ -8,6 +8,7 @@ import content from '../../Utils/content';
 import DrawBranch from "../../Utils/DrawBranch";
 import Fire from "../../Fire/Fire";
 import { baseURL } from "../../Fire/useFire";
+import { Typography } from "@mui/material";
 
 const UserDetailsMap = () => {
   const [pathDetailsArray, setPathDetailsArray] = React.useState([]);
@@ -69,7 +70,7 @@ useEffect(() => {
           gap: "5px",
         }}
       >
-        {pathDetailsArray.map((_, i) => (
+        { pathDetailsArray.length > 0 ? pathDetailsArray.map((_, i) => (
           <div
             key={i}
             style={{
@@ -97,7 +98,7 @@ useEffect(() => {
               // onClick={() => console.log(_.branch.path_id, "fffffffffffffff")}
             ></div>
           </div>
-        ))}
+        )) : <Typography sx= {{display: 'flex', justifyContent: 'center', alignItems: 'center', padding:'20px 0'}}>No Graph found for this user please generate path first...</Typography>}
       </div>
     </>
   );

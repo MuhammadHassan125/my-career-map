@@ -7,7 +7,8 @@ import Loading from "../../Components/Loading";
 
 const FileUpload = ({ onUploadSuccess }) => {
     const [file, setFile] = useState(null);
-    const {data, setLoading} = useUser();
+    const {data, setLoading, getUploadDataList} = useUser();
+
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -32,8 +33,9 @@ const FileUpload = ({ onUploadSuccess }) => {
                 Snackbar(`File upload complete! ID: ${response.data.message}`, {variant: 'success'});
                 onUploadSuccess();
                 setFile(null); 
-                data();
+                // data();
                 setLoading(false);
+                getUploadDataList();
             } catch (error) {
                 Snackbar(`Error uploading file: ${error.error || error.message}`, {variant: 'error'});
                 setLoading(false);

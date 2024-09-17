@@ -57,6 +57,7 @@ const UserProvider = ({ children }) => {
     });
   };
 
+
   const handleLoginSuccess = (token) => {
     localStorage.setItem('user-visited-dashboard', token);
     setAuthToken(token);

@@ -160,10 +160,6 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             })
             .on('click', (e, d) => {
                 setGetTitle(lastNode.title)
-                // console.log(lastNode.description)
-                // const data={title:lastNode.title, description:lastNode.description, skills: lastNode.skills}
-                // contentHandler(data);
-                // setGettingSkillsData(lastNode.skills)
                 setGetDescription(lastNode.description)
                 setGettingSkillsData(lastNode.skills)
                 })
