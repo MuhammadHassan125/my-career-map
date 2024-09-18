@@ -9,9 +9,9 @@ import { Snackbar } from '../../Utils/SnackbarUtils';
 import { AnalyzeURL } from '../../Fire/useFire';
 
 const UploadDataGrid = ({ heading, dropdown }) => {
-  const { data, getUploadDataList, setLoading } = useUser();
+  const { data, getUploadDataList, setLoading, loading } = useUser();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4); 
+  const [itemsPerPage] = useState(4);
 
   const POLLING_INTERVAL = 10000;
 
@@ -27,7 +27,7 @@ const UploadDataGrid = ({ heading, dropdown }) => {
         console.log(res);
         Snackbar(res?.data?.message, { variant: 'success' });
         setLoading(false);
-        getUploadDataList(); 
+        getUploadDataList();
       },
       onError: (err) => {
         console.log(err);
@@ -38,7 +38,8 @@ const UploadDataGrid = ({ heading, dropdown }) => {
 
   const columns = [
     { Header: "Id", accessor: "id" },
-    { Header: "Prompt", accessor: "prompt", 
+    {
+      Header: "Prompt", accessor: "prompt",
       Cell: ({ value }) => (
         <Typography>
           {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
@@ -93,16 +94,10 @@ const UploadDataGrid = ({ heading, dropdown }) => {
   };
 
   useEffect(() => {
-    const fetchData = () => {
+    if (!loading) {
       getUploadDataList();
-    };
-
-    fetchData();
-
-    const intervalId = setInterval(fetchData, POLLING_INTERVAL);
-
-    return () => clearInterval(intervalId);
-  }, [getUploadDataList]);
+    }
+  }, [loading]);
 
   return (
     <>
@@ -119,7 +114,7 @@ const UploadDataGrid = ({ heading, dropdown }) => {
         {/* Check if data is empty */}
         {data.length === 0 ? (
           <div className="no-data">
-            <Typography sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', padding:'20px 0'}}>No data available</Typography>
+            <Typography sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px 0' }}>No data available</Typography>
           </div>
         ) : (
           <>
