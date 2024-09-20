@@ -58,7 +58,7 @@ const UploadDataGrid = ({ heading, dropdown }) => {
             backgroundColor: value === 'pending' || value === 'analyzed' ? '#00B69B' : '#E8E8E8',
             color: value === 'pending' || value === 'analyzed' ? 'white' : '#354E70',
             borderRadius: '10px',
-            padding: '3px 0px 3px 10px',
+            padding: '3px 5px 3px 10px',
             cursor: 'pointer',
             fontSize: '12px',
           }}

@@ -1,13 +1,15 @@
 import { BrowserRouter } from "react-router-dom"
-import Layout from "./Layouts/MainLayout"
 import Router from "./Components/Router"
+import ErrorDialogueProvider from "./Providers/ErrorDialogueProvider"
 
 function App() {
 
   return (
+    <ErrorDialogueProvider >
     <BrowserRouter>
       <Router />
     </BrowserRouter>
+    </ErrorDialogueProvider>
   )
 }
 

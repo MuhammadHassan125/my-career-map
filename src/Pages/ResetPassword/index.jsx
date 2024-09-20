@@ -1,16 +1,14 @@
 import React from 'react'
 import PrimaryInput from '../../Components/PrimaryInput';
-import PrimaryBtn from '../../Components/PrimaryBtn';
 import { Link, useNavigate } from 'react-router-dom';
 import useFire, { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
-import {useUser} from '../../context/context';
-import Loading from '../../Components/Loading';
+import Form from '../../Components/Auth/Form';
+import FormBtn from '../../Components/Auth/FormBtn';
 const ResetPassword = () => {
   const navigate = useNavigate();
 
-  const {setLoading} = useUser();
-  const { data, setData, post, errors, onSuccess, onError } = useFire({
+  const { data, setData, post, errors, processing } = useFire({
     email: '',
     newPassword: '',
     confirmPassword: '',
@@ -18,20 +16,17 @@ const ResetPassword = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setLoading(true);
+    if(processing) return;
     post({
       url: `${baseURL}/reset-password`,
       onSuccess: (res) => {
         console.log(res)
-        Snackbar(res.data.message, { variant: 'success' });
+        // Snackbar(res.data.message, { variant: 'success' });
         navigate('/login');
-        setLoading(false);
       },
 
       onError: (err) => {
-        console.log(err);
         Snackbar(err.error, { variant: 'error' });
-        setLoading(false);
       }
     });
   };
@@ -41,16 +36,12 @@ const ResetPassword = () => {
     setData(name, value);
   }
 
-  console.log(errors, 'rrrr');
-
 
   return (
     <>
-    <Loading/>
-      <main className="register-section">
-        {/* register form  */}
-        <form className="login-form" onSubmit={handleSubmit} style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-
+        <div style={{ padding: '30px 0' }}>
+          <Form onSubmit={handleSubmit} processing={processing}
+          >
           <div className="login-form-heading">
             <h2>Reset Password</h2>
             <p>Reset password your forget password</p>
@@ -94,9 +85,8 @@ const ResetPassword = () => {
             {errors.password && <p className="error">{errors.password}</p>}
           </div>
 
-          <PrimaryBtn text="Reset Password" onClick={handleSubmit} />
-
-
+          <FormBtn text={"Reset Password"} processing={processing}/>
+          
           <div className='login-account'>
             <p>Don't won't to reset your password
               <Link to="/login" className='link-class'>
@@ -104,9 +94,8 @@ const ResetPassword = () => {
               </Link>
             </p>
           </div>
-
-        </form>
-      </main>
+          </Form>
+          </div>
     </>
   )
 }

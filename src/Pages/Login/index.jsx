@@ -3,42 +3,24 @@ import './index.scss';
 import PrimaryInput from '../../Components/PrimaryInput';
 import { Link, useNavigate } from 'react-router-dom';
 import useFire, { baseURL } from '../../Fire/useFire';
-import { Snackbar } from '../../Utils/SnackbarUtils';
-import GoogleBtn from '../../Components/Auth/SocialLinks/Login/GoogleBtn';
-import OutlookBtn from '../../Components/Auth/SocialLinks/Login/OutlookBtn';
-import LinkedinBtn from '../../Components/Auth/SocialLinks/Login/LinkedinBtn';
-import FacebookBtn from '../../Components/Auth/SocialLinks/Login/FacebookBtn';
-import InstagramBtn from '../../Components/Auth/SocialLinks/Login/InstagramBtn';
-import {useUser} from '../../context/context';
-import Loading from '../../Components/Loading';
+import Form from '../../Components/Auth/Form';
+import SocialLinkComponent from '../../Components/Auth/SocialLinks/SocialLinksComponent';
+import FormBtn from '../../Components/Auth/FormBtn';
+import AuthLayout from '../../Layouts/AuthLayout';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { data, setData, errors, post } = useFire({ email: '', password: '' });
-  const { gettingProfileInfo, handleLoginSuccess, setLoading } = useUser();
+  const { data, setData, errors, post, processing } = useFire({ email: '', password: '' });
 
   const handleLogin = (e) => {
     e.preventDefault();
-    setLoading(true); 
+    if (processing) return;
     post({
       url: `${baseURL}/login`,
       onSuccess: (res) => {
-        console.log('Login Success', res);
-        if (res.data.data.AuthToken || res.data.status === true) {
-          handleLoginSuccess(res.data.data.AuthToken);
-          Snackbar(res.data.message, { variant: 'success' });
-          gettingProfileInfo();
-          navigate('/');
-        } else {
-          Snackbar(errors || "Login Failed", { variant: 'error' });
-        }
-        setLoading(false);
+        localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
+        navigate('/');
       },
-      onError: (err) => {
-        console.log('Login Error', err);
-        Snackbar(err.message || "Login Failed", { variant: 'error' });
-        setLoading(false); 
-      }
     });
   };
 
@@ -50,10 +32,7 @@ const Login = () => {
 
   return (
     <>
-     <Loading/>
-      <main className="login-section">
-        <div className="login-form">
-          <form onSubmit={handleLogin}>
+          <Form onSubmit={handleLogin} processing={processing}>
             <div className="login-form-heading">
               <img src="/images/logo.png" alt="logo" className="login-logo" />
               <h2>Login to Account</h2>
@@ -92,25 +71,8 @@ const Login = () => {
               <span>Remember Password</span>
             </div>
 
-            <div style={{ width: '100%' }}>
-              <button
-                type="submit"
-                style={{
-                  width: '100%',
-                  borderRadius: '10px',
-                  backgroundColor: '#3749A6',
-                  border: 'none',
-                  padding: '10px 20px',
-                  color: 'white',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                }}
-              >
-                Login
-              </button>
-            </div>
-          </form>
+            <FormBtn text={"Login"} processing={processing}/>
+          </Form>
 
           <div className="or-div">
             <img src='/images/line.png' />
@@ -118,24 +80,8 @@ const Login = () => {
             <img src='/images/line.png' />
           </div>
 
-          {/* Move the social login buttons outside the form */}
-          <div className='signup-social-icons'>
-            <div className='social-icons-div'>
-              <GoogleBtn />
-            </div>
-            <div className='social-icons-div'>
-              <OutlookBtn />
-            </div>
-            <div className='social-icons-div'>
-              <LinkedinBtn />
-            </div>
-            <div className='social-icons-div'>
-              <FacebookBtn />
-            </div>
-            <div className='social-icons-div'>
-              <InstagramBtn />
-            </div>
-          </div>
+          {/* {/* here I am moving the social login buttons outside the form */}
+          <SocialLinkComponent/>
 
           <div className='create-account'>
             <p>Don't have an account?
@@ -144,8 +90,6 @@ const Login = () => {
               </Link>
             </p>
           </div>
-        </div>
-      </main>
     </>
   );
 };

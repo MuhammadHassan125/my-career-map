@@ -1,29 +1,17 @@
 import React from 'react'
 import './index.scss'
 import PrimaryInput from '../../Components/PrimaryInput';
-import PrimaryBtn from '../../Components/PrimaryBtn';
 import { Link, useNavigate } from 'react-router-dom';
-import InstagramBtn from '../../Components/Auth/SocialLinks/Login/InstagramBtn';
-import GoogleBtn from '../../Components/Auth/SocialLinks/Login/GoogleBtn';
-import FacebookBtn from '../../Components/Auth/SocialLinks/Login/FacebookBtn';
-import LinkedinBtn from '../../Components/Auth/SocialLinks/Login/LinkedinBtn';
-import OutlookBtn from '../../Components/Auth/SocialLinks/Login/OutlookBtn';
 import useFire, { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
-
-const socialIcons = [
-  // { id: 2, src: "/images/google.png", alt: "google", link: "https://www.google.com" },
-  // { id: 2, src: "/images/outlook.png", alt: "google", link: "https://www.outlook.com" },
-  // { id: 1, src: "/images/linkedin.png", alt: "facebook", link: "https://www.linkedin.com" },
-  // { id: 1, src: "/images/facebook.png", alt: "facebook", link: "https://www.facebook.com" },
-  // { id: 3, src: "/images/instagram.png", alt: "twitter", link: "https://www.instagram.com" },
-];
+import Form from '../../Components/Auth/Form';
+import FormBtn from '../../Components/Auth/FormBtn';
+import SocialLinkComponent from '../../Components/Auth/SocialLinks/SocialLinksComponent';
 
 const Register = () => {
+
   const navigate = useNavigate();
-
-
-  const { data, setData, post, setErrors, errors } = useFire({
+  const { data, setData, post, errors, processing } = useFire({
     email: '',
     username: '',
     password: ''
@@ -31,21 +19,16 @@ const Register = () => {
   
   const handleSubmit = (event) => {
     event.preventDefault();
-    setErrors({}); // Clear errors
+    if(processing) return;
     post({
       url: `${baseURL}/register`,
       onSuccess: (res) => {
         console.log('Register successfully', res);
-        if (res.status >= 200 && res.status < 300) {
-          Snackbar(res.data.message, { variant: 'success' });
-          navigate('/login');
-        } else {
-          Snackbar(res.data.message || 'Registration failed', { variant: 'error' });
-        }
+        navigate('/login');
       },
       onError: (error) => {
         console.log(error);
-        Snackbar(error.response.data.message || 'Registration failed', { variant: 'error' });
+        Snackbar(error.message || 'Registration failed', { variant: 'error' });
       },
     });
   };
@@ -54,16 +37,12 @@ const Register = () => {
   const handleInputChange = (event) => {
     const {name, value} = event.target;
     setData(name, value);
-  }
-
-  console.log(errors,'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+  };
   
 
     return (
       <>
-        <main className="register-section">
-          {/* register form  */}
-          <form className="login-form" onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} processing={processing}> 
 
             <div className="login-form-heading">
               <h2>Create an Account</h2>
@@ -71,39 +50,7 @@ const Register = () => {
             </div>
 
             {/* social media icons  */}
-            <div className='signup-social-icons'>
-              {/* {socialIcons.map((socialIcon) => (
-              <div
-                className='social-icons-div'
-                onClick={() => window.open(socialIcon.link)}
-              >
-                <img key={socialIcon.id} src={socialIcon.src} alt={socialIcon.alt}
-                />
-              </div>
-            ))} */}
-
-              <div className='social-icons-div'>
-                <OutlookBtn />
-              </div>
-
-
-              <div className='social-icons-div'>
-                <LinkedinBtn />
-              </div>
-
-              <div className='social-icons-div'>
-                {/* <GoogleBtn/> */}
-                <FacebookBtn />
-              </div>
-              <div className='social-icons-div'>
-                <GoogleBtn />
-              </div>
-
-              <div className='social-icons-div'>
-                <InstagramBtn />
-              </div>
-
-            </div>
+           <SocialLinkComponent/>
 
             <div className="or-div">
               <img src='/images/line.png' />
@@ -112,7 +59,7 @@ const Register = () => {
             </div>
 
 
-            {/* email  */}
+            {/* email  field*/}
             <div className="register-fields-div">
               <p>Email address:</p>
               <PrimaryInput 
@@ -125,7 +72,7 @@ const Register = () => {
               {errors.email && <p className="error">{errors.email}</p>}
             </div>
 
-            {/* username  */}
+            {/* username  field*/}
             <div className="register-fields-div">
               <p>Username:</p>
               <PrimaryInput 
@@ -138,8 +85,7 @@ const Register = () => {
               {errors.username && <p className="error">{errors.username}</p>}
             </div>
 
-            {/* password  */}
-
+            {/* password  field*/}
             <div className="register-fields-div">
               <div>
                 <p>Password:</p>
@@ -163,8 +109,7 @@ const Register = () => {
               <span>I accept terms and conditions</span>
             </div>
 
-            <PrimaryBtn text="Sign Up" onClick={handleSubmit} />
-
+          <FormBtn processing={processing} text={"Sign Up"}/>
 
             <div className='login-account'>
               <p>Already have an account?
@@ -174,8 +119,7 @@ const Register = () => {
               </p>
             </div>
 
-          </form>
-        </main>
+          </Form>
       </>
     )
   }

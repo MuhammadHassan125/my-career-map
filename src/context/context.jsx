@@ -4,6 +4,7 @@ import { Snackbar } from "../Utils/SnackbarUtils";
 import Fire from "../Fire/Fire";
 
 const Context = createContext();
+const LoadingContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState();
@@ -13,7 +14,6 @@ const UserProvider = ({ children }) => {
   const [checkSubscription, setCheckSubscription] = useState(true);
 
   const [singlePathData, setSinglePathData] = useState([]);
-  const [authToken, setAuthToken] = useState(localStorage?.getItem('user-visited-dashboard'));
 
 
   // loading state 
@@ -34,7 +34,6 @@ const UserProvider = ({ children }) => {
         setUser(res.data);
       },
       onError: (err) => {
-        console.log(err);
         Snackbar(err.message, { variant: 'error' });
       },
     });
@@ -48,21 +47,14 @@ const UserProvider = ({ children }) => {
       headers: { Authorization: `Bearer ${authToken}` },
       onSuccess: (res) => {
         setData(res.data.data.result);
-        console.log(res.data.data.result);
       },
       onError: (err) => {
-        console.log(err);
         Snackbar(err.message, { variant: 'error' });
       },
     });
   };
 
-
-  const handleLoginSuccess = (token) => {
-    localStorage.setItem('user-visited-dashboard', token);
-    setAuthToken(token);
-  };
-
+  const authToken = localStorage.getItem('user-visited-dashboard')
   useEffect(() => {
     if (authToken) {
       gettingProfileInfo();
@@ -71,6 +63,7 @@ const UserProvider = ({ children }) => {
   }, [authToken]);
 
   return (
+    <LoadingContext.Provider value={{ loading, setLoading }}>
     <Context.Provider
       value={{
         user,
@@ -85,7 +78,7 @@ const UserProvider = ({ children }) => {
         data,
         singlePathData,
         setSinglePathData,
-        handleLoginSuccess,
+        // handleLoginSuccess,
         getUploadDataList,
         setCheckSubscription,
         checkSubscription,
@@ -95,9 +88,12 @@ const UserProvider = ({ children }) => {
     >
       {children}
     </Context.Provider>
+    </LoadingContext.Provider>
+
   );
 };
 
 export default UserProvider;
 
 export const useUser = () => useContext(Context);
+export const useLoading = () => useContext(LoadingContext);
