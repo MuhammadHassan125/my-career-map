@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import './index.scss'
 import { BiExport } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import './index.scss'
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/context';
 import { GrAttachment } from "react-icons/gr";
@@ -51,9 +51,6 @@ const GPTComponent = () => {
   const [isMinimized, setIsMinimized] = useState(false);
 
   const { gettingSkillsData, getTitle, getDescription } = useUser();
-  console.log(getTitle, "my-title");
-  console.log(getDescription, 'description')
-
 
 
   const handleToggle = () => {

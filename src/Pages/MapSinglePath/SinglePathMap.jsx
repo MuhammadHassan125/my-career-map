@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import React, { useEffect, useRef } from "react";
 import { useUser } from "../../context/context";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../Components/Loading";
@@ -34,13 +34,6 @@ const SinglePathMap = ({contentHandler}) => {
         });
     }, [params.id]);
 
-    console.log(singleData, 'singleData');
-
-
-    const handleTitleClick = (title) => {
-        console.log(title, 'tiotle')
-    }
-
     useEffect(() => {
         if (Object.keys(singleData).length > 0) {
             const width = 1000;
@@ -56,12 +49,13 @@ const SinglePathMap = ({contentHandler}) => {
         }
     }, [singleData]);
 
-    console.log(singleData.branch, 'singleData');
 
     return (
         <React.Fragment>
             <Loading />
-            <div className="map-section____map-div-career-path" style={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="map-section____map-div-career-path" 
+            style={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+            >
                 <div
                     style={{
                         backgroundColor: "white",
@@ -75,17 +69,7 @@ const SinglePathMap = ({contentHandler}) => {
                     }}
                 >
                     <svg ref={svgRefs}></svg>
-                    {/* <div
-                        style={{
-                            position: "absolute",
-                            top: "0",
-                            bottom: "0",
-                            left: "0",
-                            right: "0",
-                            cursor: "pointer",
-                        }}>
-                    </div> */}
-                </div>
+                  </div>
             </div>
         </React.Fragment>
     );

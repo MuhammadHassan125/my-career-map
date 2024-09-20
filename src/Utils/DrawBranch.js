@@ -75,11 +75,51 @@ const processSteps = (steps, width, height, color, branchIndex = 0, parent = nul
     return { nodes, links, branches };
 };
 
+
 const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, setGettingSkillsData) => {
     if (!svg) throw new Error('svg required as HTMLElement');
     if (typeof branch !== 'object') throw new Error('branch requires an object');
 
-    const { nodes, links, branches } = processSteps(branch.steps, width, height, branch.color);
+    const tooltip = d3.select('body').append('div')
+    .attr('class', 'tooltip')
+    .style('position', 'absolute')
+    .style('padding', '8px')
+    .style('background', '#3749A6')
+    .style('color', 'white')
+    .style('border-radius', '4px')
+    .style('font-size', '12px')
+    .style('visibility', 'hidden')
+    .style('pointer-events', 'none');
+
+const tooltipWidth = 120; 
+const tooltipHeight = 40; 
+
+ const { nodes, links, branches } = processSteps(branch.steps, width, height, branch.color);
+    const wrapText = (svg, text, x, y, fontSize, Color, Bold, splitText, lineValue, RightShift) => {
+        const lineHeight = 12;
+        const words = text.split(' ');
+    
+        const maxWordsPerLine = 2;
+        const lines = [];
+    
+        for (let i = 0; i < words.length; i += maxWordsPerLine) {
+            lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+        }
+    
+        lines.forEach((line, i) => {
+            svg.append('text')
+                .attr('x', x )
+                .attr('y', y + i * lineHeight + -10)
+                .attr('text-anchor', 'middle')
+                .attr('fill', Color)
+                .style('font-weight', Bold)
+                .style('font-size', fontSize)
+
+                .text(line);
+        });
+    };
+
+
 
     svg.selectAll('line')
         .data(links)
@@ -95,43 +135,63 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .attr('x2', d => nodes.find(n => n.id === d.target).x)
         .attr('y2', d => nodes.find(n => n.id === d.target).y);
 
-    const wrapText = (svg, text, x, y) => {
-        const lineHeight = 12;
-        const words = text.split(' ');
+   
+// svg.selectAll('line.node-line')
+// .data(nodes.slice(1))
+// .enter().append('line')
+// .attr('class', 'node-line')
+// .attr('x1', d => d.x)
+// .attr('y1', d => d.y - 8)
+// .attr('x2', d => d.x)
+// .attr('y2', d => d.y)
+// .attr('stroke', d => d.color)
+// .attr('stroke-width', 3)
+// .style('cursor', 'pointer')
+// .on('mouseover', function (event, d) {
+//     setGetTitle(d.title);
+//     setGetDescription(d.description);
+//     setGettingSkillsData(d.skills);
 
-        const maxWordsPerLine = 2;
-        const lines = [];
+//     tooltip.html(`Title: ${d.title}`)
+//         .style('visibility', 'visible');
+// })
+// .on('mousemove', function (event) {
+//     tooltip
+//         .style('top', (event.pageY - tooltipHeight / 1.4) + 'px') 
+//         .style('left', (event.pageX - tooltipWidth / 2) + 'px'); 
+// })
+// .on('mouseout', function () {
+//     tooltip.style('visibility', 'hidden');
+// });
+svg.selectAll('line.node-line')
+    .data(nodes.slice(1))
+    .enter().append('line')
+    .attr('class', 'node-line')
+    .attr('x1', d => d.x)
+    .attr('y1', d => d.y - 8)
+    .attr('x2', d => d.x)
+    .attr('y2', d => d.y)
+    .attr('stroke', d => d.color)
+    .attr('stroke-width', 3)
+    .style('cursor', 'pointer')
+    .on('mouseover', function (event, d) {
+        setGetTitle(d.title);
+        setGetDescription(d.description);
+        setGettingSkillsData(d.skills);
+        tooltip.style('background', d.color);
 
-        for (let i = 0; i < words.length; i += maxWordsPerLine) {
-            lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
-        }
+        tooltip.html(`Title: ${d.title}`)
+            .style('visibility', 'visible');
+    })
+    .on('mousemove', function (event) {
+        tooltip
+            .style('top', (event.pageY - tooltipHeight / 1.2) + 'px') 
+            .style('left', (event.pageX - tooltipWidth / 2) + 'px'); 
+    })
+    .on('mouseout', function () {
+        tooltip.style('visibility', 'hidden');
+    });
 
-        lines.forEach((line, i) => {
-            svg.append('text')
-                .attr('x', x)
-                .attr('y', y + i * lineHeight + -10) 
-                .attr('text-anchor', 'middle')
-                .attr('fill', 'black')
-                .style('font-size', '9px')
-                .text(line);
-        });
-    };
-
-    svg.selectAll('line.node-line')
-        .data(nodes.slice(1))
-        .enter().append('line')
-        .attr('class', 'node-line')
-        .attr('x1', d => d.x)
-        .attr('y1', d => d.y - 8)
-        .attr('x2', d => d.x)
-        .attr('y2', d => d.y)
-        .attr('stroke', d => d.color)
-        .attr('stroke-width', 3)
-        .on('click', (e, d) => {
-            console.log(d);
-        });
-
-    // Add circles to the starting and ending nodes of the entire map
     const firstNode = nodes[0];
     const lastNode = nodes[nodes.length - 1];
 
@@ -141,25 +201,28 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             .attr('cx', node.x)
             .attr('cy', node.y)
             .attr('fill', node.color)
+            .style('cursor', 'pointer')
             .on('mouseover', function () {
                 d3.select(this)
                     .transition()
                     .duration(200)
                     .attr('r', 12);
+                // Show tooltip
+                tooltip.html(`Title: ${node.title}`)
+                    .style('visibility', 'visible');
+            })
+            .on('mousemove', function (event) {
+                tooltip.style('top', (event.pageY - 10) + 'px')
+                    .style('left', (event.pageX + 10) + 'px');
             })
             .on('mouseout', function () {
                 d3.select(this)
                     .transition()
                     .duration(200)
                     .attr('r', 8);
-            })
-            .on('click', (e, d) => {
-                setGetTitle(node.title);
-                setGetDescription(node.description);
-                setGettingSkillsData(node.skills);
-            })
-            .append('title')
-            .text(node.title);
+
+                    tooltip.style('visibility', 'hidden');
+            });
     });
 
     branches.forEach(branch => {
@@ -170,6 +233,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             .attr('cx', lastBranchNode.x)
             .attr('cy', lastBranchNode.y)
             .attr('fill', lastBranchNode.color)
+            .style('cursor', 'pointer')
             .on('mouseover', function () {
                 d3.select(this)
                     .transition()
@@ -225,7 +289,20 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .enter().append('g')
         .each(function (d) {
             const g = d3.select(this);
-            wrapText(g, d.title, d.x, d.y - 12);
+
+            const isFirstNode = d.id === nodes[0].id;
+            const isLastNode = d.id === nodes[nodes.length - 1].id;
+            const isBranchEndNode = branches.some(branch => branch.steps[branch.steps.length - 1].id === d.id);
+
+            const fontSize = isFirstNode || isLastNode ||isBranchEndNode ? '12px' : '10px'; 
+            const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
+            const Bold = isFirstNode || isLastNode  || isBranchEndNode ? 'bold' : 'medium';
+            const lineValue = isFirstNode || isLastNode ? 0 : -10;
+            const RightShift = isLastNode ? 30 : 0;
+
+            const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
+
+            wrapText(g, d.title, d.x, d.y - 12, fontSize, Color, Bold, splitText, lineValue, RightShift);
         });
 };
 
