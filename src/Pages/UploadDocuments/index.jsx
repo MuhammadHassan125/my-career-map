@@ -274,7 +274,7 @@ const UploadDocuments = () => {
           </TabContext>
         </Box>
 
-        <UploadDataGrid columns={columns} heading={"Uploaded Documents"} dropdown={"October"} />
+        <UploadDataGrid columns={columns} heading={"Path Details"} dropdown={"October"} />
 
       </main>
     </React.Fragment>
