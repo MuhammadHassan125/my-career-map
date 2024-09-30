@@ -37,14 +37,14 @@ const Router = () => {
           <Route path='/' element={<Dashboard />} index={true} />
           <Route path='documents' element={<Documents />} />
           {/* <Route path='upload' element={<Upload />} /> */}
-          <Route path='documents-upload' element={<UploadDocuments />} />
           <Route path='recommendations' element={<Recommendations />} />
           <Route path='map-career' element={<MapCareer />} />
           <Route path='map-career/:id' element={<MapSinglePath />} />
           <Route path='map-zoom' element={<MapZoom />} />
           <Route path='map-selected-path' element={<MapSelectedPath />} />
           <Route path='path' element={<Path />} />
-          <Route path='list-career-path' element={<ListCareerPath />} />
+          <Route path='path/:id/edit' element={<UploadDocuments />} />
+          <Route path='list-career-path/:id' element={<ListCareerPath />} />
           <Route path='profile' element={<Profile />} />
           <Route path='payment-checkout' element={<PaymentCheckout />} />
           <Route path='/cancel' element={<CancelCheckout />} />

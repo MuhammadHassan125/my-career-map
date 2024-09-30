@@ -8,7 +8,7 @@ import { useUser } from '../../context/context';
 import { GrAttachment } from "react-icons/gr";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import SinglePathMap from './SinglePathMap';
-import AddPathComponent from '../../Components/AddPathComponent';
+import AddPathComponent from '../../Components/AddPathComponent'
 const MapSinglePath = () => {
 
   const navigate = useNavigate();
@@ -50,12 +50,14 @@ const GPTComponent = () => {
   const navigate = useNavigate();
   const [isMinimized, setIsMinimized] = useState(false);
 
-  const { gettingSkillsData, getTitle, getDescription } = useUser();
+  const { gettingSkillsData, getTitle, getDescription, nextRole } = useUser();
+  const skillsId = localStorage.getItem('singlePathId');
 
 
   const handleToggle = () => {
       setIsMinimized(!isMinimized);
   };
+
 
   return (
       <main className='gpt-section'>
@@ -68,18 +70,18 @@ const GPTComponent = () => {
                   {Array.isArray(gettingSkillsData) && gettingSkillsData.length > 0 ? (
                       gettingSkillsData.map((skills, i) => <button key={i}>{skills.title}</button>)
                   ) : (
-                      <p>No details available</p>
+                      <p>No Skills available</p>
                   )}
 
               </div>
-                  <p>{getDescription}</p> 
+                  <p style={{fontSize:"12px", width:"350px"}}>{getDescription}</p> 
             
               <div className='gpt-section__btn-div'>
                   <div>
-                      <button className='gpt-section__btn' onClick={() => navigate('/list-career-path')}>Get Started</button>
+                      <button className='gpt-section__btn' onClick={() => navigate(`/list-career-path/${skillsId}`)}>Get Started</button>
                   </div>
-                  <div>
-                      <p><strong>Next Role:</strong>Sales Team Lead</p>
+                  <div style={{marginTop:"10px"}}>
+                      <p><strong>Next Role:  </strong>{nextRole}</p>
                   </div>
               </div>
           </div>

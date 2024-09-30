@@ -12,9 +12,9 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { IoMdClose } from "react-icons/io";
 import { Button } from '@mui/material';
-const AddPathComponent = () => {
+import useFire, { baseURL } from '../Fire/useFire';
+import { Snackbar } from '../Utils/SnackbarUtils';
 
-  
 const style = {
   position: 'absolute',
   top: '50%',
@@ -28,20 +28,45 @@ const style = {
   boxShadow: 24,
   padding: 3,
   '@media (max-width: 600px)': {
-    width: '90%',
-    p: 2,
+      width: '90%',
+      p: 2,
   }
 };
-  
+
+const AddPathComponent = () => {
+
   const navigate = useNavigate();
   const {checkSubscription, setCheckSubscription} = useUser();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // const handleNavigate = () => {
+  //   navigate('/documents-upload');
+  // };
 
-  const handleNavigate = () => {
-    navigate('/documents-upload');
+  const {data, setData, errors, post} = useFire({title:'', description:''});
+
+  const handleInput= (e) => {
+    const {name, value} = e.target;
+    setData(name, value);
+  }
+
+  const handleCreatePath = (e) => {
+      e.preventDefault();
+      post({
+        url:`${baseURL}/create-path`,
+        onSuccess : (res) => {
+          console.log(res);
+          Snackbar(res.data.message, {variant: 'success'})
+          handleClose();
+        },
+
+        onError: (err) => {
+          console.log(err);
+          Snackbar(err.message, {variant: 'error'})
+        }
+      })
   };
 
   useEffect(() => {
@@ -91,8 +116,12 @@ const style = {
               <Box sx={{ width: "100%", padding: "20px", marginTop: "10px" }}>
                 <p style={{ fontFamily: "Nunito Sans, sans-serif", fontSize: "14px" }}>
                   Title</p>
-                <input type="text"
+                <input 
+                  type="text"
                   placeholder='Enter Title'
+                  name="title"
+                  value={data.title}
+                  onChange={handleInput}
                   style={{ width: "100%", marginTop: "5px", backgroundColor: "#F5F6FA", border: "#D5D5D5", outline: "none", padding: "12px 10px", borderRadius: "5px" }} />
               </Box>
 
@@ -100,8 +129,12 @@ const style = {
                 <Box sx={{ width: "100%", }}>
                   <p style={{ fontFamily: "Nunito Sans, sans-serif", fontSize: "14px" }}>
                     Description</p>
-                  <input type="text"
-                    placeholder='Enter your last name'
+                  <input 
+                  type="text"
+                    placeholder='Enter your description'
+                    name="description"
+                    value={data.description}
+                    onChange={handleInput}
                     style={{ width: "100%", marginTop: "5px", backgroundColor: "#F5F6FA", border: "#D5D5D5", outline: "none", padding: "12px 10px", borderRadius: "5px" }} />
                 </Box>
 
@@ -129,7 +162,7 @@ const style = {
 
               <Box sx={{ width: "100%", padding: "20px", marginTop: "10px" }}>
                 <Button
-                  onClick={handleClose}
+                  onClick={handleCreatePath}
                   sx={{
                     width: "100%", backgroundColor: "#3749A6", textTransform: "capitalize",
                     '&:hover': {

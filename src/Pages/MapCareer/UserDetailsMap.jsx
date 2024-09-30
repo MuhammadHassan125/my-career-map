@@ -12,21 +12,17 @@ import { Typography } from "@mui/material";
 
 const UserDetailsMap = () => {
   const [pathDetailsArray, setPathDetailsArray] = React.useState([]);
-  const { setLoading } = useUser();
   const navigate = useNavigate();
   const svgRefs = useRef([]);
-
-  // const content = {};
-
-
+  
 useEffect(() => {
+  
   Fire.get({
     url:`${baseURL}/get-details-with-path`,
 
     onSuccess: (res) => {
       console.log(res.data, 'pathDetailsArray')
       setPathDetailsArray(res.data.data);
-      // content.push(res.data)
     },
 
     onError: (err) => {
@@ -51,10 +47,10 @@ useEffect(() => {
           .attr("width", width)
           .attr("height", height);
   
-        DrawBranch(svg, branch, width, height);
+        DrawBranch(svg, branch, width, height, navigate);
       }
     }else return;
-  }, [pathDetailsArray]);
+  }, [pathDetailsArray, navigate]);
 
 
 
@@ -85,7 +81,7 @@ useEffect(() => {
             }}
           >
             <svg ref={(el) => (svgRefs.current[i] = el)}></svg>
-            <div
+            {/* <div
               style={{
                 position: "absolute",
                 top: "0",
@@ -95,8 +91,8 @@ useEffect(() => {
                 cursor: "pointer",
               }}
               onClick={() => navigate(`/map-career/${_.branch.path_id}`,)}
-              // onClick={() => console.log(_.branch.path_id, "fffffffffffffff")}
-            ></div>
+              // onClick={() => console.log(_.branch.steps, 'hassan')}
+            ></div> */}
           </div>
         )) : <Typography sx= {{display: 'flex', justifyContent: 'center', alignItems: 'center', padding:'20px 0'}}>No Graph found for this user please generate path first...</Typography>}
       </div>

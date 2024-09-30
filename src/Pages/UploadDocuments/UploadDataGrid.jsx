@@ -7,30 +7,35 @@ import Fire from '../../Fire/Fire';
 import Loading from '../../Components/Loading';
 import { Snackbar } from '../../Utils/SnackbarUtils';
 import { AnalyzeURL } from '../../Fire/useFire';
+import { AiOutlineEdit } from "react-icons/ai";
+import { useNavigate } from 'react-router-dom';
 
 const UploadDataGrid = ({ heading, dropdown }) => {
   const { data, getUploadDataList, setLoading, loading } = useUser();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4);
-
-  const POLLING_INTERVAL = 10000;
+  const [selectedRowData, setSelectedRowData] = useState(null); 
+  const navigate = useNavigate(); 
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleEdit = (rowData) => {
+    setSelectedRowData(rowData); 
+    navigate(`/path/${rowData.id}/edit`, {state:rowData}); 
+  };
 
   const generate_roadmap = (id, status) => {
     setLoading(true);
     Fire.post({
       url: `${AnalyzeURL}/${status === 'pending' ? "generate_roadmap" : "regenerate_roadmap"}?id=${id}`,
       onSuccess: (res) => {
-        console.log(res);
         Snackbar(res?.data?.message, { variant: 'success' });
         setLoading(false);
         getUploadDataList();
       },
       onError: (err) => {
-        console.log(err);
         setLoading(false);
       }
     });
@@ -41,12 +46,20 @@ const UploadDataGrid = ({ heading, dropdown }) => {
     {
       Header: "Prompt", accessor: "prompt",
       Cell: ({ value }) => (
-        <Typography>
+        <Typography sx={{ fontSize: "13px" }}>
           {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
         </Typography>
       )
     },
-    { Header: "File Path", accessor: "file" },
+    {
+      Header: "Title", accessor: "title",
+      Cell: ({ value }) => (
+        <Typography sx={{ fontSize: "13px" }}>
+          {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
+        </Typography>
+      )
+    },
+    { Header: "Path", accessor: "file" },
     {
       Header: "Status",
       accessor: "status",
@@ -54,11 +67,10 @@ const UploadDataGrid = ({ heading, dropdown }) => {
         <Typography
           sx={{
             textTransform: 'capitalize',
-            color: value === 'pending' ? 'warning.main' : value === 'analyzed' ? 'success.main' : 'info.main',
             backgroundColor: value === 'pending' || value === 'analyzed' ? '#00B69B' : '#E8E8E8',
             color: value === 'pending' || value === 'analyzed' ? 'white' : '#354E70',
             borderRadius: '10px',
-            padding: '3px 0px 3px 10px',
+            padding: '3px 10px',
             cursor: 'pointer',
             fontSize: '12px',
           }}
@@ -69,21 +81,40 @@ const UploadDataGrid = ({ heading, dropdown }) => {
     },
     { Header: "Skills", accessor: "total_skill_count" },
     {
+      Header: "Edit",
+      accessor: "edit",
+      Cell: ({ row }) => (
+        <div
+          style={{
+            cursor: 'pointer', 
+            background: '#E8E8E8', 
+            padding: '6px', 
+            borderRadius: "20px", 
+            fontSize: "12px"
+          }}
+          onClick={() => handleEdit(row)}
+        >
+          <AiOutlineEdit />
+        </div>
+      )
+    },
+    {
       Header: "",
       accessor: "status",
       Cell: ({ value, row }) => (
         <button
           onClick={() => (value === 'pending' || value === 'analyzed') && generate_roadmap(row.id, value)}
           style={{
-            backgroundColor: value === 'pending' || value === 'analyzed' ? '#3749A6' : 'transparent',
-            border: value === 'pending' || value === 'analyzed' ? '1px solid #3749A6' : '1px solid grey',
-            color: value === 'pending' || value === 'analyzed' ? 'white' : ' #354E70',
+            backgroundColor: value === 'pending' || value === 'analyse' ? '#3749A6' : 'transparent',
+            border: value === 'pending' || value === 'analyse' ? '1px solid #3749A6' : '1px solid grey',
+            color: value === 'pending' || value === 'analyse' ? 'white' : '#354E70',
             borderRadius: '2.5px',
             padding: '5px 10px',
             cursor: 'pointer',
+            fontSize: '12px',
           }}
         >
-          {value === 'pending' ? 'Analyze' : value === 'analyzed' ? 'Reanalyze' : 'Analyzing'}
+          {value === 'pending' ? 'Analyse' : value === 'analyse' ? 'Reanalyze' : 'Analyzing'}
         </button>
       )
     },

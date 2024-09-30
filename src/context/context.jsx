@@ -12,9 +12,9 @@ const UserProvider = ({ children }) => {
   // checking the status of subscription 
   const [checkSubscription, setCheckSubscription] = useState(true);
 
-  const [singlePathData, setSinglePathData] = useState([]);
+  const [nextRole, setNextRole] = useState(null);
   const [authToken, setAuthToken] = useState(localStorage?.getItem('user-visited-dashboard'));
-
+  
 
   // loading state 
   const [loading, setLoading] = useState(false);
@@ -83,12 +83,12 @@ const UserProvider = ({ children }) => {
         getDescription,
         setGetDescription,
         data,
-        singlePathData,
-        setSinglePathData,
         handleLoginSuccess,
         getUploadDataList,
         setCheckSubscription,
         checkSubscription,
+        setNextRole,
+        nextRole,
         loading,
         setLoading
       }}

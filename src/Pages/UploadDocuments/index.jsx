@@ -22,7 +22,7 @@ import FileUpload from './FileUpload';
 import UploadDataGrid from './UploadDataGrid';
 import { useUser } from '../../context/context';
 import Loading from '../../Components/Loading';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 const columns = [
   { Header: "Id", accessor: "id" },
@@ -68,6 +68,9 @@ const style = {
 const UploadDocuments = () => {
 
   const {data, setLoading, setCheckSubscription} = useUser();
+  const location = useLocation();
+  const params = useParams();
+  console.log(params, 'tttttttttttttt')
 
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -136,11 +139,17 @@ const UploadDocuments = () => {
     }
   });
 
+  useEffect(() => {
+    if (location.state && location.state.prompt) {
+      setPrompt(location.state.prompt || location.state.title);
+    }
+  }, [location.state.prompt]);
+
   const handlePromptSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    Fire.post({
-      url: `${baseURL}/create-path`,
+    Fire.put({
+      url: `${baseURL}/update-path/${params.id}`,
       data: {
         prompt: prompt
       },

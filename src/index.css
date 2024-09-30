@@ -94,6 +94,7 @@ h5{
 
 .active {
   background-color: #3749A6;
-  color: white;
+  color: white !important;
+  font-weight: 400 !important;
   transition: 0.3s all ease;
 }

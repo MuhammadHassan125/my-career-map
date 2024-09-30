@@ -3,6 +3,7 @@
   background-color: white;
   padding: 20px 15px;
   border-radius: 10px;
+  overflow-x:  auto;
   &__container {
     overflow-x: auto;
     border-radius: 2px;
@@ -17,7 +18,7 @@
     background-color: #f1f4f9; 
   }
   &__header-cell {
-    padding: 0.75rem 2.1rem; 
+    padding: 0.75rem 1rem; 
     border-bottom: 1px solid #e2e8f0;
     text-align: left;
     font-size: 14px; 
@@ -25,12 +26,13 @@
   }
   &__body-row {
     color: #2d3748;
-    font-size: 14px; 
+    font-size: 12px; 
   }
   &__body-cell {
-    padding: 0.75rem 2.1rem; 
+    padding: 0.5rem 1.5rem; 
     border-bottom: 1px solid #e2e8f0;
     text-align: left;
+    font-size: 12px;
   }
 }
 

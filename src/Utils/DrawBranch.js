@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 
+
 const calculatePositions = (steps, centerY, depth = 0, branchIndex = 0, parentIndex = 0, parentX = 0) => {
     const nodeDistance = 110;
     const branchDistance = 50;
@@ -57,6 +58,7 @@ const processSteps = (steps, width, height, color, branchIndex = 0, parent = nul
         if (step.branches) {
             step.branches.forEach((branch, branchIndex) => {
                 branches.push({
+                    allSteps:[step, ...branch.steps],
                     color: branch.color,
                     steps: branch.steps,
                 });
@@ -77,6 +79,7 @@ const processSteps = (steps, width, height, color, branchIndex = 0, parent = nul
 
 
 const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, setGettingSkillsData) => {
+    
     if (!svg) throw new Error('svg required as HTMLElement');
     if (typeof branch !== 'object') throw new Error('branch requires an object');
 
@@ -95,7 +98,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
     const tooltipHeight = 40;
 
     const { nodes, links, branches } = processSteps(branch.steps, width, height, branch.color);
-    
+
     const wrapText = (svg, text, x, y, fontSize, Color, Bold, splitText, movingRight, lineValue, RightShift, LeftShift) => {
         const lineHeight = 12;
 
@@ -134,35 +137,42 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
     svg.selectAll('line')
         .data(links)
         .enter().append('line')
-        .attr('x1', d => nodes.find(n => n.id === d.source).x)
+        .attr('x1', d => nodes.find(n => n.id === d.source).x + 2)
         .attr('y1', d => nodes.find(n => n.id === d.source).y)
-        .attr('x2', d => nodes.find(n => n.id === d.source).x)
+        .attr('x2', d => nodes.find(n => n.id === d.source).x + 2)
         .attr('y2', d => nodes.find(n => n.id === d.source).y)
         .attr('stroke', d => d.color)
         .attr('stroke-width', 6.5)
+        .on('click', function(event, d) {
+            const sourceNode = nodes.find(n => n.id === d.source);
+            const targetNode = nodes.find(n => n.id === d.target);
+            const allSteps = [sourceNode, targetNode];
+            const branch = branches.find(b => b.steps.includes(sourceNode) && b.steps.includes(targetNode));
+            if (branch) {
+                allSteps.push(...branch.allSteps);
+            }
+            setGetTitle('/map-career/3', { state: { allSteps, color: d.color } });
+        })
+        .style('cursor', 'pointer')
         .transition()
         .duration(1000)
-        .attr('x2', d => nodes.find(n => n.id === d.target).x)
+        .attr('x2', d => nodes.find(n => n.id === d.target).x + 2)
         .attr('y2', d => nodes.find(n => n.id === d.target).y);
 
     svg.selectAll('line.node-line')
-    .data(nodes.slice(1))
-    .enter().append('line')
-    .attr('class', 'node-line')
-    .attr('x1', (d, i) => {
-        return(d.x + 6)
-    }) 
-    .attr('y1', d => d.y - 7)
-    .attr('x2', (d, i) => (d.x + 6))
-    .attr('y2', d => d.y)
-    .attr('stroke', d => d.color)
-    .attr('stroke-width', 3)
-    .style('cursor', 'pointer')
+        .data(nodes.slice(1))
+        .enter().append('line')
+        .attr('class', 'node-line')
+        .attr('x1', (d, i) => {
+            return (d.x + 15)
+        })
+        .attr('y1', d => d.y - 7)
+        .attr('x2', (d, i) => (d.x + 15))
+        .attr('y2', d => d.y)
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', 3)
+        .style('cursor', 'pointer')
         .on('mouseover', function (event, d) {
-            setGetTitle(d.title);
-            setGetDescription(d.description);
-            setGettingSkillsData(d.skills);
-
             tooltip.style('background', d.color);
             tooltip.style('font-size', '9px');
             tooltip.style('padding', '5px 8px');
@@ -186,7 +196,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
     [firstNode, lastNode].forEach(node => {
         svg.append('circle')
             .attr('r', 10)
-            .attr('cx', node.x)
+            .attr('cx', node.x + 9)
             .attr('cy', node.y)
             .attr('fill', node.color)
             .style('cursor', 'pointer')
@@ -228,7 +238,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
 
         svg.append('circle')
             .attr('r', 9.5)
-            .attr('cx', lastBranchNode.x)
+            .attr('cx', lastBranchNode.x + 9.4)
             .attr('cy', lastBranchNode.y)
             .attr('fill', lastBranchNode.color)
             .style('cursor', 'pointer')
@@ -257,40 +267,45 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
 
                 tooltip.style('visibility', 'hidden');
             })
-            .on('click', (e, d) => {
-                setGetTitle(lastBranchNode.title);
-                setGetDescription(lastBranchNode.description);
-                setGettingSkillsData(lastBranchNode.skills);
-            })
+            // .on('click', (e, d) => {
+            //     setGetTitle(lastBranchNode.title);
+            //     setGetDescription(lastBranchNode.description);
+            //     setGettingSkillsData(lastBranchNode.skills);
+            // })
             .append('title')
             .text(lastBranchNode.title);
     });
 
 
     svg.selectAll('path.branch')
-    .data(branches)
-    .enter().append('path')
-    .attr('class', 'branch')
-    .attr('d', branch => {
-        const lineGenerator = d3.line()
-            .curve(d3.curveBasis)
-            .x(d => nodes.find(n => n.id === d.id).x)
-            .y(d => nodes.find(n => n.id === d.id).y);
-        
-        return lineGenerator(branch.steps);
-    })
-    .attr('stroke', d => d.color)
-    .attr('stroke-width', 6.5)
-    .attr('fill', 'none')
-    .attr('stroke-dasharray', function () {
-        return this.getTotalLength();
-    })
-    .attr('stroke-dashoffset', function () {
-        return this.getTotalLength();
-    })
-    .transition()
-    .duration(1000)
-    .attr('stroke-dashoffset', 0);
+        .data(branches)
+        .enter().append('path')
+        .attr('class', 'branch')
+        .attr('d', branch => {
+            const lineGenerator = d3.line()
+            .curve(d3.curveCatmullRom)
+                .x(d => nodes.find(n => n.id === d.id).x)
+                .y(d => nodes.find(n => n.id === d.id).y);
+
+            return lineGenerator(branch.steps);
+        })
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', 6.5)
+        .attr('fill', 'none')
+        .attr('stroke-dasharray', function () {
+            return this.getTotalLength();
+        })
+        .attr('stroke-dashoffset', function () {
+            return this.getTotalLength();
+        })
+        .on('click', function(event, d) {
+            setGetTitle('/map-career/2', {state:d})
+            console.log(d?.id, 'fffffffffffffffffffff')
+        })
+        .style('cursor', 'pointer')
+        .transition()
+        .duration(1000)
+        .attr('stroke-dashoffset', 0);
 
     svg.selectAll('text')
         .data(nodes)
@@ -306,12 +321,12 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
             const Bold = isFirstNode || isLastNode || isBranchEndNode ? 'bold' : 'medium';
             const lineValue = isFirstNode || isLastNode ? 0 : -10;
-            const RightShift = isLastNode || isBranchEndNode ? 110 : 0;
-            const LeftShift = isFirstNode ? -60 : 0;
+            const RightShift = isLastNode || isBranchEndNode ? 120 : 0;
+            const LeftShift = isFirstNode ? -70 : 0;
             const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
 
             const movingRight = isFirstNode ? '20px' : '0px';
-    
+
             if (isFirstNode) {
                 const textElement = g.append('text')
                     .attr('x', d.x + LeftShift)
@@ -322,21 +337,22 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                     .style('font-size', fontSize)
                     // .style('margin-top', + 10)
                     .text(d.title);
-    
+
                 const textWidth = textElement.node().getBBox().width;
                 const textHeight = textElement.node().getBBox().height;
-    
+
                 g.insert('rect', 'text')
-                    .attr('x', d.x + LeftShift - textWidth / 2 - 5) 
+                    .attr('x', d.x + LeftShift - textWidth / 2 - 5)
                     .attr('y', d.y + 8)
-                    .attr('width', textWidth + 10)  
+                    .attr('width', textWidth + 10)
                     .attr('height', textHeight + 10)
-                    .attr('fill', '#3749A626')  
-                    .attr('rx', 5)  
+                    .attr('fill', '#3749A626')
+                    .attr('rx', 5)
                     .attr('ry', 5);
             } else {
-                wrapText(g, d.title, d.x, d.y - 12, fontSize, Color, Bold, splitText,  movingRight, lineValue, RightShift, LeftShift);
-            } });
+                wrapText(g, d.title, d.x, d.y - 12, fontSize, Color, Bold, splitText, movingRight, lineValue, RightShift, LeftShift);
+            }
+        });
 };
 
 export default DrawBranch;
