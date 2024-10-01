@@ -45,7 +45,7 @@ const AddPathComponent = () => {
   //   navigate('/documents-upload');
   // };
 
-  const {data, setData, errors, post} = useFire({title:'', description:''});
+  const {data, setData, errors, post} = useFire({title:'', prompt:''});
 
   const handleInput= (e) => {
     const {name, value} = e.target;
@@ -71,7 +71,6 @@ const AddPathComponent = () => {
 
   useEffect(() => {
     if(checkSubscription === false){
-      // handleOpen();
       navigate('/documents-upload');
 
     } else {setCheckSubscription(true);}
@@ -132,8 +131,8 @@ const AddPathComponent = () => {
                   <input 
                   type="text"
                     placeholder='Enter your description'
-                    name="description"
-                    value={data.description}
+                    name="prompt"
+                    value={data.prompt}
                     onChange={handleInput}
                     style={{ width: "100%", marginTop: "5px", backgroundColor: "#F5F6FA", border: "#D5D5D5", outline: "none", padding: "12px 10px", borderRadius: "5px" }} />
                 </Box>

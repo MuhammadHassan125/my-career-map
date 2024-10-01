@@ -41,16 +41,27 @@ const UploadDataGrid = ({ heading, dropdown }) => {
     });
   };
 
+
+useEffect(() => {
+  getUploadDataList();
+
+  const pollInterval = setInterval(() => {
+    getUploadDataList();
+  }, 30000);
+
+  return () => clearInterval(pollInterval);
+}, []);
+
   const columns = [
     { Header: "Id", accessor: "id" },
-    {
-      Header: "Prompt", accessor: "prompt",
-      Cell: ({ value }) => (
-        <Typography sx={{ fontSize: "13px" }}>
-          {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
-        </Typography>
-      )
-    },
+    // {
+    //   Header: "Prompt", accessor: "prompt",
+    //   Cell: ({ value }) => (
+    //     <Typography sx={{ fontSize: "13px" }}>
+    //       {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
+    //     </Typography>
+    //   )
+    // },
     {
       Header: "Title", accessor: "title",
       Cell: ({ value }) => (
@@ -59,7 +70,7 @@ const UploadDataGrid = ({ heading, dropdown }) => {
         </Typography>
       )
     },
-    { Header: "Path", accessor: "file" },
+    // { Header: "Path", accessor: "file" },
     {
       Header: "Status",
       accessor: "status",
@@ -70,9 +81,12 @@ const UploadDataGrid = ({ heading, dropdown }) => {
             backgroundColor: value === 'pending' || value === 'analyzed' ? '#00B69B' : '#E8E8E8',
             color: value === 'pending' || value === 'analyzed' ? 'white' : '#354E70',
             borderRadius: '10px',
-            padding: '3px 10px',
+            padding: '3px 0',
+            textAlign:'center',
             cursor: 'pointer',
             fontSize: '12px',
+             width:'70px',
+            // height:'25px'
           }}
         >
           {value}
@@ -90,7 +104,10 @@ const UploadDataGrid = ({ heading, dropdown }) => {
             background: '#E8E8E8', 
             padding: '6px', 
             borderRadius: "20px", 
-            fontSize: "12px"
+            fontSize: "12px",
+            textAlign:'center',
+            width:'25px',
+            height:'25px'
           }}
           onClick={() => handleEdit(row)}
         >
@@ -103,18 +120,18 @@ const UploadDataGrid = ({ heading, dropdown }) => {
       accessor: "status",
       Cell: ({ value, row }) => (
         <button
-          onClick={() => (value === 'pending' || value === 'analyzed') && generate_roadmap(row.id, value)}
+          onClick={() => (value === 'pending' || value === 'analysed') && generate_roadmap(row.id, value)}
           style={{
-            backgroundColor: value === 'pending' || value === 'analyse' ? '#3749A6' : 'transparent',
-            border: value === 'pending' || value === 'analyse' ? '1px solid #3749A6' : '1px solid grey',
-            color: value === 'pending' || value === 'analyse' ? 'white' : '#354E70',
+            backgroundColor: value === 'pending' || value === 'analysed' ? '#3749A6' : 'transparent',
+            border: value === 'pending' || value === 'analysed' ? '1px solid #3749A6' : '1px solid grey',
+            color: value === 'pending' || value === 'analysed' ? 'white' : '#354E70',
             borderRadius: '2.5px',
             padding: '5px 10px',
             cursor: 'pointer',
             fontSize: '12px',
           }}
         >
-          {value === 'pending' ? 'Analyse' : value === 'analyse' ? 'Reanalyze' : 'Analyzing'}
+          {value === 'pending' ? 'Analysed' : value === 'analysed' ? 'Reanalyze' : 'Analyzing'}
         </button>
       )
     },

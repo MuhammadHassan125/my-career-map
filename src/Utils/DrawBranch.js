@@ -58,7 +58,7 @@ const processSteps = (steps, width, height, color, branchIndex = 0, parent = nul
         if (step.branches) {
             step.branches.forEach((branch, branchIndex) => {
                 branches.push({
-                    allSteps:[step, ...branch.steps],
+                    allSteps: [step, ...branch.steps],
                     color: branch.color,
                     steps: branch.steps,
                 });
@@ -79,7 +79,7 @@ const processSteps = (steps, width, height, color, branchIndex = 0, parent = nul
 
 
 const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, setGettingSkillsData) => {
-    
+
     if (!svg) throw new Error('svg required as HTMLElement');
     if (typeof branch !== 'object') throw new Error('branch requires an object');
 
@@ -143,15 +143,19 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .attr('y2', d => nodes.find(n => n.id === d.source).y)
         .attr('stroke', d => d.color)
         .attr('stroke-width', 6.5)
-        .on('click', function(event, d) {
+        .on('click', function (event, d) {
             const sourceNode = nodes.find(n => n.id === d.source);
             const targetNode = nodes.find(n => n.id === d.target);
-            const allSteps = [sourceNode, targetNode];
-            const branch = branches.find(b => b.steps.includes(sourceNode) && b.steps.includes(targetNode));
-            if (branch) {
-                allSteps.push(...branch.allSteps);
-            }
+            
+            const relevantBranch = branches.find(branch => 
+                branch.allSteps.some(step => step.id === sourceNode.id) && 
+                branch.allSteps.some(step => step.id === targetNode.id)
+            );
+            
+            const allSteps = relevantBranch ? relevantBranch.allSteps : [sourceNode, targetNode];
+            
             setGetTitle('/map-career/3', { state: { allSteps, color: d.color } });
+            
         })
         .style('cursor', 'pointer')
         .transition()
@@ -283,7 +287,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .attr('class', 'branch')
         .attr('d', branch => {
             const lineGenerator = d3.line()
-            .curve(d3.curveCatmullRom)
+                .curve(d3.curveCatmullRom)
                 .x(d => nodes.find(n => n.id === d.id).x)
                 .y(d => nodes.find(n => n.id === d.id).y);
 
@@ -298,9 +302,8 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .attr('stroke-dashoffset', function () {
             return this.getTotalLength();
         })
-        .on('click', function(event, d) {
-            setGetTitle('/map-career/2', {state:d})
-            console.log(d?.id, 'fffffffffffffffffffff')
+        .on('click', function (event, d) {
+            setGetTitle('/map-career/2', { state: d })
         })
         .style('cursor', 'pointer')
         .transition()

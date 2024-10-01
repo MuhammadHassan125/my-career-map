@@ -8,10 +8,8 @@ const SinglePathMap = () => {
     const svgRef = useRef(null);
     const { setGettingSkillsData, setGetTitle, setGetDescription, setNextRole } = useUser();
     const location = useLocation();
-    console.log(location.state);
 
-    const firstStepId = location.state.allSteps[0].id;
-    localStorage.setItem('singlePathId', firstStepId);
+    // localStorage.setItem('singlePathId', firstStepId);
 
     useEffect(() => {
         if (Object.keys(location.state?.allSteps).length > 0) {
@@ -68,6 +66,7 @@ const SinglePathMap = () => {
                 .attr('fill', location.state.color)
                 .style('cursor', 'pointer')
                 .on('click', function(event, d) {
+                    localStorage.setItem('singlePathId', d.id);
                     setGetTitle(d.title);
                     setGetDescription(d.description);
                     setGettingSkillsData(d.skills);
@@ -105,7 +104,7 @@ const SinglePathMap = () => {
             for (let i = 0; i < branch.length; i++) {
                 if (branch[i].status === 'pending') {
                     console.log(`Pending Step: ${branch[i].title} - ${branch[i].description} - ${branch[i].id}`);
-
+                    localStorage.setItem('singlePathId', branch[i].id);
                     setGetTitle(branch[i].title);
                     setGetDescription(branch[i].description);
                     setGettingSkillsData(branch[i].skills);
@@ -116,13 +115,13 @@ const SinglePathMap = () => {
                 }
             }
         }
-    }, [location.state?.allSteps]);
+    }, []);
 
     return (
         <React.Fragment>
             <Loading />
             <div className="map-section____map-div-career-path"
-                style={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+                style={{ height: '100%', overflowY: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
             >
                 <div
                     style={{

@@ -11,11 +11,11 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from '@mui/material';
 import { IoCheckmarkSharp } from "react-icons/io5";
 import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { BiSolidSend } from "react-icons/bi";
-import { Snackbar } from '../../Utils/SnackbarUtils';
+// import TabContext from '@mui/lab/TabContext';
+// import TabList from '@mui/lab/TabList';
+// import TabPanel from '@mui/lab/TabPanel';
+// import { BiSolidSend } from "react-icons/bi";
+// import { Snackbar } from '../../Utils/SnackbarUtils';
 import Fire from '../../Fire/Fire';
 import { baseURL } from '../../Fire/useFire';
 import FileUpload from './FileUpload';
@@ -70,7 +70,7 @@ const UploadDocuments = () => {
   const {data, setLoading, setCheckSubscription} = useUser();
   const location = useLocation();
   const params = useParams();
-  console.log(params, 'tttttttttttttt')
+  // console.log(params, 'tttttttttttttt')
 
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -145,32 +145,32 @@ const UploadDocuments = () => {
     }
   }, [location.state.prompt]);
 
-  const handlePromptSubmit = (event) => {
-    event.preventDefault();
-    setLoading(true);
-    Fire.put({
-      url: `${baseURL}/update-path/${params.id}`,
-      data: {
-        prompt: prompt
-      },
+  // const handlePromptSubmit = (event) => {
+  //   event.preventDefault();
+  //   setLoading(true);
+  //   Fire.put({
+  //     url: `${baseURL}/update-path/${params.id}`,
+  //     data: {
+  //       prompt: prompt
+  //     },
 
-      onSuccess: (res) => {
-        console.log('create path successfully', res);
-        Snackbar(res.data.message, { variant: 'success' });
-        setPrompt('');
-        setLoading(false);
-        data();
-        getUploadDataList();
-      },
+  //     onSuccess: (res) => {
+  //       console.log('create path successfully', res);
+  //       Snackbar(res.data.message, { variant: 'success' });
+  //       setPrompt('');
+  //       setLoading(false);
+  //       data();
+  //       getUploadDataList();
+  //     },
 
-      onError: (err) => {
-        console.log(err);
-        Snackbar(err.error, { variant: 'error' });
-        setLoading(false);
-      }
-    });
+  //     onError: (err) => {
+  //       console.log(err);
+  //       Snackbar(err.error, { variant: 'error' });
+  //       setLoading(false);
+  //     }
+  //   });
 
-  };
+  // };
 
   return (
     <React.Fragment>
@@ -186,17 +186,19 @@ const UploadDocuments = () => {
           </div>
         )}
         <Box sx={{ width: '100%', typography: 'body1' }}>
-          <TabContext value={value}>
-            <Box>
+          {/* <TabContext value={value}>
+            <Box> */}
 
-              <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ padding: '0 25px' }}>
+              {/* <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ padding: '0 25px' }}> */}
 
-                <Tab label="Add Path" value="1" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} />
-                <Tab label="Upload CV" value="2" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} />
-              </TabList>
+                {/* <Tab label="Add Path" value="1" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} /> */}
+                {/* <Tab label="Upload CV" value="2" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} /> */}
+
+              {/* </TabList> */}
+              <h3>Upload CV</h3>
             </Box>
 
-            <TabPanel value="1">
+            {/* <TabPanel value="1">
               <TextField
                 id="outlined-multiline-static"
                 label="Enter Your Prompt"
@@ -212,15 +214,15 @@ const UploadDocuments = () => {
                     <InputAdornment position="end">
                       <BiSolidSend                          
                       style={{ cursor: 'pointer', position: 'absolute', bottom: 8, right: 15, fontSize:'20px' }}
-                      onClick={handlePromptSubmit}
+                      // onClick={handlePromptSubmit}
                       />
                     </InputAdornment>
                   ),
                 }}
               />
-            </TabPanel>
+            </TabPanel> */}
 
-            <TabPanel value="2">
+            {/* <TabPanel value="2"> */}
               <FileUpload onUploadSuccess={handleSuccess}/>
               <Modal
                 aria-labelledby="transition-modal-title"
@@ -278,10 +280,10 @@ const UploadDocuments = () => {
                   </Box>
                 </Fade>
               </Modal>
-            </TabPanel>
+            {/* </TabPanel> */}
 
-          </TabContext>
-        </Box>
+          {/* </TabContext> */}
+        {/* </Box> */}
 
         <UploadDataGrid columns={columns} heading={"Path Details"} dropdown={"October"} />
 

@@ -19,7 +19,6 @@ const ListCareerPath = () => {
       setSelectedId(null);
     } else {
       handleUpdateSkills(id);
-      setSelectedId(id);  
     }
   };
 
@@ -39,14 +38,17 @@ const ListCareerPath = () => {
   const handleUpdateSkills = (id) => {
     Fire.get({
       url: `${baseURL}/check-status-of-skills/${id}`,
-
       onSuccess: (res) => {
         console.log(res, '')
         Snackbar(res?.data?.message, {variant: 'success'});
-        setSelectedId(null);
+        if (res?.data?.status === "completed") {
+          setSelectedId(id);
+        } else {
+          setSelectedId(null);
+        }
+        console.log('hassan')
         handleSubmit();
       },
-
       onError: (err) => {
         console.log(err)
         Snackbar(err.error, {variant: 'error'});
@@ -75,19 +77,19 @@ const ListCareerPath = () => {
                 <div
                   key={item.id}  
                   className='list-section__content__div'
-                  style={{ backgroundColor: selectedId === item.id ? '#3749A6' : 'white' }}
+                  style={{ backgroundColor: selectedId === item.id || item.status === "completed" ? '#3749A6' : 'white' }}
                 >
                   <div>
                     <button
                       onClick={() => handleSelect(item.id)}  
                       style={{
-                        color: selectedId === item.id ? '1px solid white' : null,
-                        borderColor: selectedId === item.id ? 'white' : null,
+                        color: selectedId === item.id || item.status === "completed" ? 'white' : null,
+                        borderColor: selectedId === item.id || item.status === "completed" ? 'white' : null,
                       }}
                     >
-                      {selectedId === item.id ? <IoCheckmarkSharp style={{ color: 'white' }} /> : null}
+                      {selectedId === item.id || item.status === "completed" ? <IoCheckmarkSharp style={{ color: 'white' }} /> : null}
                     </button>
-                    <p style={{ color: selectedId === item.id ? 'white' : '#5B708B' }}>{item.title}</p>
+                    <p style={{ color: selectedId === item.id || item.status === "completed" ? 'white' : '#5B708B' }}>{item.title}</p>
                   </div>
     
                   <div
@@ -96,8 +98,8 @@ const ListCareerPath = () => {
                       padding: '5px 8px',
                       borderRadius: '5px',
                       cursor: 'pointer',
-                      color: item.status === "pending" ? 'white' : 'white',
-                      backgroundColor: item.status === "pending" ? '#00B69B' : 'rgb(55, 73, 166)'
+                      color: item.status === "pending" ? 'white' : 'blue',
+                      backgroundColor: item.status === "pending" ? '#00B69B' : '#f5f6fd'
                     }}
                   >
                     <p>{item.status}</p>
@@ -111,7 +113,6 @@ const ListCareerPath = () => {
       </div>
     </main>
     </React.Fragment>
-
   );
 };
 

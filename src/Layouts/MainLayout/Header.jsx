@@ -29,7 +29,7 @@ const Header = () => {
     const [readAll, setReadAll] = React.useState(false);
     const [read, setRead] = React.useState(false);
     const [unread, setUnread] = React.useState(false);
-    const [unseenCount, setUnseenCount] = React.useState(10);
+    const [unseenCount, setUnseenCount] = React.useState(null);
     const previousUnseenCountRef = useRef(0);
     const audioRef = useRef(new Audio('./notification-sound.mp3'));
 
@@ -128,6 +128,7 @@ const Header = () => {
             onSuccess: (res) => {
                 console.log(res, 'read notifications')
                 Snackbar(res?.data?.data?.message, { variant: "success" })
+                getNotification()
             },
 
             onError: (err) => {
@@ -150,6 +151,7 @@ const Header = () => {
             onSuccess: (res) => {
                 console.log(res, 'unread notifications')
                 Snackbar(res?.data?.data?.message, { variant: "success" })
+                getNotification();
             },
 
             onError: (err) => {
@@ -172,6 +174,7 @@ const Header = () => {
             onSuccess: (res) => {
                 console.log(res, 'unread notifications')
                 Snackbar(res?.data?.data?.message, { variant: "success" })
+                getNotification()
             },
             onError: (err) => {
                 console.log(err);
@@ -228,14 +231,14 @@ const Header = () => {
                                         overflow: 'auto',
                                         marginLeft: "-50%",
                                         top: 30,
-                                        left: 0,
+                                        left: -40,
                                         zIndex: 99,
                                         borderRadius: '5px',
                                         boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
                                     }}
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <div style={{ display: 'flex', borderBottom: "1px solid #f5f6fa", marginBottom: "10px", alignItems: 'center', justifyContent: "space-between", marginBottom: "-15px" }}>
+                                    <div style={{ display: 'flex', borderBottom: "1px solid #f5f6fa", alignItems: 'center', justifyContent: "space-between", marginBottom: "-15px" }}>
 
                                         <h5>Notifications</h5>
                                         <div>

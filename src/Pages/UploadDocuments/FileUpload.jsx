@@ -54,13 +54,13 @@ const FileUpload = ({ onUploadSuccess }) => {
         <Loading/>
         <div className='file-upload__section'>
             <img src='/images/upload.png' alt='upload' />
-            <label style={{border:'1px solid grey', borderRadius:'10px', padding:'5px 10px'}}>
+            <label style={{padding:'5px 10px', borderBottom: '1px solid #3749A6', cursor:'pointer', color:'#3749A6'}}>
                 <input
                     type="file"
                     onChange={handleFileChange}
                     style={{ display: 'none' }} 
                 />
-                Upload Your File
+                Click here to Browse.
             </label>
             {file && <p>{file.name}</p>} 
         </div>
