@@ -80,6 +80,7 @@ const Header = () => {
         setOpenNotification(!openNotification);
         if (openNotification === false) {
             console.log("true")
+            getNotification()
             handleSeenAllNotifications();
         } return;
     };

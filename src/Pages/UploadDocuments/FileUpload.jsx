@@ -4,12 +4,13 @@ import { baseURL } from "../../Fire/useFire";
 import { Snackbar } from "../../Utils/SnackbarUtils";
 import { useUser } from "../../context/context";
 import Loading from "../../Components/Loading";
+import { useParams } from "react-router-dom";
 
 const FileUpload = ({ onUploadSuccess }) => {
     const [file, setFile] = useState(null);
     const {data, setLoading, getUploadDataList} = useUser();
 
-
+    const params = useParams();
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
@@ -24,7 +25,7 @@ const FileUpload = ({ onUploadSuccess }) => {
             formData.append('file', file);
             try {
                 setLoading(true);
-                const response = await axios.post(`${baseURL}/create-path`, formData, {
+                const response = await axios.put(`${baseURL}/update-path/${params.id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`

@@ -9,6 +9,7 @@ import { Snackbar } from '../../Utils/SnackbarUtils';
 import { AnalyzeURL } from '../../Fire/useFire';
 import { AiOutlineEdit } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
+import { MdOutlineFileUpload } from "react-icons/md";
 
 const UploadDataGrid = ({ heading, dropdown }) => {
   const { data, getUploadDataList, setLoading, loading } = useUser();
@@ -47,7 +48,7 @@ useEffect(() => {
 
   const pollInterval = setInterval(() => {
     getUploadDataList();
-  }, 30000);
+  }, 20000);
 
   return () => clearInterval(pollInterval);
 }, []);
@@ -84,7 +85,7 @@ useEffect(() => {
             padding: '3px 0',
             textAlign:'center',
             cursor: 'pointer',
-            fontSize: '12px',
+            fontSize: '11px',
              width:'70px',
             // height:'25px'
           }}
@@ -111,7 +112,7 @@ useEffect(() => {
           }}
           onClick={() => handleEdit(row)}
         >
-          <AiOutlineEdit />
+          <MdOutlineFileUpload  />
         </div>
       )
     },
@@ -128,7 +129,7 @@ useEffect(() => {
             borderRadius: '2.5px',
             padding: '5px 10px',
             cursor: 'pointer',
-            fontSize: '12px',
+            fontSize: '10px',
           }}
         >
           {value === 'pending' ? 'Analysed' : value === 'analysed' ? 'Reanalyze' : 'Analyzing'}

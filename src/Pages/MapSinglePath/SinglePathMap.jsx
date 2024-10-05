@@ -1,23 +1,43 @@
 import * as d3 from "d3";
 import React, { useEffect, useRef } from "react";
 import { useUser } from "../../context/context";
-import { useLocation, } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Loading from "../../Components/Loading";
+import Fire from "../../Fire/Fire";
+import { baseURL } from "../../Fire/useFire";
 
 const SinglePathMap = () => {
     const svgRef = useRef(null);
+    const [singlePathData, setSinglePathData] = React.useState(null);
     const { setGettingSkillsData, setGetTitle, setGetDescription, setNextRole } = useUser();
-    const location = useLocation();
+    const params = useParams();
+    const singlePathId = params.id;
 
-    // localStorage.setItem('singlePathId', firstStepId);
+    const getIndividualPathData = () => {
+        Fire.get({
+            url: `${baseURL}/get-single-branch/${singlePathId}`,
+            onSuccess: (res) => {
+                console.log(res?.data?.data, 'singlePath');
+                setSinglePathData(res?.data?.data[0]); // Get the first item from the array
+            },
+            onError: (err) => {
+                console.log(err);
+            }
+        });
+    };
 
     useEffect(() => {
-        if (Object.keys(location.state?.allSteps).length > 0) {
+        getIndividualPathData();
+    }, []);
+
+    useEffect(() => {
+        if (singlePathData && singlePathData.steps && singlePathData.steps.length > 0) {
             const width = 1000;
             const height = 400;
 
-            const branch = location.state.allSteps;
-            console.log(branch, 'branch')
+            const branch = singlePathData.steps;
+
+            d3.select(svgRef.current).selectAll("*").remove();
 
             const tooltip = d3.select('body').append('div')
                 .attr('class', 'tooltip')
@@ -43,27 +63,25 @@ const SinglePathMap = () => {
                 .range([margin.left, width - margin.right])
                 .padding(0.5);
 
-            const yScale = d3.scaleLinear()
-                .domain([0, 1])
-                .range([height - margin.bottom, margin.top]);
-
+            // Draw lines connecting nodes
             svg.selectAll('line')
-                .data(branch)
+                .data(branch.slice(0, -1))
                 .enter().append('line')
-                .attr('x1', (d, i) => xScale(d.title))
+                .attr('x1', d => xScale(d.title))
                 .attr('y1', height / 2)
-                .attr('x2', (d, i) => xScale(branch[i + 1]?.title) || xScale(d.title))
+                .attr('x2', (d, i) => xScale(branch[i + 1].title))
                 .attr('y2', height / 2)
-                .attr('stroke', location.state.color)
+                .attr('stroke', singlePathData.color)
                 .attr('stroke-width', 4);
 
+            // Draw circles for each node
             svg.selectAll('circle')
                 .data(branch)
                 .enter().append('circle')
-                .attr('cx', (d, i) => xScale(d.title))
+                .attr('cx', d => xScale(d.title))
                 .attr('cy', height / 2)
                 .attr('r', 8)
-                .attr('fill', location.state.color)
+                .attr('fill', singlePathData.color)
                 .style('cursor', 'pointer')
                 .on('click', function(event, d) {
                     localStorage.setItem('singlePathId', d.id);
@@ -71,30 +89,32 @@ const SinglePathMap = () => {
                     setGetDescription(d.description);
                     setGettingSkillsData(d.skills);
                 })
-                .on('mouseover', function (event, d) {
+                .on('mouseover', function(event, d) {
                     const x = event.clientX;
                     const y = event.clientY;
-                    tooltip.style('background', location.state.color);
-                    tooltip.style('font-size', '9px');
-                    tooltip.style('padding', '5px 8px');
-                    tooltip.style('top', (y - tooltipHeight / 2) + 'px');
-                    tooltip.style('left', (x - tooltipWidth / 2) + 'px');
-                    tooltip.html(`${d.title}`)
+                    tooltip.style('background', singlePathData.color)
+                        .style('font-size', '9px')
+                        .style('padding', '5px 8px')
+                        .style('top', (y - tooltipHeight / 2) + 'px')
+                        .style('left', (x - tooltipWidth / 2) + 'px')
+                        .html(`${d.title}`)
                         .style('visibility', 'visible');
                 })
-                .on('mousemove', function (event) {
+                .on('mousemove', function(event) {
                     const x = event.clientX;
                     const y = event.clientY;
-                    tooltip.style('top', (y - tooltipHeight / 2) + 'px');
-                    tooltip.style('left', (x - tooltipWidth / 3) + 'px');
+                    tooltip.style('top', (y - tooltipHeight / 2) + 'px')
+                        .style('left', (x - tooltipWidth / 3) + 'px');
                 })
-                .on('mouseout', function () {
+                .on('mouseout', function() {
                     tooltip.style('visibility', 'hidden');
                 });
+
+            // Add text labels
             svg.selectAll('text')
                 .data(branch)
                 .enter().append('text')
-                .attr('x', (d, i) => xScale(d.title))
+                .attr('x', d => xScale(d.title))
                 .attr('y', height / 2 + 20)
                 .attr('text-anchor', 'middle')
                 .attr('fill', 'black')
@@ -102,20 +122,22 @@ const SinglePathMap = () => {
                 .text(d => d.title);
 
             for (let i = 0; i < branch.length; i++) {
-                if (branch[i].status === 'pending') {
-                    console.log(`Pending Step: ${branch[i].title} - ${branch[i].description} - ${branch[i].id}`);
+                if (/* branch[i].status === 'pending' */ i === 0) {
                     localStorage.setItem('singlePathId', branch[i].id);
                     setGetTitle(branch[i].title);
                     setGetDescription(branch[i].description);
                     setGettingSkillsData(branch[i].skills);
-                    if (i < branch.length - 1) {
-                        setNextRole(branch[i + 1].title)
-                    }
+                    setNextRole(branch[i].title);
                     break;
                 }
             }
+
+            // Cleanup function
+            return () => {
+                tooltip.remove();
+            };
         }
-    }, []);
+    }, [singlePathData]);
 
     return (
         <React.Fragment>
@@ -140,7 +162,6 @@ const SinglePathMap = () => {
             </div>
         </React.Fragment>
     );
-
 };
 
 export default SinglePathMap;

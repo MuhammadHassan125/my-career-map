@@ -69,7 +69,24 @@ const ForgotPassword = () => {
               />
             </div>
 
-            <PrimaryBtn text="GET OTP" onClick={handleSubmit} />
+            <div style={{ width: '100%' }}>
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  borderRadius: '10px',
+                  backgroundColor: '#3749A6',
+                  border: 'none',
+                  padding: '10px 20px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                }}
+              >
+                GET OTP
+              </button>
+            </div>
 
 
             <div className='login-account'>

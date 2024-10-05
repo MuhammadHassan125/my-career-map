@@ -15,86 +15,92 @@ const UserDetailsMap = () => {
   const navigate = useNavigate();
   const svgRefs = useRef([]);
   
-useEffect(() => {
-  
-  Fire.get({
-    url:`${baseURL}/get-details-with-path`,
-
-    onSuccess: (res) => {
-      console.log(res.data, 'pathDetailsArray')
-      setPathDetailsArray(res.data.data);
-    },
-
-    onError: (err) => {
-      console.log(err);
-      if(err.status == 404 || err.status === false){
-        Snackbar("No paths found for this user", { variant: 'error' });
-      }return;
-
-    }
-  });
-}, [])
+  useEffect(() => {
+    Fire.get({
+      url: `${baseURL}/get-details-with-path`,
+      onSuccess: (res) => {
+        console.log(res.data, 'pathDetailsArray')
+        setPathDetailsArray(res.data.data);
+      },
+      onError: (err) => {
+        console.log(err);
+        if(err.status == 404 || err.status === false){
+          Snackbar("No paths found for this user", { variant: 'error' });
+        }
+        return;
+      }
+    });
+  }, []);
 
   useEffect(() => {    
-
-    if(pathDetailsArray.length > 0){
+    if(pathDetailsArray.length > 0) {
       const width = 1000;
-      const height = 400;
+      const height = 490;
       const centerY = height / 2;
+      
       for (let index = 0; index < pathDetailsArray.length; index++) {
         const branch = pathDetailsArray[index].branch;
         const svg = d3.select(svgRefs.current[index])
           .attr("width", width)
-          .attr("height", height);
-  
+          .attr("height", height)
+          .attr("viewBox", `0 0 ${width} ${height}`)
+          .attr("preserveAspectRatio", "xMidYMid meet");
+          
         DrawBranch(svg, branch, width, height, navigate);
       }
-    }else return;
+    }
   }, [pathDetailsArray, navigate]);
-
-
 
   return (
     <>
       <Loading />
-      <div
-        className="map-section____map-div-career-path"
-        style={{
-          marginBottom: "40px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "5px",
-        }}
-      >
-        { pathDetailsArray.length > 0 ? pathDetailsArray.map((_, i) => (
-          <div
-            key={i}
-            style={{
-              backgroundColor: "white",
-              borderRadius: "10px",
-              marginBottom: "10px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "relative",
-              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        padding: "20px",
+        minHeight: "calc(100vh - 100px)", // Adjust based on your header/footer
+        justifyContent: "center"
+      }}>
+        {pathDetailsArray.length > 0 ? (
+          pathDetailsArray.map((_, i) => (
+            <div
+              key={i}
+              style={{
+                backgroundColor: "white",
+                borderRadius: "10px",
+                padding: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+                width: "100%",
+                height: "420px", 
+                overflow: "hidden",
+              }}
+            >
+              <svg 
+                ref={(el) => (svgRefs.current[i] = el)}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                }}
+              ></svg>
+            </div>
+          ))
+        ) : (
+          <Typography 
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '20px 0'
             }}
           >
-            <svg ref={(el) => (svgRefs.current[i] = el)}></svg>
-            {/* <div
-              style={{
-                position: "absolute",
-                top: "0",
-                bottom: "0",
-                left: "0",
-                right: "0",
-                cursor: "pointer",
-              }}
-              onClick={() => navigate(`/map-career/${_.branch.path_id}`,)}
-              // onClick={() => console.log(_.branch.steps, 'hassan')}
-            ></div> */}
-          </div>
-        )) : <Typography sx= {{display: 'flex', justifyContent: 'center', alignItems: 'center', padding:'20px 0'}}>No Graph found for this user please generate path first...</Typography>}
+            No Graph found for this user please generate path first...
+          </Typography>
+        )}
       </div>
     </>
   );
