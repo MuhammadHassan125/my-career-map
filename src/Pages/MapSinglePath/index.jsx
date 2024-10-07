@@ -14,7 +14,7 @@ const MapSinglePath = () => {
   const navigate = useNavigate();
   
   const contentHandler = (data) => {
-    console.log(data, 'ffffffffffffffffffffffffffffff')
+    // console.log(data, 'ffffffffffffffffffffffffffffff')
   }
   
   return (

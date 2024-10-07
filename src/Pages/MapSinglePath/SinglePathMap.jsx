@@ -63,7 +63,6 @@ const SinglePathMap = () => {
                 .range([margin.left, width - margin.right])
                 .padding(0.5);
 
-            // Draw lines connecting nodes
             svg.selectAll('line')
                 .data(branch.slice(0, -1))
                 .enter().append('line')
@@ -74,7 +73,6 @@ const SinglePathMap = () => {
                 .attr('stroke', singlePathData.color)
                 .attr('stroke-width', 4);
 
-            // Draw circles for each node
             svg.selectAll('circle')
                 .data(branch)
                 .enter().append('circle')
@@ -83,13 +81,13 @@ const SinglePathMap = () => {
                 .attr('r', 8)
                 .attr('fill', singlePathData.color)
                 .style('cursor', 'pointer')
-                .on('click', function(event, d) {
+                .on('click', function (event, d) {
                     localStorage.setItem('singlePathId', d.id);
                     setGetTitle(d.title);
                     setGetDescription(d.description);
                     setGettingSkillsData(d.skills);
                 })
-                .on('mouseover', function(event, d) {
+                .on('mouseover', function (event, d) {
                     const x = event.clientX;
                     const y = event.clientY;
                     tooltip.style('background', singlePathData.color)
@@ -100,17 +98,16 @@ const SinglePathMap = () => {
                         .html(`${d.title}`)
                         .style('visibility', 'visible');
                 })
-                .on('mousemove', function(event) {
+                .on('mousemove', function (event) {
                     const x = event.clientX;
                     const y = event.clientY;
                     tooltip.style('top', (y - tooltipHeight / 2) + 'px')
                         .style('left', (x - tooltipWidth / 3) + 'px');
                 })
-                .on('mouseout', function() {
+                .on('mouseout', function () {
                     tooltip.style('visibility', 'hidden');
                 });
 
-            // Add text labels
             svg.selectAll('text')
                 .data(branch)
                 .enter().append('text')
@@ -122,7 +119,7 @@ const SinglePathMap = () => {
                 .text(d => d.title);
 
             for (let i = 0; i < branch.length; i++) {
-                if (/* branch[i].status === 'pending' */ i === 0) {
+                if (branch[i].status === 'pending') {
                     localStorage.setItem('singlePathId', branch[i].id);
                     setGetTitle(branch[i].title);
                     setGetDescription(branch[i].description);
@@ -132,7 +129,6 @@ const SinglePathMap = () => {
                 }
             }
 
-            // Cleanup function
             return () => {
                 tooltip.remove();
             };
@@ -157,6 +153,21 @@ const SinglePathMap = () => {
                         boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
                     }}
                 >
+                    {singlePathData && (
+                        <div style={{
+                            position: "absolute",
+                            top: "65px",
+                            left: "20px",
+                            backgroundColor: "rgba(255, 255, 255, 0.8)",
+                            borderRadius: "5px",
+                            padding: "5px 10px",
+                            zIndex: 1,
+                            fontWeight: "bold",
+                        }}>
+                            {singlePathData.pathTitle}
+                        </div>
+                    )}
+
                     <svg ref={svgRef}></svg>
                 </div>
             </div>

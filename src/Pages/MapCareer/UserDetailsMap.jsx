@@ -10,6 +10,7 @@ import Fire from "../../Fire/Fire";
 import { baseURL } from "../../Fire/useFire";
 import { Typography } from "@mui/material";
 
+
 const UserDetailsMap = () => {
   const [pathDetailsArray, setPathDetailsArray] = React.useState([]);
   const navigate = useNavigate();
@@ -59,11 +60,11 @@ const UserDetailsMap = () => {
         flexDirection: "column",
         gap: "20px",
         padding: "20px",
-        minHeight: "calc(100vh - 100px)", // Adjust based on your header/footer
+        minHeight: "calc(100vh - 100px)",
         justifyContent: "center"
       }}>
         {pathDetailsArray.length > 0 ? (
-          pathDetailsArray.map((_, i) => (
+          pathDetailsArray.map((item, i) => (
             <div
               key={i}
               style={{
@@ -76,10 +77,22 @@ const UserDetailsMap = () => {
                 position: "relative",
                 boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
                 width: "100%",
-                height: "420px", 
+                height: "420px",
                 overflow: "hidden",
               }}
             >
+              <h4 style={{
+                position: "absolute",
+                top: "12px",
+                left: "20px",
+                backgroundColor: "rgba(255, 255, 255, 0.8)", 
+                borderRadius: "5px",
+                padding: "5px 10px",
+                zIndex: 1,
+              }}>
+                {item.Title} 
+              </h4>
+              
               <svg 
                 ref={(el) => (svgRefs.current[i] = el)}
                 style={{
@@ -104,6 +117,7 @@ const UserDetailsMap = () => {
       </div>
     </>
   );
+  
 };
 
 export default UserDetailsMap;

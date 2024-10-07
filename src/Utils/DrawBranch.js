@@ -103,7 +103,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
 
     const wrapText = (svg, text, x, y, fontSize, Color, Bold, splitText, movingRight, lineValue, RightShift, LeftShift) => {
         const lineHeight = 12;
-    
+
         if (!splitText) {
             svg.append('text')
                 .attr('x', x + (RightShift !== 0 ? RightShift : LeftShift))
@@ -115,10 +115,10 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 .text(text);
             return;
         }
-    
+
         const words = text.split(' ');
         const lines = [];
-    
+
         if (words[0].length > 7) {
             lines.push(words[0]);
             const remainingWords = words.slice(1);
@@ -140,7 +140,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 }
             }
         }
-    
+
         lines.forEach((line, i) => {
             svg.append('text')
                 .attr('x', x)
@@ -152,7 +152,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 .text(line);
         });
     };
-    
+
 
     svg.selectAll('path.connection')
         .data(links)
@@ -161,11 +161,11 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .attr('d', d => {
             const source = nodes.find(n => n.id === d.source);
             const target = nodes.find(n => n.id === d.target);
-    
+
             const midX = (source.x + target.x) / 2;
             const controlPoint1X = source.x + (midX - source.x) * 0.5;
             const controlPoint2X = target.x - (target.x - midX) * 0.5;
-    
+
             return `M ${source.x + 2} ${source.y}
                 C ${controlPoint1X + 2} ${source.y},
                   ${controlPoint2X + 2} ${target.y},
@@ -178,7 +178,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
         .on('click', function (event, d) {
             const sourceNode = nodes.find(n => n.id === d.source);
             const targetNode = nodes.find(n => n.id === d.target);
-            
+
             // Find the branch that contains both source and target nodes
             const relevantBranch = branches.find(branch => {
                 // Check if the branch's steps contain both nodes
@@ -186,18 +186,18 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 const containsTarget = branch.steps.some(step => step.id === targetNode.id);
                 return containsSource && containsTarget;
             });
-    
+
             if (relevantBranch) {
                 setGetTitle(`/map-career/${relevantBranch.branch_id}`);
             } else {
                 const mainBranch = {
-                    branch_id: branch.id, 
+                    branch_id: branch.id,
                     steps: branch.steps
                 };
                 setGetTitle(`/map-career/${mainBranch.branch_id}`);
             }
         });
-    
+
 
     svg.selectAll('line.node-line')
         .data(nodes.slice(1))
@@ -418,65 +418,151 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
     //         }
     //     });
 
-        svg.selectAll('text')
-    .data(nodes)
-    .enter().append('g')
-    .each(function (d) {
-        const g = d3.select(this);
+    svg.selectAll('text')
+        .data(nodes)
+        .enter().append('g')
+        .each(function (d) {
+            const g = d3.select(this);
 
-        const isFirstNode = d.id === nodes[0].id;
-        const isLastNode = d.id === nodes[nodes.length - 1].id;
-        const isBranchEndNode = branches.some(branch => branch.steps[branch.steps.length - 1].id === d.id);
+            const isFirstNode = d.id === nodes[0].id;
+            const isLastNode = d.id === nodes[nodes.length - 1].id;
+            const isBranchEndNode = branches.some(branch => branch.steps[branch.steps.length - 1].id === d.id);
 
-        const fontSize = isFirstNode || isLastNode || isBranchEndNode ? '12px' : '10px';
-        const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
-        const Bold = isFirstNode || isLastNode || isBranchEndNode ? 'bold' : 'medium';
-        const lineValue = isFirstNode || isLastNode ? 0 : -10;
-        const RightShift = isLastNode || isBranchEndNode ? 120 : 0;
-        const LeftShift = isFirstNode ? -45 : 0;
-        const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
-        const margin = 12;
+            const fontSize = isFirstNode || isLastNode || isBranchEndNode ? '12px' : '10px';
+            const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
+            const Bold = isFirstNode || isLastNode || isBranchEndNode ? 'bold' : 'medium';
+            const lineValue = isFirstNode || isLastNode ? 0 : -10;
+            const RightShift = isLastNode || isBranchEndNode ? 120 : 0;
+            const LeftShift = isFirstNode ? -45 : 0;
+            const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
+            const margin = 12;
 
-        if (isFirstNode) {
-            const textElement = g.append('text')
-                .attr('x', d.x + LeftShift)
-                .attr('y', d.y + 26)
-                .attr('text-anchor', 'middle')
-                .attr('fill', Color)
-                .style('font-weight', Bold)
-                .style('font-size', fontSize)
-                .text(d.title);
+            if (isFirstNode) {  
+                // const words = d.title.split(' ');
+                // const fontSize = '12px';
+                // const Color = '#354E70';
+                // const Bold = 'bold';
+                // const LeftShift = -20;
+            
+                // if (words.length > 2) {
+                //     wrapText(g, words.slice(0, 2).join(' '), d.x + LeftShift, d.y + 20, fontSize, Color, Bold);
+                //     wrapText(g, words.slice(2).join(' '), d.x + LeftShift, d.y + 40, fontSize, Color, Bold);
+                // } else {
+                //     wrapText(g, d.title, d.x + LeftShift, d.y + 20, fontSize, Color, Bold);
+                // }
+                
+                // const textElement = g.append('text')
+                //     .attr('x', d.x + LeftShift)
+                //     .attr('y', d.y + 26)
+                //     .attr('text-anchor', 'middle')
+                //     .attr('fill', Color)
+                //     .style('font-weight', Bold)
+                //     .style('font-size', fontSize);
+                
+                // const textWidth = textElement.node().getBBox().width;
+                // const textHeight = textElement.node().getBBox().height;
 
-            const textWidth = textElement.node().getBBox().width;
-            const textHeight = textElement.node().getBBox().height;
+                // g.insert('rect', 'text')
+                // .attr('x', d.x + LeftShift - textWidth / 2 - 5)
+                // .attr('y', d.y + 8)
+                // .attr('width', textWidth + 10)
+                // .attr('height', textHeight + 20)
+                // .attr('fill', '#3749A626')
+                // .attr('rx', 5)
+                // .attr('ry', 5);
 
-            g.insert('rect', 'text')
-                .attr('x', d.x + LeftShift - textWidth / 2 - 5)
-                .attr('y', d.y + 8)
-                .attr('width', textWidth + 10)
-                .attr('height', textHeight + 10)
-                .attr('fill', '#3749A626')
-                .attr('rx', 5)
-                .attr('ry', 5);
-        } else if (isLastNode || isBranchEndNode) {
-            const textY = d.y - 10;
- 
-            wrapText(g, d.title, d.x, textY, fontSize, Color, Bold, false, null, 0, RightShift, 0);
+                const words = d.title.split(' ');
+                let totalHeight = 0;
+                let maxWidth = 0;
+                const lineHeight = 20;
+                const padding = 10;
+                const leftShift = -65;
+                
+                const tempTexts = [];
+                
+                if (words.length > 2) {
+                    const line1 = words.slice(0, 2).join(' ');
+                    const line2 = words.slice(2).join(' ');
+                    
+                    [line1, line2].forEach((line, i) => {
+                        const tempText = g.append('text')
+                            .attr('x', d.x + leftShift)
+                            .attr('y', d.y + (i * lineHeight) + 20)
+                            .attr('text-anchor', 'middle')
+                            .attr('fill', Color)
+                            .style('font-weight', Bold)
+                            .style('font-size', fontSize)
+                            .text(line);
+                        
+                        const bbox = tempText.node().getBBox();
+                        maxWidth = Math.max(maxWidth, bbox.width);
+                        totalHeight += lineHeight;
+                        tempTexts.push({ text: line, y: d.y + (i * lineHeight) + 20 });
+                        tempText.remove();
+                    });
+                } else {
+                    const tempText = g.append('text')
+                        .attr('x', d.x + leftShift)
+                        .attr('y', d.y + 20)
+                        .attr('text-anchor', 'middle')
+                        .attr('fill', Color)
+                        .style('font-weight', Bold)
+                        .style('font-size', fontSize)
+                        .text(d.title);
+                    
+                    const bbox = tempText.node().getBBox();
+                    maxWidth = bbox.width;
+                    totalHeight = lineHeight;
+                    tempTexts.push({ text: d.title, y: d.y + 20 });
+                    tempText.remove();
+                }
+    
+                g.append('rect')
+                    .attr('x', (d.x + leftShift) - (maxWidth / 2) - padding)
+                    .attr('y', d.y + 8)
+                    .attr('width', maxWidth + (padding * 2))
+                    .attr('height', totalHeight + padding)
+                    .attr('fill', '#3749A626')
+                    .attr('rx', 5)
+                    .attr('ry', 5);
+    
+                tempTexts.forEach(({text, y}) => {
+                    g.append('text')
+                        .attr('x', d.x + leftShift)
+                        .attr('y', y + 6)
+                        .attr('text-anchor', 'middle')
+                        .attr('fill', Color)
+                        .style('font-weight', Bold)
+                        .style('font-size', fontSize)
+                        .text(text);
+                });
 
-        } else {
-            const currentIndex = nodes.indexOf(d);
-            const isUp = d.y <= height / 2;
-            let textY;
+            } else if (isLastNode || isBranchEndNode) {
+                const textY = d.y - 10;
 
-            if (currentIndex % 2 === 0) {
-                textY = d.y - 15;
+                wrapText(g, d.title, d.x, textY, fontSize, Color, Bold, false, null, 0, RightShift, 0);
+
             } else {
-                textY = d.y + 30;
-            }
+                const currentIndex = nodes.indexOf(d);
+                const isUp = d.y <= height / 2;
+                let textY;
 
-            wrapText(g, d.title, d.x + margin, textY, fontSize, Color, Bold, splitText, null, lineValue, RightShift, LeftShift);
-        }
-    });
+                if (currentIndex % 2 === 0) {
+                    if (d.title.split(' ').length > 3) {
+                        textY = d.y - 22;
+                    } else {
+                        textY = d.y - 12;
+                    }
+                } else {
+                    if (d.title.split(' ').length > 3) {
+                        textY = d.y + 24;
+                    } else {
+                        textY = d.y + 30;
+                    }
+                };
+                wrapText(g, d.title, d.x + margin, textY, fontSize, Color, Bold, splitText, null, lineValue, RightShift, LeftShift);
+            }
+        });
 };
 
 export default DrawBranch;
