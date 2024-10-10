@@ -19,17 +19,18 @@ import { Snackbar } from '../../Utils/SnackbarUtils';
 import Fire from '../../Fire/Fire';
 import { baseURL } from '../../Fire/useFire';
 import FileUpload from './FileUpload';
-import UploadDataGrid from './UploadDataGrid';
+import UploadDataGrid from '../../Components/DashboardComponents/DataGrid/UploadDataGrid';
 import { useUser } from '../../context/context';
 import Loading from '../../Components/Loading';
 import { useNavigate } from 'react-router-dom';
+import useFetch from 'point-fetch-react';
 
 const columns = [
   { Header: "Id", accessor: "id" },
   { Header: "Prompt", accessor: "prompt" },
   { Header: "File Path", accessor: "file" },
   { Header: "Skills", accessor: "total_skill_count" },
-{
+  {
     Header: "Status",
     accessor: "status",
     Cell: ({ value }) => (
@@ -48,7 +49,7 @@ const columns = [
         {value.charAt(0).toUpperCase() + value.slice(1)}
       </button>
     )
-  },  { Header: "", accessor: "Btn" },
+  }, { Header: "", accessor: "Btn" },
 ];
 
 const style = {
@@ -67,12 +68,14 @@ const style = {
 
 const UploadDocuments = () => {
 
-  const {data, setLoading, setCheckSubscription} = useUser();
+  // const {data, setLoading, setCheckSubscription} = useUser();
+  const { get, post, Data, setData } = useFetch({ state: {} })
 
+  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('1');
-  const [prompt, setPrompt] = useState([]);
+  // const [prompt, setPrompt] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
 
@@ -83,7 +86,9 @@ const UploadDocuments = () => {
   };
 
   const handlePrompt = (event) => {
-    setPrompt(event.target.value);
+    // setPrompt(event.target.value);
+    const {name, value} = event.target;
+    setData(name, value)
   };
 
   const handleSuccess = (value) => {
@@ -96,16 +101,15 @@ const UploadDocuments = () => {
 
   const checkSubscription = () => {
     setLoading(true);
-    Fire.get({
-      url: `${baseURL}/check-user-subscription`,
+    get({
+      endPoint: `/check-user-subscription`,
 
       onSuccess: (res) => {
         setLoading(false);
-        data();
         getUploadDataList();
         if (res?.data?.Subscription_Status === false) {
           // navigate(-1, { state: setCheckSubscription(true)  });
-        }return;
+        } return;
 
       },
 
@@ -139,18 +143,16 @@ const UploadDocuments = () => {
   const handlePromptSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    Fire.post({
-      url: `${baseURL}/create-path`,
-      data: {
-        prompt: prompt
-      },
+    post({
+      endPoint: `/create-path`,
+      // data: {
+      //   prompt: prompt
+      // },
 
       onSuccess: (res) => {
         console.log('create path successfully', res);
         Snackbar(res.data.message, { variant: 'success' });
-        setPrompt('');
         setLoading(false);
-        data();
         getUploadDataList();
       },
 
@@ -165,7 +167,7 @@ const UploadDocuments = () => {
 
   return (
     <React.Fragment>
-      <Loading/>
+      <Loading />
       <main className='documents-upload__section'>
         {success && (
           <div className='success__message'>
@@ -177,6 +179,9 @@ const UploadDocuments = () => {
           </div>
         )}
         <Box sx={{ width: '100%', typography: 'body1' }}>
+            <TextField id="standard-basic" label="Enter title" variant="standard"
+                sx={{ width: '40%', height: '100%', position: 'relative', marginBottom:"30px", marginLeft:"25px" }}
+              />
           <TabContext value={value}>
             <Box>
 
@@ -188,12 +193,14 @@ const UploadDocuments = () => {
             </Box>
 
             <TabPanel value="1">
+             
+
               <TextField
                 id="outlined-multiline-static"
                 label="Enter Your Prompt"
                 onChange={handlePrompt}
                 name="prompt"
-                value={prompt}
+                value={Data.prompt}
                 multiline
                 rows={6}
                 defaultValue=""
@@ -201,9 +208,9 @@ const UploadDocuments = () => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <BiSolidSend                          
-                      style={{ cursor: 'pointer', position: 'absolute', bottom: 8, right: 15, fontSize:'20px' }}
-                      onClick={handlePromptSubmit}
+                      <BiSolidSend
+                        style={{ cursor: 'pointer', position: 'absolute', bottom: 8, right: 15, fontSize: '20px' }}
+                        onClick={handlePromptSubmit}
                       />
                     </InputAdornment>
                   ),
@@ -212,7 +219,7 @@ const UploadDocuments = () => {
             </TabPanel>
 
             <TabPanel value="2">
-              <FileUpload onUploadSuccess={handleSuccess}/>
+              <FileUpload onUploadSuccess={handleSuccess} />
               <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

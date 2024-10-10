@@ -1,34 +1,46 @@
-import React, { useEffect } from 'react'
-import useFire, { baseURL } from '../Fire/useFire';
+import React, { useEffect, useState } from 'react'
 import UserContext from '../context/userContext';
+import MapProvider from './MapProvider';
+import useFetch from 'point-fetch-react';
 
-const UserProvider = ({children}) => {
+const UserProvider = ({ children }) => {
 
-    const { get, processing} = useFire();
+  const { get } = useFetch({
+    state:{}
+  });
+  const [user, setUser] = useState();
 
-    const authToken = localStorage.getItem('user-visited-dashboard')
-    const gettingProfileInfo = () => {
-        if (!authToken) return;  
-    
-        get({
-          url: `${baseURL}/show-profile`,
-          headers: { Authorization: `Bearer ${authToken}` },
-          onSuccess: (res) => {
-            setUser(res.data);
-          },
-          onError: (err) => {
-            Snackbar(err.message, { variant: 'error' });
-          },
-        });
-      };
+  const authToken = localStorage.getItem('user-visited-dashboard')
+  const gettingProfileInfo = () => {
+    if (!authToken) return;
 
-    useEffect(() => {
-        gettingProfileInfo();
-    },[authToken])
-    
+    get({
+      endPoint: `/show-profile`,
+      headers: { Authorization: `Bearer ${authToken}` },
+      onSuccess: (res) => {
+        setUser(res.data);
+      },
+      onError: (err) => {
+        console.log(err.message, { variant: 'error' });
+      },
+    });
+  };
+
+  useEffect(() => {
+    gettingProfileInfo();
+  }, [authToken])
+
   return (
-    <UserContext.Provider>
+
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+      }}
+    >
+      <MapProvider>
         {children}
+      </MapProvider>
     </UserContext.Provider>
   )
 }

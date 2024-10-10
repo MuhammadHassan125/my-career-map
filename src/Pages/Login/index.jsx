@@ -1,27 +1,39 @@
-import React from 'react';
 import './index.scss';
 import PrimaryInput from '../../Components/PrimaryInput';
 import { Link, useNavigate } from 'react-router-dom';
-import useFire, { baseURL } from '../../Fire/useFire';
 import Form from '../../Components/Auth/Form';
 import SocialLinkComponent from '../../Components/Auth/SocialLinks/SocialLinksComponent';
 import FormBtn from '../../Components/Auth/FormBtn';
-import AuthLayout from '../../Layouts/AuthLayout';
+import useFetch from 'point-fetch-react';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { data, setData, errors, post, processing } = useFire({ email: '', password: '' });
+  const { Data, setData, Errors, post, Processing, validate } = useFetch({
+    state:{
+      email: '', 
+      password: '' 
+    },
+    rules:{
+      email: ['required','email'],
+      password: ['required']
+    },
+    message:{
+      email:{
+        required: 'Email is required',
+      }
+    }
+  });
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (processing) return;
-    post({
-      url: `${baseURL}/login`,
-      onSuccess: (res) => {
-        localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
-        navigate('/');
-      },
-    });
+  const handleLogin = () => {
+    if(validate()){
+      post({
+        endPoint:'/login',
+        onSuccess: (res) => {
+          localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
+          navigate('/');
+        },
+      });
+    }
   };
 
   const handleInputChange = (e) => {
@@ -32,7 +44,7 @@ const Login = () => {
 
   return (
     <>
-          <Form onSubmit={handleLogin} processing={processing}>
+          <Form onSubmit={handleLogin} processing={Processing}>
             <div className="login-form-heading">
               <img src="/images/logo.png" alt="logo" className="login-logo" />
               <h2>Login to Account</h2>
@@ -45,10 +57,10 @@ const Login = () => {
                 type="email"
                 placeholder="Enter Email"
                 name="email"
-                value={data.email}
+                value={Data.email}
                 onChange={handleInputChange}
               />
-              {errors.email && <p className="error">{errors.email}</p>}
+              {Errors.email && <p className="error">{Errors.email}</p>}
             </div>
 
             <div className="email-div">
@@ -60,10 +72,10 @@ const Login = () => {
                 type="password"
                 placeholder="Password"
                 name="password"
-                value={data.password}
+                value={Data.password}
                 onChange={handleInputChange}
               />
-              {errors.password && <p className="error">{errors.password}</p>}
+              {Errors.password && <p className="error">{Errors.password}</p>}
             </div>
 
             <div className="remember-flex">
@@ -71,7 +83,7 @@ const Login = () => {
               <span>Remember Password</span>
             </div>
 
-            <FormBtn text={"Login"} processing={processing}/>
+            <FormBtn text={"Login"} processing={Processing}/>
           </Form>
 
           <div className="or-div">
@@ -84,7 +96,7 @@ const Login = () => {
           <SocialLinkComponent/>
 
           <div className='create-account'>
-            <p>Don't have an account?
+            <p>Dont have an account?
               <Link className='link-class' to="/register">
                 <span>Create Account</span>
               </Link>

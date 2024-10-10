@@ -1,17 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useFire, { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import FormBtn from '../../Components/Auth/FormBtn';
 import Form from '../../Components/Auth/Form'
+import useFetch from 'point-fetch-react';
 
 const VerifyOtp = () => {
   const navigate = useNavigate();
 
   const [timer, setTimer] = useState(600);
   const [showResend, setShowResend] = useState(false);
-  const {data, setData, post, processing} = useFire({ otp: '' });
+  const {Data, setData, post, processing} = useFetch({
+    state:{
+      otp: '' 
+    },
+    rules: {
+      otp: ['required']
+    },
+    message:{
+      otp: {
+        required: 'Please provide OTP is required'
+      }
+    }
+  });
 
   useEffect(() => {
     if (timer > 0) {
@@ -33,18 +45,18 @@ const VerifyOtp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     post({
-      url: `${baseURL}/verify-otp`,
+      endPoint: `/verify-otp`,
      
       onSuccess: (res) => {
         console.log('OTP Verified Successfully', res);
-        Snackbar(res.data.message, { variant: 'success' });
+        alert(res.data.message);
         localStorage.setItem('reset-token', true)
         navigate('/reset-password');
       },
 
       onError: (error) => {
         console.log(error);
-        Snackbar(error.error, { variant: 'error' });
+        alert(error.error || 'Failed to verify OTP');
       }
     });
   };
@@ -68,7 +80,7 @@ const VerifyOtp = () => {
 
             <div className="register-fields-div" style={{ marginBottom: '20px' }}>
               <p>Enter OTP:</p>
-              <MuiOtpInput value={data.otp} onChange={handleChange} length={6} />
+              <MuiOtpInput value={Data.otp} onChange={handleChange} length={6} />
             </div>
 
             <FormBtn text={"Verify OTP"} processing={processing}/>

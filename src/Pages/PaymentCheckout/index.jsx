@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import Fire from '../../Fire/Fire';
 import { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
 import { GoNorthStar } from "react-icons/go";
 import { loadStripe } from '@stripe/stripe-js';
 import './index.scss';
+import useFetch from 'point-fetch-react';
 
 const PaymentCheckout = () => {
     const [subscriptionPlans, setSubscriptionPlans] = useState([]);
     const stripePromise = loadStripe('pk_test_51PpmncIILuhliL1zY30SSomzkp2paejUduNmFduUkYhXjiblP0DeUGqf5QfOdH6FzKhruv2n50tWqxRG3QNBNmSg00EayNmN8a');
 
+    const {get} = useFetch({state:{}})
+
     const getCheckoutPlans = () => {
-        Fire.get({
-            url: `${baseURL}/get-subscription`,
+        get({
+            endPoint: `/get-subscription`,
 
             onSuccess: (res) => {
                 setSubscriptionPlans(res?.data?.data || []);
-                // Snackbar("Subscription Plans fetched successfully", { variant: 'success' });
             },
 
             onError: (err) => {
                 console.log(err);
-                Snackbar(err.error || "Subscription Plans fetch failed", { variant: "error" });
+                alert(err.error || "Subscription Plans fetch failed");
             }
         });
     };
@@ -44,15 +45,16 @@ const PaymentCheckout = () => {
                 const result = await stripe.redirectToCheckout({ sessionId: data.data.sessionId });
 
                 if (result.error) {
-                    alert(result?.error?.message);
+                    alert(result.error.message);
+                } else {
+                    alert(data.message);
                 }
             } else {
-                Snackbar('Failed to create checkout session', {variant:'error'});
-
+                alert(data.message || 'Failed to create checkout session');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error occurred during checkout');
+            // alert('Error occurred during checkout');
         } 
     };
 

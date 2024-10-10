@@ -15,6 +15,7 @@ import PrimaryInput from '../../Components/PrimaryInput/index';
 import PrimaryBtn from '../../Components/PrimaryBtn/index';
 import axios from 'axios';
 import ChangePassword from './ChangePassword';
+import useFetch from 'point-fetch-react';
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 30,
@@ -43,6 +44,21 @@ const Profile = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadMessage, setUploadMessage] = useState('');
     const [newUsername, setNewUsername] = useState(user?.data?.username);
+
+    const {put, Data, setData} = useFetch({
+        state:{
+            newUsername
+        },
+        
+        rules:{
+            newUsername: 'required'
+        },
+        message:{
+            newUsername:{
+                required: 'Please provide new username'
+            }
+        }
+})
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -92,16 +108,14 @@ const Profile = () => {
 
     const handleUpdateUsername = (event) => {
         event.preventDefault();
-
-        Fire.put({
-            url: `${baseURL}/update-username`,
-            data: { newUsername },
+        put({
+            endPoint: `/update-username`,
             onSuccess: (res) => {
-                Snackbar(res.data.message || "Username updated successfully", { variant: "success" });
+                alert(res.data.message || "Username updated successfully", { variant: "success" });
                 gettingProfileInfo();
             },
             onError: (err) => {
-                Snackbar(err.error || "Failed to update username", { variant: "error" });
+                alert(err.error || "Failed to update username", { variant: "error" });
             }
         });
 
@@ -194,7 +208,7 @@ const Profile = () => {
                             <div style={{ width: "100%", marginBottom: '10px' }}>
                                 <PrimaryInput
                                     type="text"
-                                    value={newUsername}
+                                    value={Data?.newUsername}
                                     placeholder={user?.data?.username}
                                     onChange={handleUsernameChange}
                                 />

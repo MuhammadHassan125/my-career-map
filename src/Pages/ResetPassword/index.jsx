@@ -1,34 +1,44 @@
-import React from 'react'
 import PrimaryInput from '../../Components/PrimaryInput';
 import { Link, useNavigate } from 'react-router-dom';
-import useFire, { baseURL } from '../../Fire/useFire';
 import { Snackbar } from '../../Utils/SnackbarUtils';
 import Form from '../../Components/Auth/Form';
 import FormBtn from '../../Components/Auth/FormBtn';
+import useFetch from 'point-fetch-react';
 const ResetPassword = () => {
   const navigate = useNavigate();
 
-  const { data, setData, post, errors, processing } = useFire({
-    email: '',
-    newPassword: '',
-    confirmPassword: '',
+  const { Data, setData, post, Errors, Processing, validate } = useFetch({
+    state:{
+      email: '',
+      newPassword: '',
+      confirmPassword: '',
+    }, 
+
+    rules : {
+      email: ['required', 'email'],
+      newPassword: ['same:newPassword'],
+      confirmPassword: ['same:newPassword'],
+    },
+
+
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if(processing) return;
-    post({
-      url: `${baseURL}/reset-password`,
-      onSuccess: (res) => {
-        console.log(res)
-        // Snackbar(res.data.message, { variant: 'success' });
-        navigate('/login');
-      },
 
-      onError: (err) => {
-        Snackbar(err.error, { variant: 'error' });
-      }
-    });
+  const handleSubmit = () => {
+    if (validate()) {
+      post({
+        endPoint: '/reset-password',
+        onSuccess: (res) => {
+          console.log(res)
+          // Snackbar(res.data.message, { variant: 'success' });
+          navigate('/login');
+        },
+
+        onError: (err) => {
+          Snackbar(err.error, { variant: 'error' });
+        }
+      });
+    }
   };
 
   const handleInputChange = (event) => {
@@ -39,9 +49,9 @@ const ResetPassword = () => {
 
   return (
     <>
-        <div style={{ padding: '30px 0' }}>
-          <Form onSubmit={handleSubmit} processing={processing}
-          >
+      <div style={{ padding: '30px 0' }}>
+        <Form onSubmit={handleSubmit} processing={Processing}
+        >
           <div className="login-form-heading">
             <h2>Reset Password</h2>
             <p>Reset password your forget password</p>
@@ -53,10 +63,10 @@ const ResetPassword = () => {
               type="email"
               placeholder="Enter Email"
               name="email"
-              value={data.email}
+              value={Data.email}
               onChange={handleInputChange}
             />
-                          {errors.email && <p className="error">{errors.email}</p>}
+            {Errors.email && <p className="error">{Errors.email}</p>}
           </div>
 
           {/* new Password  */}
@@ -66,10 +76,10 @@ const ResetPassword = () => {
               type="password"
               placeholder="Enter Email"
               name="newPassword"
-              value={data.newPassword}
+              value={Data.newPassword}
               onChange={handleInputChange}
             />
-            {errors.password && <p className="error">{errors.password}</p>}
+            {Errors.password && <p className="error">{Errors.password}</p>}
           </div>
 
           {/* confirm password  */}
@@ -79,14 +89,14 @@ const ResetPassword = () => {
               type="password"
               placeholder="Enter Email"
               name="confirmPassword"
-              value={data.confirmPassword}
+              value={Data.confirmPassword}
               onChange={handleInputChange}
             />
-            {errors.password && <p className="error">{errors.password}</p>}
+            {Errors.password && <p className="error">{Errors.password}</p>}
           </div>
 
-          <FormBtn text={"Reset Password"} processing={processing}/>
-          
+          <FormBtn text={"Reset Password"} processing={Processing} />
+
           <div className='login-account'>
             <p>Don't won't to reset your password
               <Link to="/login" className='link-class'>
@@ -94,8 +104,8 @@ const ResetPassword = () => {
               </Link>
             </p>
           </div>
-          </Form>
-          </div>
+        </Form>
+      </div>
     </>
   )
 }

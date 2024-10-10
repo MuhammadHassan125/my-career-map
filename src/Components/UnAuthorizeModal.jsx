@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import { Modal, Box, Typography, Button } from '@mui/material';
 import { FcCancel } from "react-icons/fc";
+import { useNavigate } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -19,22 +19,19 @@ const style = {
   textAlign:'center',
 };
 
-const UnAuthorizeModal = () => {
-  const [open, setOpen] = useState(false); 
-  // const navigate = useNavigate();
 
-  useEffect(() => {
-    setOpen(true);
-    // navigate('/')
-  }, [])
-  const handleClose = () => {
-    setOpen(false);
-    clearError(); 
+const UnAuthorizeModal = ({open, handleClose}) => {
+
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    localStorage.removeItem('user-visited-dashboard')
+    navigate('/login');
+    handleClose();
   };
 
-
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleNavigate}>
     <Box sx={style}>
     <FcCancel style={{fontSize:'3.4rem'}}/>
       <Typography variant="h6" component="h2">
@@ -43,8 +40,8 @@ const UnAuthorizeModal = () => {
       <Typography>
           You don't have permission to access this page
       </Typography>
-      <Button onClick={handleClose} variant="contained" sx={{ mt: 2, backgroundColor:'red' }}>
-        Close
+      <Button onClick={handleNavigate} variant="contained" sx={{ mt: 2, backgroundColor:'red' }}>
+        Login
       </Button>
     </Box>
   </Modal>

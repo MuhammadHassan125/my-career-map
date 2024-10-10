@@ -22,12 +22,12 @@ import ProfileLayout from "../Layouts/ProfileLayout"
 import PaymentCheckout from "../Pages/PaymentCheckout"
 import CancelCheckout from "../Pages/PaymentCheckout/CancelCheckout"
 import Success from "../Pages/PaymentCheckout/SuccessCheckout"
-import AuthLayout from "../Layouts/AuthLayout"
+import FullPageFormLayout from "../Layouts/FullPageFormLayout"
 const Router = () => {
   return (
     <Routes>
       <Route element={<GuestRoute />}>
-        <Route element={<AuthLayout />}>
+        <Route element={<FullPageFormLayout />}>
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
         <Route path="forget-password" element={<ForgetPassword />} />
@@ -46,7 +46,7 @@ const Router = () => {
           <Route path='map-zoom' element={<MapZoom />} />
           <Route path='map-selected-path' element={<MapSelectedPath />} />
           <Route path='path' element={<Path />} />
-          <Route path='list-career-path' element={<ListCareerPath />} />
+          <Route path='list-career-path/:id' element={<ListCareerPath />} />
           <Route path='profile' element={<Profile />} />
           <Route path='payment-checkout' element={<PaymentCheckout />} />
           <Route path='/cancel' element={<CancelCheckout />} />

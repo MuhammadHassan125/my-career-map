@@ -1,7 +1,6 @@
 import React from 'react'
 import './index.scss';
-import UploadDataGrid from '../UploadDocuments/UploadDataGrid';
-
+import UploadDataGrid from '../../Components/DashboardComponents/DataGrid/UploadDataGrid';
 
 
 const Path = () => {

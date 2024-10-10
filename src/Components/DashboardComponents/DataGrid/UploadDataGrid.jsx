@@ -1,28 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './index.scss';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Pagination, Typography } from '@mui/material';
-import { useUser } from '../../context/context';
-import Fire from '../../Fire/Fire';
-import Loading from '../../Components/Loading';
-import { Snackbar } from '../../Utils/SnackbarUtils';
-import { AnalyzeURL } from '../../Fire/useFire';
+import Loading from '../../Loading';
+import useFetch from 'point-fetch-react';
+import { MdOutlineFileUpload } from "react-icons/md";
+
 
 const UploadDataGrid = ({ heading, dropdown }) => {
-  const { data, getUploadDataList, setLoading, loading } = useUser();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4);
 
-  const POLLING_INTERVAL = 10000;
+  const { get, post} = useFetch({ state: {} });
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
+  const getUploadDataList = () => {
+    get({
+      endPoint: `/get-paths-for-user`,
+      onSuccess: (res) => {
+        setData(res.data.data.result || []);
+        console.log('data', res);
+      },
+      onError: (err) => {
+        console.log(err);
+        setData([]);
+      },
+    });
+  };
+
   const generate_roadmap = (id, status) => {
     setLoading(true);
-    Fire.post({
-      url: `${AnalyzeURL}/${status === 'pending' ? "generate_roadmap" : "regenerate_roadmap"}?id=${id}`,
+    post({
+      endPoint: `/${status === 'pending' ? "generate_roadmap" : "regenerate_roadmap"}?id=${id}`,
       onSuccess: (res) => {
         console.log(res);
         Snackbar(res?.data?.message, { variant: 'success' });
@@ -38,15 +52,23 @@ const UploadDataGrid = ({ heading, dropdown }) => {
 
   const columns = [
     { Header: "Id", accessor: "id" },
+    // {
+    //   Header: "Prompt", accessor: "prompt",
+    //   Cell: ({ value }) => (
+    //     <Typography sx={{ fontSize: "13px" }}>
+    //       {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
+    //     </Typography>
+    //   )
+    // },
     {
-      Header: "Prompt", accessor: "prompt",
+      Header: "Title", accessor: "title",
       Cell: ({ value }) => (
-        <Typography>
+        <Typography sx={{ fontSize: "13px" }}>
           {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
         </Typography>
       )
     },
-    { Header: "File Path", accessor: "file" },
+    // { Header: "Path", accessor: "file" },
     {
       Header: "Status",
       accessor: "status",
@@ -54,13 +76,15 @@ const UploadDataGrid = ({ heading, dropdown }) => {
         <Typography
           sx={{
             textTransform: 'capitalize',
-            color: value === 'pending' ? 'warning.main' : value === 'analyzed' ? 'success.main' : 'info.main',
             backgroundColor: value === 'pending' || value === 'analyzed' ? '#00B69B' : '#E8E8E8',
             color: value === 'pending' || value === 'analyzed' ? 'white' : '#354E70',
             borderRadius: '10px',
-            padding: '3px 5px 3px 10px',
+            padding: '3px 0',
+            textAlign:'center',
             cursor: 'pointer',
-            fontSize: '12px',
+            fontSize: '11px',
+             width:'70px',
+            // height:'25px'
           }}
         >
           {value}
@@ -69,21 +93,43 @@ const UploadDataGrid = ({ heading, dropdown }) => {
     },
     { Header: "Skills", accessor: "total_skill_count" },
     {
+      Header: "Edit",
+      accessor: "edit",
+      Cell: ({ row }) => (
+        <div
+          style={{
+            cursor: 'pointer', 
+            background: '#E8E8E8', 
+            padding: '6px', 
+            borderRadius: "20px", 
+            fontSize: "12px",
+            textAlign:'center',
+            width:'25px',
+            height:'25px'
+          }}
+          onClick={() => handleEdit(row)}
+        >
+          <MdOutlineFileUpload  />
+        </div>
+      )
+    },
+    {
       Header: "",
       accessor: "status",
       Cell: ({ value, row }) => (
         <button
-          onClick={() => (value === 'pending' || value === 'analyzed') && generate_roadmap(row.id, value)}
+          onClick={() => (value === 'pending' || value === 'analysed') && generate_roadmap(row.id, value)}
           style={{
-            backgroundColor: value === 'pending' || value === 'analyzed' ? '#3749A6' : 'transparent',
-            border: value === 'pending' || value === 'analyzed' ? '1px solid #3749A6' : '1px solid grey',
-            color: value === 'pending' || value === 'analyzed' ? 'white' : ' #354E70',
+            backgroundColor: value === 'pending' || value === 'analysed' ? '#3749A6' : 'transparent',
+            border: value === 'pending' || value === 'analysed' ? '1px solid #3749A6' : '1px solid grey',
+            color: value === 'pending' || value === 'analysed' ? 'white' : '#354E70',
             borderRadius: '2.5px',
             padding: '5px 10px',
             cursor: 'pointer',
+            fontSize: '10px',
           }}
         >
-          {value === 'pending' ? 'Analyze' : value === 'analyzed' ? 'Reanalyze' : 'Analyzing'}
+          {value === 'pending' ? 'Analysed' : value === 'analysed' ? 'Reanalyze' : 'Analyzing'}
         </button>
       )
     },
@@ -111,7 +157,6 @@ const UploadDataGrid = ({ heading, dropdown }) => {
           </button>
         </div>
 
-        {/* Check if data is empty */}
         {data.length === 0 ? (
           <div className="no-data">
             <Typography sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px 0' }}>No data available</Typography>
@@ -130,16 +175,25 @@ const UploadDataGrid = ({ heading, dropdown }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((row, rowIndex) => (
-                    <tr key={rowIndex} className="data-grid__body-row">
-                      {columns.map((col, colIndex) => (
-                        <td key={colIndex} className="data-grid__body-cell">
-                          {col.Cell ? col.Cell({ value: row[col.accessor], row }) : (row[col.accessor] !== null ? row[col.accessor] : 'No Data')}
-                        </td>
-                      ))}
+                  {currentItems.length > 0 ? (
+                    currentItems.map((row, rowIndex) => (
+                      <tr key={rowIndex} className="data-grid__body-row">
+                        {columns.map((col, colIndex) => (
+                          <td key={colIndex} className="data-grid__body-cell">
+                            {col.Cell ? col.Cell({ value: row[col.accessor], row }) : (row[col.accessor] !== null ? row[col.accessor] : 'No Data')}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={columns.length} className="data-grid__body-cell">
+                        No items to display
+                      </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
+
               </table>
             </div>
             <Pagination

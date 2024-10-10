@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { baseURL } from '../../../Fire/useFire';
-import Fire from '../../../Fire/Fire';
-import { Snackbar } from '../../../Utils/SnackbarUtils';
+import useFetch from 'point-fetch-react';
 
 const Success = () => {
     const location = useLocation();
+    const {post} = useFetch()
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -19,20 +18,20 @@ const Success = () => {
                         throw new Error('User not authenticated');
                     }
                     
-                    Fire.post({
-                        url: `${baseURL}/confirm-subscription`,
+                    post({
+                        endPoint: `/confirm-subscription`,
                         data: {
                             sessionId
                         },
 
                         onSuccess: (res) => {
                             console.log(res);
-                            Snackbar("Subscription confirmed successfully", { variant: 'success' });
+                            alert("Subscription confirmed successfully");
                         },
 
                         onError: (err) => {
                             console.log(err);
-                            Snackbar("Subscription confirmation failed", { variant: 'error' });
+                            alert("Subscription confirmation failed");
                         }
                     })
                 } catch (error) {

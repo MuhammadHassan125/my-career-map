@@ -1,8 +1,7 @@
-import React from 'react'
 import '../Pages/Login/index.scss'
 import { Outlet } from 'react-router-dom'
 
-const AuthLayout = () => {
+const FullPageFormLayout = () => {
   return (
         <main className="login-section">
         <div className="login-form">
@@ -12,4 +11,4 @@ const AuthLayout = () => {
   )
 }
 
-export default AuthLayout
+export default FullPageFormLayout

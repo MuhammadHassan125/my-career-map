@@ -1,16 +1,21 @@
-import { BrowserRouter } from "react-router-dom"
 import Router from "./Components/Router"
-import ErrorDialogueProvider from "./Providers/ErrorDialogueProvider"
+import { Provider } from "point-fetch-react"
+import useErrorDialogs from "./Hooks/useErrorDialogs";
+import { baseURL } from "./Utils/contants";
 
 function App() {
-
+  const {handleOpenUnAuthorizeModal, handleOpenInternalServer} = useErrorDialogs();
   return (
-    <ErrorDialogueProvider >
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
-    </ErrorDialogueProvider>
+    <Provider
+      baseURL={baseURL}
+      authorization={`Bearer ${localStorage.getItem('user-visited-dashboard')}`}
+      onUnAuthenticated={handleOpenUnAuthorizeModal}
+      onServerError={handleOpenInternalServer}
+    >
+          <Router />
+    </Provider>
   )
 }
 
 export default App
+ 

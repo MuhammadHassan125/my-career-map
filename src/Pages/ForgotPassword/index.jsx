@@ -1,36 +1,39 @@
-import React from 'react'
 import PrimaryInput from '../../Components/PrimaryInput';
 import { Link, useNavigate } from 'react-router-dom';
-import useFire, { baseURL } from '../../Fire/useFire';
-import { Snackbar } from '../../Utils/SnackbarUtils';
 import Form from '../../Components/Auth/Form';
 import FormBtn from '../../Components/Auth/FormBtn';
+import useFetch from 'point-fetch-react';
 
 const ForgotPassword = () => {
   
   const navigate = useNavigate();
-  const { data, setData, post, errors, processing } = useFire({
-    email: '',
+  const { Data, setData, post, Errors, processing, validate } = useFetch({
+    state:{
+      email: '',
+    },
+    rules: {
+      email: ['required', 'email']
+    }
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    post({
-      url: `${baseURL}/request-for-otp`,
-      onSuccess: (res) => {
-        console.log('forget password successfully', res);
-        Snackbar(res.data.data.message, { variant: 'success' });
-        location.setItem('otp-verified', true);
-        navigate('/verify-otp');
-      },
-
-      onError: (err) => {
-        console.log('forget password error', err);
-        Snackbar(err.message || "forget password Failed", { variant: 'error' });
-      }
-    });
-
-
+  const handleSubmit = () => {
+    if(validate()){
+      post({
+        endPoint: `/request-for-otp`,
+        onSuccess: (res) => {
+          console.log('forget password successfully', res);
+          if(res?.data?.status === true){
+            localStorage.setItem('otp-verified', true);
+            navigate('/verify-otp');
+          }return
+        },
+  
+        onError: (err) => {
+          console.log('forget password error', err);
+        }
+      });
+  
+    }
   };
 
   const handleInputChange = (event) => {
@@ -54,15 +57,16 @@ const ForgotPassword = () => {
               type="email" 
               placeholder="Enter Email" 
               name="email"
-              value={data.email}
+              value={Data.email}
               onChange={handleInputChange}
               />
+            {Errors.email && <p className="error">{Errors.email}</p>}
             </div>
 
             <FormBtn processing={processing} text={'GET OTP'}/>
 
             <div className='login-account'>
-              <p>Don't won't to forget password
+              <p>Dont wont to forget password
                 <Link to="/login" className='link-class'>
                   <span> Login</span>
                 </Link>

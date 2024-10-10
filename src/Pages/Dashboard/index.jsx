@@ -1,9 +1,8 @@
-import React from 'react';
 import './index.scss';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import UploadDataGrid from '../UploadDocuments/UploadDataGrid';
+import UploadDataGrid from '../../Components/DashboardComponents/DataGrid/UploadDataGrid';
 
 const columns = [
     { Header: "Id", accessor: "id" },

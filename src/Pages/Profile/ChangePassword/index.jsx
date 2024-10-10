@@ -1,37 +1,36 @@
 import React from 'react';
 import PrimaryInput from '../../../Components/PrimaryInput';
-import { Link, useNavigate } from 'react-router-dom';
-import useFire, { baseURL } from '../../../Fire/useFire';
-import { Snackbar } from '../../../Utils/SnackbarUtils';
+import { useNavigate } from 'react-router-dom';
+import useFetch from 'point-fetch-react';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
-  const { data, setData, errors, put } = useFire({ currentPassword: '', newPassword: '', confirmPassword:'' });
+  const { Data, setData, errors, put } = useFetch({
+    state:{
+      currentPassword: '', 
+      newPassword: '', 
+      confirmPassword:''
+    }
+  });
 
   const handleLogin = (e) => {
-    const authToken = localStorage.getItem('user-visited-dashboard');
     e.preventDefault();
     put({
-      url: `${baseURL}/change-profile-password`,
-
-      headers:{
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
+      endPoint: `/change-profile-password`,
 
       onSuccess: (res) => {
         console.log('Login Success', res);
         if (res.data.data.AuthToken || res.data.status === true) {
           localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
-          Snackbar(res.data.message, { variant: 'success' });
+          alert(res.data.message);
           navigate('/');
         } else {
-          Snackbar(errors || "Login Failed", { variant: 'error' });
+          alert(errors || "Login Failed");
         }
       },
       onError: (err) => {
         console.log('change password Error', err);
-        Snackbar(err.error, { variant: 'error' });
+        alert(err.error);
       }
     });
   };
@@ -60,7 +59,7 @@ const ChangePassword = () => {
               type="password"
               placeholder="Current password"
               name="currentPassword"
-              value={data.currentPassword}
+              value={Data.currentPassword}
               onChange={handleInputChange}
             />
             {/* {errors.email && <p className="error">{errors.email}</p>} */}
@@ -74,7 +73,7 @@ const ChangePassword = () => {
               type="password"
               placeholder="New Password"
               name="newPassword"
-              value={data.newPassword}
+              value={Data.newPassword}
               onChange={handleInputChange}
             />
             {/* {errors.password && <p className="error">{errors.password}</p>} */}
@@ -88,7 +87,7 @@ const ChangePassword = () => {
               type="password"
               placeholder="Confirm Password"
               name="confirmPassword"
-              value={data.confirmPassword}
+              value={Data.confirmPassword}
               onChange={handleInputChange}
             />
             {/* {errors.password && <p className="error">{errors.password}</p>} */}

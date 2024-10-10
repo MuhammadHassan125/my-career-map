@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BiExport } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import './index.scss'
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/context';
 import { GrAttachment } from "react-icons/gr";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import SinglePathMap from './SinglePathMap';
 import AddPathComponent from '../../Components/AddPathComponent';
+import MapContext from '../../context/mapContext';
 const MapSinglePath = () => {
 
-  const navigate = useNavigate();
-  
-  const contentHandler = (data) => {
-    console.log(data, 'ffffffffffffffffffffffffffffff')
-  }
-  
   return (
     <React.Fragment>
       <main className='map-section'>
@@ -36,7 +30,7 @@ const MapSinglePath = () => {
         </div>
 
         <div className='map-section__map-div'>
-          <SinglePathMap contentHandler={contentHandler}/>
+          <SinglePathMap/>
         </div>
 
         <GPTComponent />
@@ -50,10 +44,8 @@ const GPTComponent = () => {
   const navigate = useNavigate();
   const [isMinimized, setIsMinimized] = useState(false);
 
-  const { gettingSkillsData, getTitle, getDescription } = useUser();
-  console.log(getTitle, "my-title");
-  console.log(getDescription, 'description')
-
+  const { gettingSkillsData, getTitle, getDescription } = useContext(MapContext);
+  const skillsId = localStorage.getItem('singlePathId');
 
 
   const handleToggle = () => {
@@ -79,7 +71,7 @@ const GPTComponent = () => {
             
               <div className='gpt-section__btn-div'>
                   <div>
-                      <button className='gpt-section__btn' onClick={() => navigate('/list-career-path')}>Get Started</button>
+                      <button className='gpt-section__btn' onClick={() => navigate(`/list-career-path/${skillsId}`)}>Get Started</button>
                   </div>
                   <div>
                       <p><strong>Next Role:</strong>Sales Team Lead</p>
