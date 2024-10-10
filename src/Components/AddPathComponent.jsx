@@ -41,33 +41,10 @@ const AddPathComponent = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // const handleNavigate = () => {
-  //   navigate('/documents-upload');
-  // };
-
-  const {data, setData, errors, post} = useFire({title:'', prompt:''});
-
-  const handleInput= (e) => {
-    const {name, value} = e.target;
-    setData(name, value);
-  }
-
-  const handleCreatePath = (e) => {
-      e.preventDefault();
-      post({
-        url:`${baseURL}/create-path`,
-        onSuccess : (res) => {
-          console.log(res);
-          Snackbar(res.data.message, {variant: 'success'})
-          handleClose();
-        },
-
-        onError: (err) => {
-          console.log(err);
-          Snackbar(err.message, {variant: 'error'})
-        }
-      })
+  const handleNavigate = () => {
+    navigate('/add-path');
   };
+
 
   useEffect(() => {
     if(checkSubscription === false){
@@ -79,10 +56,10 @@ const AddPathComponent = () => {
   return (
     <>
       <Loading />
-      <PrimaryBtn text={"Add Path"} icon={<FiPlus />} onClick={handleOpen} />
+      <PrimaryBtn text={"Add Path"} icon={<FiPlus />} onClick={handleNavigate} />
       {/* <PremiumModel open={open} handleClose={handleClose} /> */}
 
-      <Modal
+      {/* <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
@@ -139,26 +116,6 @@ const AddPathComponent = () => {
 
               </Box>
 
-              {/* <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", martinTop: "10px", width: "100%", padding: "15px 20px 0 20px" }}>
-                <Box>
-                  <p style={{ fontFamily: "Nunito Sans, sans-serif", fontSize: "14px" }}>
-                    Skills:</p>
-                </Box>
-
-                <Box sx={{ flexWrap: "wrap", display: "flex", gap: "10px" }}>
-
-                  <button className='skills-btn'>
-                    Skill necessary
-                    <IoMdClose />
-                  </button>
-                  <button className='skills-btn'>
-                    Skill necessary
-                    <IoMdClose />
-                  </button>
-                </Box>
-              </Box> */}
-
-
               <Box sx={{ width: "100%", padding: "20px", marginTop: "10px" }}>
                 <Button
                   onClick={handleCreatePath}
@@ -172,7 +129,7 @@ const AddPathComponent = () => {
             </Box>
           </Box>
         </Fade>
-      </Modal>
+      </Modal> */}
     </>
   );
 };

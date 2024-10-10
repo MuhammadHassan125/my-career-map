@@ -18,7 +18,7 @@ const SinglePathMap = () => {
             url: `${baseURL}/get-single-branch/${singlePathId}`,
             onSuccess: (res) => {
                 console.log(res?.data?.data, 'singlePath');
-                setSinglePathData(res?.data?.data[0]); // Get the first item from the array
+                setSinglePathData(res?.data?.data[0]); 
             },
             onError: (err) => {
                 console.log(err);
@@ -47,6 +47,7 @@ const SinglePathMap = () => {
                 .style('color', 'white')
                 .style('border-radius', '4px')
                 .style('font-size', '12px')
+                .style('margin-left', '-10px')
                 .style('visibility', 'hidden')
                 .style('pointer-events', 'none');
 
@@ -108,15 +109,35 @@ const SinglePathMap = () => {
                     tooltip.style('visibility', 'hidden');
                 });
 
-            svg.selectAll('text')
+            svg.selectAll('.node-text')
                 .data(branch)
-                .enter().append('text')
-                .attr('x', d => xScale(d.title))
-                .attr('y', height / 2 + 20)
-                .attr('text-anchor', 'middle')
-                .attr('fill', 'black')
-                .style('font-size', '10px')
-                .text(d => d.title);
+                .enter()
+                .append('g')
+                .attr('class', 'node-text')
+                .attr('transform', d => `translate(${xScale(d.title)},${height / 2 + 20})`)
+                .each(function(d) {
+                    const words = d.title.split(' ');
+                    const text = d3.select(this);
+                    
+                    if (words.length > 2) {
+                        text.append('text')
+                            .attr('text-anchor', 'middle')
+                            .attr('dy', '0em')
+                            .style('font-size', '10px')
+                            .text(words.slice(0, 2).join(' '));
+                        
+                        text.append('text')
+                            .attr('text-anchor', 'middle')
+                            .attr('dy', '1.2em')
+                            .style('font-size', '10px')
+                            .text(words.slice(2).join(' '));
+                    } else {
+                        text.append('text')
+                            .attr('text-anchor', 'middle')
+                            .style('font-size', '10px')
+                            .text(d.title);
+                    }
+                });
 
             for (let i = 0; i < branch.length; i++) {
                 if (branch[i].status === 'pending') {

@@ -81,7 +81,7 @@ const GPTComponent = () => {
                       <button className='gpt-section__btn' onClick={() => navigate(`/list-career-path/${skillsId}`)}>Get Started</button>
                   </div>
                   <div style={{marginTop:"10px"}}>
-                      <p><strong>Next Role:  </strong>{nextRole}</p>
+                      <p><strong>Next Role:</strong>Sales Team Lead</p>
                   </div>
               </div>
           </div>

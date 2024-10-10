@@ -112,7 +112,7 @@ useEffect(() => {
           }}
           onClick={() => handleEdit(row)}
         >
-          <MdOutlineFileUpload  />
+          <AiOutlineEdit  />
         </div>
       )
     },

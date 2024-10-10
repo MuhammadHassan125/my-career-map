@@ -36,7 +36,7 @@ const UserDetailsMap = () => {
   useEffect(() => {    
     if(pathDetailsArray.length > 0) {
       const width = 1000;
-      const height = 490;
+      const height = 580;
       const centerY = height / 2;
       
       for (let index = 0; index < pathDetailsArray.length; index++) {

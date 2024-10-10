@@ -25,7 +25,7 @@ const FileUpload = ({ onUploadSuccess }) => {
             formData.append('file', file);
             try {
                 setLoading(true);
-                const response = await axios.put(`${baseURL}/update-path/${params.id}`, formData, {
+                const response = await axios.put(`${baseURL}/create-path`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`

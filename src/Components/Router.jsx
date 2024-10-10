@@ -22,6 +22,7 @@ import ProfileLayout from "../Layouts/ProfileLayout"
 import PaymentCheckout from "../Pages/PaymentCheckout"
 import CancelCheckout from "../Pages/PaymentCheckout/CancelCheckout"
 import Success from "../Pages/PaymentCheckout/SuccessCheckout"
+import EditPath from "../Pages/UploadDocuments/EditPath"
 const Router = () => {
   return (
     <Routes>
@@ -43,7 +44,8 @@ const Router = () => {
           <Route path='map-zoom' element={<MapZoom />} />
           <Route path='map-selected-path' element={<MapSelectedPath />} />
           <Route path='path' element={<Path />} />
-          <Route path='path/:id/edit' element={<UploadDocuments />} />
+          <Route path='path/:id/edit' element={<EditPath/>} />
+          <Route path='add-path' element={<UploadDocuments />} />
           <Route path='list-career-path/:id' element={<ListCareerPath />} />
           <Route path='profile' element={<Profile />} />
           <Route path='payment-checkout' element={<PaymentCheckout />} />

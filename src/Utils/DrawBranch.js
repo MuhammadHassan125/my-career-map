@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 
 const calculatePositions = (steps, centerY, depth = 0, branchIndex = 0, parentIndex = 0, parentX = 0) => {
     const nodeDistance = 110;
-    const branchDistance = 70;
+    const branchDistance = 80;
 
     return steps.map((step, index) => {
         const x = index === 0 ? parentX + nodeDistance : parentX + (index + 1) * nodeDistance;
@@ -179,9 +179,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             const sourceNode = nodes.find(n => n.id === d.source);
             const targetNode = nodes.find(n => n.id === d.target);
 
-            // Find the branch that contains both source and target nodes
             const relevantBranch = branches.find(branch => {
-                // Check if the branch's steps contain both nodes
                 const containsSource = branch.steps.some(step => step.id === sourceNode.id);
                 const containsTarget = branch.steps.some(step => step.id === targetNode.id);
                 return containsSource && containsTarget;
@@ -432,44 +430,12 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
             const Bold = isFirstNode || isLastNode || isBranchEndNode ? 'bold' : 'medium';
             const lineValue = isFirstNode || isLastNode ? 0 : -10;
-            const RightShift = isLastNode || isBranchEndNode ? 120 : 0;
+            const RightShift = isLastNode || isBranchEndNode ? 150 : 0;
             const LeftShift = isFirstNode ? -45 : 0;
             const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
             const margin = 12;
 
             if (isFirstNode) {  
-                // const words = d.title.split(' ');
-                // const fontSize = '12px';
-                // const Color = '#354E70';
-                // const Bold = 'bold';
-                // const LeftShift = -20;
-            
-                // if (words.length > 2) {
-                //     wrapText(g, words.slice(0, 2).join(' '), d.x + LeftShift, d.y + 20, fontSize, Color, Bold);
-                //     wrapText(g, words.slice(2).join(' '), d.x + LeftShift, d.y + 40, fontSize, Color, Bold);
-                // } else {
-                //     wrapText(g, d.title, d.x + LeftShift, d.y + 20, fontSize, Color, Bold);
-                // }
-                
-                // const textElement = g.append('text')
-                //     .attr('x', d.x + LeftShift)
-                //     .attr('y', d.y + 26)
-                //     .attr('text-anchor', 'middle')
-                //     .attr('fill', Color)
-                //     .style('font-weight', Bold)
-                //     .style('font-size', fontSize);
-                
-                // const textWidth = textElement.node().getBBox().width;
-                // const textHeight = textElement.node().getBBox().height;
-
-                // g.insert('rect', 'text')
-                // .attr('x', d.x + LeftShift - textWidth / 2 - 5)
-                // .attr('y', d.y + 8)
-                // .attr('width', textWidth + 10)
-                // .attr('height', textHeight + 20)
-                // .attr('fill', '#3749A626')
-                // .attr('rx', 5)
-                // .attr('ry', 5);
 
                 const words = d.title.split(' ');
                 let totalHeight = 0;
