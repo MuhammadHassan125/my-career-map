@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import './index.scss';
+import { useNavigate } from 'react-router-dom';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Pagination, Typography } from '@mui/material';
 import Loading from '../../Loading';
 import useFetch from 'point-fetch-react';
-import { MdOutlineFileUpload } from "react-icons/md";
-
+import { AiOutlineEdit } from "react-icons/ai";
+import { AnalyzeURL } from '../../../Utils/contants';
+import Fire from '../../../Fire/Fire';
 
 const UploadDataGrid = ({ heading, dropdown }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4);
+  const navigate = useNavigate();
 
   const { get, post} = useFetch({ state: {} });
 
@@ -34,20 +37,22 @@ const UploadDataGrid = ({ heading, dropdown }) => {
   };
 
   const generate_roadmap = (id, status) => {
-    setLoading(true);
-    post({
-      endPoint: `/${status === 'pending' ? "generate_roadmap" : "regenerate_roadmap"}?id=${id}`,
+    Fire.post({
+      url: `${AnalyzeURL}/${status === 'pending' ? "generate_roadmap" : "regenerate_roadmap"}?id=${id}`,
       onSuccess: (res) => {
         console.log(res);
-        Snackbar(res?.data?.message, { variant: 'success' });
+        // Snackbar(res?.data?.message, { variant: 'success' });
         setLoading(false);
         getUploadDataList();
       },
       onError: (err) => {
         console.log(err);
-        setLoading(false);
       }
     });
+  };
+
+  const handleEdit = (rowData) => {
+    navigate(`/path/${rowData.id}/edit`, {state:rowData}); 
   };
 
   const columns = [
@@ -109,7 +114,7 @@ const UploadDataGrid = ({ heading, dropdown }) => {
           }}
           onClick={() => handleEdit(row)}
         >
-          <MdOutlineFileUpload  />
+          <AiOutlineEdit  />
         </div>
       )
     },
@@ -129,7 +134,7 @@ const UploadDataGrid = ({ heading, dropdown }) => {
             fontSize: '10px',
           }}
         >
-          {value === 'pending' ? 'Analysed' : value === 'analysed' ? 'Reanalyze' : 'Analyzing'}
+          {value === 'pending' ? 'Analyse' : value === 'analysed' ? 'Reanalyse' : 'Analysing'}
         </button>
       )
     },

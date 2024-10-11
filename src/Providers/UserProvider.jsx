@@ -1,38 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import UserContext from '../context/userContext';
+import UserContext from '../context/UserContext';
 import MapProvider from './MapProvider';
 import useFetch from 'point-fetch-react';
+import Fire from '../Fire/Fire';
+import { baseURL } from '../Utils/contants';
 
 const UserProvider = ({ children }) => {
 
   const { get } = useFetch({
-    state:{}
+    state: {}
   });
+
   const [user, setUser] = useState();
+  const authToken = localStorage.getItem('user-visited-dashboard');
 
-  const authToken = localStorage.getItem('user-visited-dashboard')
   const gettingProfileInfo = () => {
-    if (!authToken) return;
-
-    get({
-      endPoint: `/show-profile`,
-      headers: { Authorization: `Bearer ${authToken}` },
+    
+    Fire.get({
+      url: `${baseURL}/show-profile`,
       onSuccess: (res) => {
-        setUser(res.data);
+        setUser(res?.data || []);
+        console.log('data', res);
       },
       onError: (err) => {
-        console.log(err.message, { variant: 'error' });
+        console.log(err);
+        setUser([]);
       },
     });
   };
 
   useEffect(() => {
-    gettingProfileInfo();
-  }, [authToken])
+    if (authToken) {
+      gettingProfileInfo();
+    } return
+  }, [authToken, gettingProfileInfo])
 
   return (
 
-    <UserContext.Provider
+    <UserContext.Provider 
       value={{
         user,
         setUser,

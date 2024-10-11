@@ -1,7 +1,6 @@
 import { BaseOptions, FireOptions, SubmitOptions } from "./Fire";
 import { useState } from "react";
 import Fire from "./Fire";
-// import { useNavigate } from 'react-router-dom';
 
 // local ip
 // export const baseURL = "http://192.168.18.194:8001/api";
@@ -12,7 +11,6 @@ export const AnalyzeURL = "http://64.23.166.88:3500";
 
 const useFire = <T extends Record<string, any> = Record<string, any>>(initialState: T, initialProcessing?: boolean) => {
     type StateKeyType = keyof typeof initialState;
-    // const navigate = useNavigate();
     const [data, setData] = useState<typeof initialState>(initialState);
     const [errors, setErrors] = useState<Record<StateKeyType, any> | Record<string, any>>({});
     const [processing, setProcessing] = useState(initialProcessing ?? false);

@@ -101,10 +101,71 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
 
     const { nodes, links, branches } = processSteps(branch.steps, width, height, branch.color);
 
+    // const wrapText = (svg, text, x, y, fontSize, Color, Bold, splitText, movingRight, lineValue, RightShift, LeftShift) => {
+    //     const lineHeight = 12;
+
+    //     if (!splitText) {
+    //         svg.append('text')
+    //             .attr('x', x + (RightShift !== 0 ? RightShift : LeftShift))
+    //             .attr('y', y + 15)
+    //             .attr('text-anchor', 'middle')
+    //             .attr('fill', Color)
+    //             .style('font-weight', Bold)
+    //             .style('font-size', fontSize)
+    //             .text(text);
+    //         return;
+    //     }
+
+    //     const words = text.split(' ');
+    //     const lines = [];
+
+    //     if (words[0].length > 7) {
+    //         lines.push(words[0]);
+    //         const remainingWords = words.slice(1);
+    //         for (let i = 0; i < remainingWords.length; i += 2) {
+    //             const lineWords = remainingWords.slice(i, i + 2);
+    //             lines.push(lineWords.join(' '));
+    //         }
+    //     } else {
+    //         const maxWordsPerLine = 2;
+    //         for (let i = 0; i < words.length; i += maxWordsPerLine) {
+    //             if (i + maxWordsPerLine >= words.length) {
+    //                 if (words.length > 4) {
+    //                     return;
+    //                 } else {
+    //                     lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+    //                 }
+    //             } else {
+    //                 lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+    //             }
+    //         }
+    //     }
+
+    //     lines.forEach((line, i) => {
+    //         svg.append('text')
+    //             .attr('x', x)
+    //             .attr('y', y + i * lineHeight + lineValue)
+    //             .attr('text-anchor', 'middle')
+    //             .attr('fill', Color)
+    //             .style('font-weight', Bold)
+    //             .style('font-size', fontSize)
+    //             .text(line);
+    //     });
+    // };
+
     const wrapText = (svg, text, x, y, fontSize, Color, Bold, splitText, movingRight, lineValue, RightShift, LeftShift) => {
         const lineHeight = 12;
-
+    
+        // For non-split text (first and last nodes)
         if (!splitText) {
+            const words = text.split(' ');
+            let displayText = text;
+            
+            // If text is too long, truncate with ellipsis
+            if (words.length > 6) {
+                displayText = words.slice(0, 5).join(' ') + '...';
+            }
+    
             svg.append('text')
                 .attr('x', x + (RightShift !== 0 ? RightShift : LeftShift))
                 .attr('y', y + 15)
@@ -112,35 +173,29 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 .attr('fill', Color)
                 .style('font-weight', Bold)
                 .style('font-size', fontSize)
-                .text(text);
+                .text(displayText);
+                
+            if (displayText !== text) {
+                svg.append('title').text(text);
+            }
             return;
         }
-
+    
         const words = text.split(' ');
         const lines = [];
-
-        if (words[0].length > 7) {
-            lines.push(words[0]);
-            const remainingWords = words.slice(1);
-            for (let i = 0; i < remainingWords.length; i += 2) {
-                const lineWords = remainingWords.slice(i, i + 2);
+        
+        if (words.length > 5) {
+            const firstLine = words.slice(0, 2).join(' ');
+            const secondLine = words.slice(2, 4).join(' ') + '...';
+            lines.push(firstLine, secondLine);
+        } else {
+            for (let i = 0; i < words.length; i += 2) {
+                const lineWords = words.slice(i, i + 2);
                 lines.push(lineWords.join(' '));
             }
-        } else {
-            const maxWordsPerLine = 2;
-            for (let i = 0; i < words.length; i += maxWordsPerLine) {
-                if (i + maxWordsPerLine >= words.length) {
-                    if (words.length > 4) {
-                        return;
-                    } else {
-                        lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
-                    }
-                } else {
-                    lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
-                }
-            }
         }
-
+    
+        // Render each line
         lines.forEach((line, i) => {
             svg.append('text')
                 .attr('x', x)
@@ -151,8 +206,11 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 .style('font-size', fontSize)
                 .text(line);
         });
+    
+        if (words.length > 4) {
+            svg.append('title').text(text);
+        }
     };
-
 
     svg.selectAll('path.connection')
         .data(links)
@@ -360,64 +418,6 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             setGetTitle(`/map-career/${d.branch_id}`);
         });
 
-    // svg.selectAll('text')
-    //     .data(nodes)
-    //     .enter().append('g')
-    //     .each(function (d) {
-    //         const g = d3.select(this);
-
-    //         const isFirstNode = d.id === nodes[0].id;
-    //         const isLastNode = d.id === nodes[nodes.length - 1].id;
-    //         const isBranchEndNode = branches.some(branch => branch.steps[branch.steps.length - 1].id === d.id);
-
-    //         const fontSize = isFirstNode || isLastNode || isBranchEndNode ? '12px' : '10px';
-    //         const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
-    //         const Bold = isFirstNode || isLastNode || isBranchEndNode ? 'bold' : 'medium';
-    //         const lineValue = isFirstNode || isLastNode ? 0 : -10;
-    //         const RightShift = isLastNode || isBranchEndNode ? 120 : 0;
-    //         const LeftShift = isFirstNode ? -45 : 0;
-    //         const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
-    //         const margin = 12;
-
-    //         if (isFirstNode) {
-    //             const textElement = g.append('text')
-    //                 .attr('x', d.x + LeftShift)
-    //                 .attr('y', d.y + 26)
-    //                 .attr('text-anchor', 'middle')
-    //                 .attr('fill', Color)
-    //                 .style('font-weight', Bold)
-    //                 .style('font-size', fontSize)
-    //                 .text(d.title);
-
-    //             const textWidth = textElement.node().getBBox().width;
-    //             const textHeight = textElement.node().getBBox().height;
-
-    //             g.insert('rect', 'text')
-    //                 .attr('x', d.x + LeftShift - textWidth / 2 - 5)
-    //                 .attr('y', d.y + 8)
-    //                 .attr('width', textWidth + 10)
-    //                 .attr('height', textHeight + 10)
-    //                 .attr('fill', '#3749A626')
-    //                 .attr('rx', 5)
-    //                 .attr('ry', 5);
-    //         } else if (isLastNode || isBranchEndNode) {
-    //             const textY = d.y - 10;
-    //             wrapText(g, d.title, d.x, textY, fontSize, Color, Bold, false, null, 0, RightShift, 0);
-    //         } else {
-    //             const currentIndex = nodes.indexOf(d);
-    //             const isUp = d.y <= height / 2;
-    //             let textY;
-
-    //             if (currentIndex % 2 === 0) {
-    //                 textY = d.y - 15;
-    //             } else {
-    //                 textY = d.y + 30;
-    //             }
-
-    //             wrapText(g, d.title, d.x + margin, textY, fontSize, Color, Bold, splitText, null, lineValue, RightShift, LeftShift);
-    //         }
-    //     });
-
     svg.selectAll('text')
         .data(nodes)
         .enter().append('g')
@@ -531,6 +531,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 wrapText(g, d.title, d.x + margin, textY, fontSize, Color, Bold, splitText, null, lineValue, RightShift, LeftShift);
             }
         });
+
 };
 
 export default DrawBranch;

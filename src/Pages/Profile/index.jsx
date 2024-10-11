@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import './index.scss';
-import { useUser } from '../../context/context';
+// import { useUser } from '../../context/context';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import Fire from '../../Fire/Fire';
@@ -16,6 +16,7 @@ import PrimaryBtn from '../../Components/PrimaryBtn/index';
 import axios from 'axios';
 import ChangePassword from './ChangePassword';
 import useFetch from 'point-fetch-react';
+import UserContext from '../../context/UserContext';
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
     width: 30,
@@ -39,7 +40,7 @@ const style = {
 };
 
 const Profile = () => {
-    const { user, gettingProfileInfo } = useUser();
+    const { user, gettingProfileInfo } = useContext(UserContext);
     const [open, setOpen] = React.useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadMessage, setUploadMessage] = useState('');

@@ -14,22 +14,21 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { BiSolidSend } from "react-icons/bi";
 import Fire from '../../Fire/Fire';
-import useFire, { baseURL } from '../../Fire/useFire';
-import FileUpload from './FileUpload';
+import { baseURL } from '../../Fire/useFire';
 import UploadDataGrid from '../../Components/DashboardComponents/DataGrid/UploadDataGrid';
 import Loading from '../../Components/Loading';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { Snackbar } from '../../Utils/SnackbarUtils';
 import axios from 'axios';
+import useFetch from 'point-fetch-react';
 
 const columns = [
   { Header: "Id", accessor: "id" },
   { Header: "Prompt", accessor: "prompt" },
   { Header: "File Path", accessor: "file" },
   { Header: "Skills", accessor: "total_skill_count" },
-{
+  {
     Header: "Status",
     accessor: "status",
     Cell: ({ value }) => (
@@ -48,7 +47,7 @@ const columns = [
         {value.charAt(0).toUpperCase() + value.slice(1)}
       </button>
     )
-  },  { Header: "", accessor: "Btn" },
+  }, { Header: "", accessor: "Btn" },
 ];
 
 const style = {
@@ -80,10 +79,25 @@ const EditPath = () => {
 
 
   const navigate = useNavigate();
-  const {data, setData, errors, post, put} = useFire(
-    // {title:'', prompt:''}
-    { title: location.state?.title || '',
-  prompt: location.state?.prompt || ''}
+  const { Data, setData, Errors, post, put, validate } = useFetch(
+    {
+      state: {
+        title: location.state?.title || '',
+        prompt: location.state?.prompt || ''
+      },
+      rules: {
+        title: ['required'],
+        prompt: ['required']
+      },
+      message: {
+        title: {
+          required: 'Title field is required'
+        },
+        prompt: {
+          required: 'Prompt field is required'
+        },
+      },
+    }
   );
 
   const handleChange = (event, newValue) => {
@@ -99,90 +113,83 @@ const EditPath = () => {
   };
 
   const checkSubscription = () => {
-    setLoading(true);
     Fire.get({
       url: `${baseURL}/check-user-subscription`,
 
       onSuccess: (res) => {
-        setLoading(false);
         data();
         getUploadDataList();
         if (res?.data?.Subscription_Status === false) {
           // navigate(-1, { state: setCheckSubscription(true)  });
-        }return;
+        } return;
 
       },
 
       onError: (err) => {
         console.log(err)
-        setLoading(false);
       }
     })
   };
 
   const handleFileChange = (e) => {
-        setFile(e.target.files[0] );
-    };
+    setFile(e.target.files[0]);
+  };
 
-    const handleFileUpdate = async () => {
-        const token = localStorage.getItem('user-visited-dashboard');
-        if (!file) return alert('Please select a file');
-        if (!token) return alert('Please upload a token');
+  const handleFileUpdate = async () => {
+    const token = localStorage.getItem('user-visited-dashboard');
+    if (!file) return alert('Please select a file');
+    if (!token) return alert('Please upload a token');
 
-        if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('title', data.title); 
-            try {
-                setLoading(true);
-                const response = await axios.put(`${baseURL}/update-path/${params.id}`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${token}`
-                    },
-                });
-                Snackbar(`File upload complete! ID: ${response.data.message}`, {variant: 'success'});
-                handleSuccess();
-                setFile(null); 
-                // data();
-                setLoading(false);
-                // getUploadDataList();
-            } catch (error) {
-                Snackbar(`Error uploading file: ${error.error || error.message}`, {variant: 'error'});
-                setLoading(false);
-            }
-        }
-    };
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', Data.title);
+      try {
+        const response = await axios.put(`${baseURL}/update-path/${params.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
+          },
+        });
+        Snackbar(`File upload complete! ID: ${response.data.message}`, { variant: 'success' });
+        handleSuccess();
+        setFile(null);
+
+      } catch (error) {
+        Snackbar(`Error uploading file: ${error.error || error.message}`, { variant: 'error' });
+      }
+    }
+  };
 
   //   useEffect(() => {
   //     if (file) {
   //         handleFileUpload();
   //     }
   // }, [file]);
-  
-  const handleInput= (e) => {
-    const {name, value} = e.target;
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
     setData(name, value);
   }
   const handleUpdatePathWithPrompt = (e) => {
     e.preventDefault();
-    put({
-      url:`${baseURL}/update-path/${params.id}`,
-      onSuccess : (res) => {
-        console.log(res);
-        Snackbar(res.data.message, {variant: 'success'})
-        setData({ title: '', prompt: '' });
-        // setData((prevState) => ({ ...prevState, title: location.state?.title || '', prompt: '' }));
-        navigate('/path')
-        handleClose();
-      },
+    if (validate()) {
+      put({
+        endPoint: `/update-path/${params.id}`,
+        onSuccess: (res) => {
+          console.log(res);
+          setData({ title: '', prompt: '' });
+          // setData((prevState) => ({ ...prevState, title: location.state?.title || '', prompt: '' }));
+          navigate('/path')
+          handleClose();
+        },
 
-      onError: (err) => {
-        console.log(err);
-        Snackbar(err.message, {variant: 'error'})
-      }
-    })
-};
+        onError: (err) => {
+          console.log(err);
+        }
+      })
+    }
+  };
 
 
   useEffect(() => {
@@ -213,7 +220,7 @@ const EditPath = () => {
 
   return (
     <React.Fragment>
-      <Loading/>
+      <Loading />
       <main className='documents-upload__section'>
         {success && (
           <div className='success__message'>
@@ -225,32 +232,32 @@ const EditPath = () => {
           </div>
         )}
         <Box sx={{ width: '100%', typography: 'body1' }}>
-        <TextField id="standard-basic" label="Enter title" variant="standard"
-          sx={{ width: '40%', height: '100%', position: 'relative', marginBottom:"30px", marginLeft:"25px" }}
-          onChange={handleInput}
-          name="title"
-          value={data.title || location.state?.title}
-
+          <TextField id="standard-basic" label="Enter title" variant="standard"
+            sx={{ width: '40%', height: '100%', position: 'relative', marginBottom: "30px", marginLeft: "25px" }}
+            onChange={handleInput}
+            name="title"
+            value={Data.title || location.state?.title}
           />
+          {Errors.title && <p className="error" style={{ marginLeft: "25px" }}>{Errors.title}</p>}
+
           <TabContext value={value}>
             <Box>
 
               <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ padding: '0 25px' }}>
 
-                <Tab label="Add Path" value="1" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} /> 
+                <Tab label="Add Path" value="1" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} />
                 <Tab label="Upload CV" value="2" sx={{ fontWeight: 700, fontFamily: "Nunito Sans, sans-serif" }} />
 
-               </TabList> 
+              </TabList>
             </Box>
 
-            <TabPanel value="1" sx={{position:"relative", mb:5}}>
+            <TabPanel value="1" sx={{ position: "relative", mb: 5 }}>
               <TextField
                 id="outlined-multiline-static"
                 label="Enter Your Prompt"
                 onChange={handleInput}
                 name="prompt"
-                // value={data.prompt}
-                value={data.prompt || location.state?.prompt}
+                value={Data.prompt || location.state?.prompt}
                 multiline
                 rows={6}
                 defaultValue=""
@@ -258,57 +265,56 @@ const EditPath = () => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      {/* <BiSolidSend                          
-                      style={{ cursor: 'pointer', position: 'absolute', bottom: 8, right: 15, fontSize:'20px' }}
-                      /> */}
                     </InputAdornment>
                   ),
                 }}
               />
-                <Button variant="contained"
-                sx={{cursor:"pointer", 
-                  position: 'absolute', 
+              {Errors.prompt && <p className="error">{Errors.prompt}</p>}
+              <Button variant="contained"
+                sx={{
+                  cursor: "pointer",
+                  position: 'absolute',
                   bottom: -10,
-                   right: 25, 
-                   fontSize:'10px', 
-                   padding:"3px 5px",
-                   backgroundColor:"rgb(55, 73, 166)"
+                  right: 25,
+                  fontSize: '10px',
+                  padding: "3px 5px",
+                  backgroundColor: "rgb(55, 73, 166)"
                 }}
                 onClick={handleUpdatePathWithPrompt}
-                >Submit</Button>
+              >Submit</Button>
             </TabPanel>
 
-            <TabPanel value="2" sx={{position:"relative", mb:3}}>
+            <TabPanel value="2" sx={{ position: "relative", mb: 3 }}>
               {/* <FileUpload onUploadSuccess={handleSuccess}/> */}
               <div className='file-upload__section' >
-            <img src='/images/upload.png' alt='upload' />
-            <label style={{padding:'5px 10px', borderBottom: '1px solid #3749A6', cursor:'pointer', color:'#3749A6'}}>
-                <input
+                <img src='/images/upload.png' alt='upload' />
+                <label style={{ padding: '5px 10px', borderBottom: '1px solid #3749A6', cursor: 'pointer', color: '#3749A6' }}>
+                  <input
                     type="file"
                     onChange={handleFileChange}
-                    style={{ display: 'none' }} 
-                    
-                />
-                Click here to Browse.
-            </label>
-            {file && <p>{file.name}</p>} 
-           
-           
-        </div> 
-        <Button variant="contained"
-                  sx={{
-                    cursor: "pointer",
-                    fontSize: '10px',
-                    padding: "3px 5px",
-                    position:"absolute",
-                    bottom: 15,
-                    right: 25, 
-                    backgroundColor: "rgb(55, 73, 166)"
-                  }}
-                  onClick={handleFileUpdate}
-                >
+                    style={{ display: 'none' }}
+
+                  />
+                  Click here to Browse.
+                </label>
+                {file && <p>{file.name}</p>}
+
+
+              </div>
+              <Button variant="contained"
+                sx={{
+                  cursor: "pointer",
+                  fontSize: '10px',
+                  padding: "3px 5px",
+                  position: "absolute",
+                  bottom: 15,
+                  right: 25,
+                  backgroundColor: "rgb(55, 73, 166)"
+                }}
+                onClick={handleFileUpdate}
+              >
                 Submit
-                </Button>
+              </Button>
               <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

@@ -14,17 +14,14 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { BiSolidSend } from "react-icons/bi";
-// import { Snackbar } from '../../Utils/SnackbarUtils';
 import Fire from '../../Fire/Fire';
 import useFire, { baseURL } from '../../Fire/useFire';
-import FileUpload from './FileUpload';
 import UploadDataGrid from '../../Components/DashboardComponents/DataGrid/UploadDataGrid';
-import { useUser } from '../../context/context';
 import Loading from '../../Components/Loading';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { Snackbar } from '../../Utils/SnackbarUtils';
 import axios from 'axios';
+import useFetch from 'point-fetch-react';
 
 const columns = [
   { Header: "Id", accessor: "id" },
@@ -83,7 +80,24 @@ const UploadDocuments = () => {
 
 
   const navigate = useNavigate();
-  const { data, setData, errors, post } = useFire({ title: '', prompt: '' });
+  const { Data, setData, Errors, post, get, validate } = useFetch({
+    state: {
+      title: '',
+      prompt: ''
+    },
+    rules: {
+      title: ['required'],
+      prompt: ['required']
+    },
+    message: {
+      title: {
+        required: 'Title field is required'
+      },
+      prompt: {
+        required: 'Prompt field is required'
+      },
+    }
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -98,12 +112,10 @@ const UploadDocuments = () => {
   };
 
   const checkSubscription = () => {
-    // setLoading(true);
-    Fire.get({
-      url: `${baseURL}/check-user-subscription`,
+    get({
+      endPoint: `/check-user-subscription`,
 
       onSuccess: (res) => {
-        // setLoading(false);
         data();
         getUploadDataList();
         if (res?.data?.Subscription_Status === false) {
@@ -114,7 +126,6 @@ const UploadDocuments = () => {
 
       onError: (err) => {
         console.log(err)
-        // setLoading(false);
       }
     })
   };
@@ -131,7 +142,7 @@ const UploadDocuments = () => {
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('title', data.title);
+      formData.append('title', Data.title);
       try {
         const response = await axios.post(`${baseURL}/create-path`, formData, {
           headers: {
@@ -142,19 +153,13 @@ const UploadDocuments = () => {
         Snackbar(`File upload complete! ID: ${response.data.message}`, { variant: 'success' });
         handleSuccess();
         setFile(null);
-        // data();
-        // getUploadDataList();
+
       } catch (error) {
         Snackbar(`Error uploading file: ${error.error || error.message}`, { variant: 'error' });
       }
     }
   };
 
-  //   useEffect(() => {
-  //     if (file) {
-  //         handleFileUpload();
-  //     }
-  // }, [file]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -163,20 +168,21 @@ const UploadDocuments = () => {
 
   const handleCreatePath = (e) => {
     e.preventDefault();
-    post({
-      url: `${baseURL}/create-path`,
-      onSuccess: (res) => {
-        console.log(res);
-        Snackbar(res.data.message, { variant: 'success' })
-        setData({ title: '', prompt: '' });
-        handleClose();
-      },
+    if (validate()) {
 
-      onError: (err) => {
-        console.log(err);
-        Snackbar(err.message, { variant: 'error' })
-      }
-    })
+      post({
+        endPoint: `/create-path`,
+        onSuccess: (res) => {
+          console.log(res);
+          setData({ title: '', prompt: '' });
+          handleClose();
+        },
+
+        onError: (err) => {
+          console.log(err);
+        }
+      });
+    };
   };
 
 
@@ -206,33 +212,6 @@ const UploadDocuments = () => {
     }
   }, []);
 
-  // const handlePromptSubmit = (event) => {
-  //   event.preventDefault();
-  //   setLoading(true);
-  //   Fire.put({
-  //     url: `${baseURL}/update-path/${params.id}`,
-  //     data: {
-  //       prompt: prompt
-  //     },
-
-  //     onSuccess: (res) => {
-  //       console.log('create path successfully', res);
-  //       Snackbar(res.data.message, { variant: 'success' });
-  //       setPrompt('');
-  //       setLoading(false);
-  //       data();
-  //       getUploadDataList();
-  //     },
-
-  //     onError: (err) => {
-  //       console.log(err);
-  //       Snackbar(err.error, { variant: 'error' });
-  //       setLoading(false);
-  //     }
-  //   });
-
-  // };
-
   return (
     <React.Fragment>
       <Loading />
@@ -251,8 +230,9 @@ const UploadDocuments = () => {
             sx={{ width: '40%', height: '100%', position: 'relative', marginBottom: "30px", marginLeft: "25px" }}
             onChange={handleInput}
             name="title"
-            value={data.title}
+            value={Data.title}
           />
+          {Errors.title && <p className="error" style={{marginLeft:"25px"}}>{Errors.title}</p>}
           <TabContext value={value}>
             <Box>
 
@@ -270,7 +250,7 @@ const UploadDocuments = () => {
                 label="Enter Your Prompt"
                 onChange={handleInput}
                 name="prompt"
-                value={data.prompt}
+                value={Data.prompt}
                 multiline
                 rows={6}
                 defaultValue=""
@@ -278,10 +258,7 @@ const UploadDocuments = () => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      {/* <BiSolidSend                          
-                      style={{ cursor: 'pointer', position: 'absolute', bottom: 8, right: 15, fontSize:'20px' }}
-                      onClick={handleCreatePath}
-                      /> */}
+                      
                       <Button variant="contained"
                         sx={{
                           cursor: "pointer",
@@ -298,9 +275,10 @@ const UploadDocuments = () => {
                   ),
                 }}
               />
+                        {Errors.prompt && <p className="error">{Errors.prompt}</p>}
             </TabPanel>
 
-            <TabPanel value="2" sx={{position:"relative"}}>
+            <TabPanel value="2" sx={{ position: "relative" }}>
               {/* <FileUpload onUploadSuccess={handleSuccess}/> */}
               <div className='file-upload__section'>
                 <img src='/images/upload.png' alt='upload' />
@@ -315,20 +293,20 @@ const UploadDocuments = () => {
                 {file && <p>{file.name}</p>}
               </div>
               <Button variant="contained"
-                  sx={{
-                    cursor: "pointer",
-                    fontSize: '10px',
-                    padding: "3px 5px",
-                    position:"absolute",
-                    bottom: 20,
-                    right: 25, 
-                    backgroundColor: "rgb(55, 73, 166)"
-                  }}
-                  onClick={handleFileUpload}
-                >
+                sx={{
+                  cursor: "pointer",
+                  fontSize: '10px',
+                  padding: "3px 5px",
+                  position: "absolute",
+                  bottom: 20,
+                  right: 25,
+                  backgroundColor: "rgb(55, 73, 166)"
+                }}
+                onClick={handleFileUpload}
+              >
                 Submit
-                </Button>
-        
+              </Button>
+
 
               <Modal
                 aria-labelledby="transition-modal-title"
