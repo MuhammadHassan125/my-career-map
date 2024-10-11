@@ -22,30 +22,30 @@ import ProfileLayout from "../Layouts/ProfileLayout"
 import PaymentCheckout from "../Pages/PaymentCheckout"
 import CancelCheckout from "../Pages/PaymentCheckout/CancelCheckout"
 import Success from "../Pages/PaymentCheckout/SuccessCheckout"
-import FullPageFormLayout from "../Layouts/FullPageFormLayout"
+import EditPath from "../Pages/UploadDocuments/EditPath"
 const Router = () => {
   return (
     <Routes>
       <Route element={<GuestRoute />}>
-        <Route element={<FullPageFormLayout />}>
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
         <Route path="forget-password" element={<ForgetPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
         <Route path="verify-otp" element={<VerifyOtp />} />
-        </Route>
       </Route>
       <Route element={<AuthRoute />}>
         <Route element={<MainLayout />}>
           <Route path='/' element={<Dashboard />} index={true} />
           <Route path='documents' element={<Documents />} />
-          <Route path='documents-upload' element={<UploadDocuments />} />
+          {/* <Route path='upload' element={<Upload />} /> */}
           <Route path='recommendations' element={<Recommendations />} />
           <Route path='map-career' element={<MapCareer />} />
           <Route path='map-career/:id' element={<MapSinglePath />} />
           <Route path='map-zoom' element={<MapZoom />} />
           <Route path='map-selected-path' element={<MapSelectedPath />} />
           <Route path='path' element={<Path />} />
+          <Route path='path/:id/edit' element={<EditPath/>} />
+          <Route path='add-path' element={<UploadDocuments />} />
           <Route path='list-career-path/:id' element={<ListCareerPath />} />
           <Route path='profile' element={<Profile />} />
           <Route path='payment-checkout' element={<PaymentCheckout />} />

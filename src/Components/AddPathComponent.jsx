@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import PrimaryBtn from '../Components/PrimaryBtn/index';
 import { FiPlus } from "react-icons/fi";
 import Loading from '../Components/Loading';
+import {useUser} from '../context/context'
+import PremiumModel from './PremiumModel';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -10,70 +12,44 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { IoMdClose } from "react-icons/io";
 import { Button } from '@mui/material';
-import {useUser} from '../context/context'
-import PremiumModel from './PremiumModel';
-import useFetch from 'point-fetch-react';
+import useFire, { baseURL } from '../Fire/useFire';
+import { Snackbar } from '../Utils/SnackbarUtils';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: 'none',
+  outline: 'none',
+  borderRadius: '8px',
+  boxShadow: 24,
+  padding: 3,
+  '@media (max-width: 600px)': {
+      width: '90%',
+      p: 2,
+  }
+};
+
 const AddPathComponent = () => {
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: 'none',
-    outline: 'none',
-    borderRadius: '8px',
-    boxShadow: 24,
-    padding: 3,
-    '@media (max-width: 600px)': {
-        width: '90%',
-        p: 2,
-    }
-  };
-  
-  
   const navigate = useNavigate();
+  // const {checkSubscription, setCheckSubscription} = useUser();
   const [checkSubscription, setCheckSubscription] = useState(true);
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const {post, Data, setData} = useFetch({
-    state:{
-      title:'', 
-      prompt:''
-    }
-  })
-
   const handleNavigate = () => {
-    navigate('/documents-upload');
+    navigate('/add-path');
   };
 
-  const handleInput= (e) => {
-    const {name, value} = e.target;
-    setData(name, value);
-  }
-
-  const handleCreatePath = (e) => {
-    e.preventDefault();
-    post({
-      endPoint:`/create-path`,
-      onSuccess : (res) => {
-        console.log(res);
-        handleClose();
-      },
-
-      onError: (err) => {
-        console.log(err);
-      }
-    })
-};
 
   useEffect(() => {
     if(checkSubscription === false){
-      // handleOpen();
       navigate('/documents-upload');
 
     } else {setCheckSubscription(true);}
@@ -85,7 +61,7 @@ const AddPathComponent = () => {
       <PrimaryBtn text={"Add Path"} icon={<FiPlus />} onClick={handleNavigate} />
       {/* <PremiumModel open={open} handleClose={handleClose} /> */}
 
-      <Modal
+      {/* <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
@@ -122,7 +98,7 @@ const AddPathComponent = () => {
                   type="text"
                   placeholder='Enter Title'
                   name="title"
-                  value={Data.title}
+                  value={data.title}
                   onChange={handleInput}
                   style={{ width: "100%", marginTop: "5px", backgroundColor: "#F5F6FA", border: "#D5D5D5", outline: "none", padding: "12px 10px", borderRadius: "5px" }} />
               </Box>
@@ -135,32 +111,12 @@ const AddPathComponent = () => {
                   type="text"
                     placeholder='Enter your description'
                     name="prompt"
-                    value={Data.prompt}
+                    value={data.prompt}
                     onChange={handleInput}
                     style={{ width: "100%", marginTop: "5px", backgroundColor: "#F5F6FA", border: "#D5D5D5", outline: "none", padding: "12px 10px", borderRadius: "5px" }} />
                 </Box>
 
               </Box>
-
-              {/* <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", martinTop: "10px", width: "100%", padding: "15px 20px 0 20px" }}>
-                <Box>
-                  <p style={{ fontFamily: "Nunito Sans, sans-serif", fontSize: "14px" }}>
-                    Skills:</p>
-                </Box>
-
-                <Box sx={{ flexWrap: "wrap", display: "flex", gap: "10px" }}>
-
-                  <button className='skills-btn'>
-                    Skill necessary
-                    <IoMdClose />
-                  </button>
-                  <button className='skills-btn'>
-                    Skill necessary
-                    <IoMdClose />
-                  </button>
-                </Box>
-              </Box> */}
-
 
               <Box sx={{ width: "100%", padding: "20px", marginTop: "10px" }}>
                 <Button
@@ -175,7 +131,7 @@ const AddPathComponent = () => {
             </Box>
           </Box>
         </Fade>
-      </Modal>
+      </Modal> */}
     </>
   );
 };
