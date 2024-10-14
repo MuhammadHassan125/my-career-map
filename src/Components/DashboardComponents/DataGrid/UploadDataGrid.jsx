@@ -57,14 +57,6 @@ const UploadDataGrid = ({ heading, dropdown }) => {
 
   const columns = [
     { Header: "Id", accessor: "id" },
-    // {
-    //   Header: "Prompt", accessor: "prompt",
-    //   Cell: ({ value }) => (
-    //     <Typography sx={{ fontSize: "13px" }}>
-    //       {value ? (value.length > 40 ? `${value.substring(0, 40)}......` : value) : 'No Data'}
-    //     </Typography>
-    //   )
-    // },
     {
       Header: "Title", accessor: "title",
       Cell: ({ value }) => (

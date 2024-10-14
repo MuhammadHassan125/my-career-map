@@ -14,8 +14,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import Fire from '../../Fire/Fire';
-import useFire, { baseURL } from '../../Fire/useFire';
+import { baseURL } from '../../Utils/contants';
 import UploadDataGrid from '../../Components/DashboardComponents/DataGrid/UploadDataGrid';
 import Loading from '../../Components/Loading';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
@@ -66,7 +65,6 @@ const style = {
 
 const UploadDocuments = () => {
 
-  // const { setLoading, setCheckSubscription } = useUser();
   const location = useLocation();
   const params = useParams();
 

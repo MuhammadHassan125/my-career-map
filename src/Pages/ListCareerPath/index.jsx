@@ -1,19 +1,15 @@
 import React, { useEffect } from 'react';
 import { IoCheckmarkSharp } from "react-icons/io5";
 import './index.scss';
-import { baseURL } from '../../Fire/useFire';
-import Fire from '../../Fire/Fire';
-import { useUser } from '../../context/context';
-import { Snackbar } from '../../Utils/SnackbarUtils';
 import { useParams } from 'react-router-dom';
 import Loading from '../../Components/Loading';
+import useFetch from 'point-fetch-react';
 
 const ListCareerPath = () => {
   const [selectedId, setSelectedId] = React.useState(null);
   const [listData, setListData] = React.useState([]);
-  // const {loading} = useUser();
   const params = useParams();
-
+  const { get } = useFetch({state:{}});
   const handleSelect = (id) => {
     if (selectedId === id) {
       setSelectedId(null);
@@ -23,8 +19,8 @@ const ListCareerPath = () => {
   };
 
   const handleSubmit = () => {
-    Fire.get({
-      url: `${baseURL}/get-skills-for-single-step/${params.id}`,
+    get({
+      endPoint: `/get-skills-for-single-step/${params.id}`,
       onSuccess: (res) => {
         console.log('API Response:', res?.data?.data?.skills); 
         setListData(res?.data?.data?.skills || []);
@@ -36,22 +32,19 @@ const ListCareerPath = () => {
   };
 
   const handleUpdateSkills = (id) => {
-    Fire.get({
-      url: `${baseURL}/check-status-of-skills/${id}`,
+    get({
+      endPoint: `/check-status-of-skills/${id}`,
       onSuccess: (res) => {
         console.log(res, '')
-        Snackbar(res?.data?.message, {variant: 'success'});
         if (res?.data?.status === "completed") {
           setSelectedId(id);
         } else {
           setSelectedId(null);
         }
-        console.log('hassan')
         handleSubmit();
       },
       onError: (err) => {
         console.log(err)
-        Snackbar(err.error, {variant: 'error'});
       }
     })
   };

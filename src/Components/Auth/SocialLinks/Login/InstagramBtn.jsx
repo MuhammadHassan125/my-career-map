@@ -1,5 +1,5 @@
 import React from 'react';
-import { baseURL } from '../../../../Fire/useFire';
+import { baseURL } from '../../../../Utils/contants';
 import Fire from '../../../../Fire/Fire';
 const InstagramBtn = () => {
   const clientId = '1010450964112254';

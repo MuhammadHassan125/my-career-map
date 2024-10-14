@@ -3,8 +3,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import MapContext from "../../context/MapContext";
 import { useParams } from "react-router-dom";
 import Loading from "../../Components/Loading";
-import Fire from "../../Fire/Fire";
-import { baseURL } from "../../Fire/useFire";
+import useFetch from "point-fetch-react";
 
 const SinglePathMap = () => {
     const svgRef = useRef(null);
@@ -13,9 +12,11 @@ const SinglePathMap = () => {
     const params = useParams();
     const singlePathId = params.id;
 
+    const { get } = useFetch({ state: {} });
+
     const getIndividualPathData = () => {
-        Fire.get({
-            url: `${baseURL}/get-single-branch/${singlePathId}`,
+        get({
+            endPoint: `/get-single-branch/${singlePathId}`,
             onSuccess: (res) => {
                 console.log(res?.data?.data, 'singlePath');
                 setSinglePathData(res?.data?.data[0]); 

@@ -7,15 +7,12 @@ import { baseURL } from '../Utils/contants';
 
 const UserProvider = ({ children }) => {
 
-  const { get } = useFetch({
-    state: {}
-  });
+  const { get} = useFetch({ state: {} });
 
   const [user, setUser] = useState();
   const authToken = localStorage.getItem('user-visited-dashboard');
 
   const gettingProfileInfo = () => {
-    
     Fire.get({
       url: `${baseURL}/show-profile`,
       onSuccess: (res) => {
@@ -32,8 +29,8 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (authToken) {
       gettingProfileInfo();
-    } return
-  }, [authToken, gettingProfileInfo])
+    }
+  }, [authToken])
 
   return (
 

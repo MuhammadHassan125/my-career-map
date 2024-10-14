@@ -14,12 +14,10 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import Fire from '../../Fire/Fire';
-import { baseURL } from '../../Fire/useFire';
+import { baseURL } from '../../Utils/contants';
 import UploadDataGrid from '../../Components/DashboardComponents/DataGrid/UploadDataGrid';
 import Loading from '../../Components/Loading';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { Snackbar } from '../../Utils/SnackbarUtils';
 import axios from 'axios';
 import useFetch from 'point-fetch-react';
 
@@ -113,8 +111,8 @@ const EditPath = () => {
   };
 
   const checkSubscription = () => {
-    Fire.get({
-      url: `${baseURL}/check-user-subscription`,
+    get({
+      endPoint: `/check-user-subscription`,
 
       onSuccess: (res) => {
         data();
@@ -151,21 +149,14 @@ const EditPath = () => {
             Authorization: `Bearer ${token}`
           },
         });
-        Snackbar(`File upload complete! ID: ${response.data.message}`, { variant: 'success' });
         handleSuccess();
         setFile(null);
 
       } catch (error) {
-        Snackbar(`Error uploading file: ${error.error || error.message}`, { variant: 'error' });
+        console.log(err);
       }
     }
   };
-
-  //   useEffect(() => {
-  //     if (file) {
-  //         handleFileUpload();
-  //     }
-  // }, [file]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -179,7 +170,6 @@ const EditPath = () => {
         onSuccess: (res) => {
           console.log(res);
           setData({ title: '', prompt: '' });
-          // setData((prevState) => ({ ...prevState, title: location.state?.title || '', prompt: '' }));
           navigate('/path')
           handleClose();
         },
@@ -210,7 +200,7 @@ const EditPath = () => {
 
       return () => handleCloseModal();
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (location.state && location.state.prompt) {
