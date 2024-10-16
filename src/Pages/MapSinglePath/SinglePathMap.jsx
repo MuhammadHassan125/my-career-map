@@ -6,7 +6,7 @@ import Loading from "../../Components/Loading";
 import Fire from "../../Fire/Fire";
 import { baseURL } from "../../Fire/useFire";
 
-const SinglePathMap = () => {
+const SinglePathMap = ({onSelectId}) => {
     const svgRef = useRef(null);
     const [singlePathData, setSinglePathData] = React.useState(null);
     const { setGettingSkillsData, setGetTitle, setGetDescription, setNextRole } = useUser();
@@ -87,6 +87,7 @@ const SinglePathMap = () => {
                     setGetTitle(d.title);
                     setGetDescription(d.description);
                     setGettingSkillsData(d.skills);
+                    onSelectId(d.id);
                 })
                 .on('mouseover', function (event, d) {
                     const x = event.clientX;
@@ -146,6 +147,7 @@ const SinglePathMap = () => {
                     setGetDescription(branch[i].description);
                     setGettingSkillsData(branch[i].skills);
                     setNextRole(branch[i].title);
+                    onSelectId(branch[i].id)
                     break;
                 }
             }
