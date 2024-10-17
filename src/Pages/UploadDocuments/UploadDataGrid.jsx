@@ -32,7 +32,7 @@ const UploadDataGrid = ({ heading, dropdown }) => {
     Fire.post({
       url: `${AnalyzeURL}/${status === 'pending' ? "generate_roadmap" : "regenerate_roadmap"}?id=${id}`,
       onSuccess: (res) => {
-        Snackbar(res?.data?.message, { variant: 'success' });
+        Snackbar(res?.data?.message, { variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' } });
         setLoading(false);
         getUploadDataList();
       },
@@ -79,8 +79,8 @@ useEffect(() => {
         <Typography
           sx={{
             textTransform: 'capitalize',
-            backgroundColor: value === 'pending' || value === 'analyzed' ? '#00B69B' : '#E8E8E8',
-            color: value === 'pending' || value === 'analyzed' ? 'white' : '#354E70',
+            backgroundColor: value === 'pending' || value === 'analyzed' ? 'rgb(241, 244, 246)' : '#E8E8E8',
+            color: value === 'pending' || value === 'analyzed' ? '#879aad' : '#354E70',
             borderRadius: '10px',
             padding: '3px 0',
             textAlign:'center',
@@ -123,8 +123,8 @@ useEffect(() => {
         <button
           onClick={() => (value === 'pending' || value === 'analysed') && generate_roadmap(row.id, value)}
           style={{
-            backgroundColor: value === 'pending' || value === 'analysed' ? '#3749A6' : 'transparent',
-            border: value === 'pending' || value === 'analysed' ? '1px solid #3749A6' : '1px solid grey',
+            backgroundColor: value === 'pending' || value === 'analysed' ? '#879aad' : 'transparent',
+            border: value === 'pending' || value === 'analysed' ? '1px solid #879aad' : '1px solid grey',
             color: value === 'pending' || value === 'analysed' ? 'white' : '#354E70',
             borderRadius: '2.5px',
             padding: '5px 10px',

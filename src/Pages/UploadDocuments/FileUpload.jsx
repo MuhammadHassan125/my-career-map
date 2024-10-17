@@ -31,7 +31,7 @@ const FileUpload = ({ onUploadSuccess }) => {
                         Authorization: `Bearer ${token}`
                     },
                 });
-                Snackbar(`File upload complete! ID: ${response.data.message}`, {variant: 'success'});
+                Snackbar(`File upload complete! ID: ${response.data.message}`, {variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' }});
                 onUploadSuccess();
                 setFile(null); 
                 // data();

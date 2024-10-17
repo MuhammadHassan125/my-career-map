@@ -17,23 +17,8 @@ const GPTComponent = ({ selectedPathId }) => {
   const skillsId = localStorage.getItem("singlePathId");
   const [message, setMessage ] = useState("");
   const [step_id, setStep_id] = useState();
-  console.log(selectedPathId)
-
-//   const { post, get, Data, setData, Errors, validate } = useFetch({
-//     state: {
-//       message: "",
-//       step_id: null,
-//     },
-//     rules: {
-//       message: ["required"],
-//     },
-//     message: {
-//       message: {
-//         required: "Message field is required*",
-//       },
-//     },
-//   });
-
+  console.log(selectedPathId);
+  
 const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
@@ -85,12 +70,12 @@ const handleInputChange = (e) => {
       {/* left sales executive  */}
       <div className="gpt-section__left">
         <h5>Details</h5>
-        <h2>{getTitle}</h2>
+        <h2 style={{color:'var(--primary-btn-color)'}}>{getTitle}</h2>
 
         <div className="gpt-section__skills-div">
           {Array.isArray(gettingSkillsData) && gettingSkillsData.length > 0 ? (
             gettingSkillsData.map((skills, i) => (
-              <button key={i}>{skills.title}</button>
+              <button key={i} style={{color:'var(--primary-btn-color)'}}>{skills.title}</button>
             ))
           ) : (
             <p>No details available</p>
@@ -102,6 +87,7 @@ const handleInputChange = (e) => {
           <div>
             <button
               className="gpt-section__btn"
+              style={{ backgroundColor:'var(--primary-btn-color)', color:'white'}}
               onClick={() => navigate(`/list-career-path/${skillsId}`)}
             >
               Get Started

@@ -1,3 +1,8 @@
+:root {
+  --primary-btn-color: #879aad;
+  --secondary-color: #2ecc71;
+  --text-color: #333;
+}
 
 * {
   margin: 0;
@@ -5,7 +10,6 @@
   box-sizing: border-box;
   /* overflow-x: hidden; */
 }
-
 
 .nunito-sans {
   font-family: "Nunito Sans", sans-serif;
@@ -93,7 +97,7 @@ h5{
 }
 
 .active {
-  background-color: #3749A6;
+  background-color: var(--primary-btn-color);
   color: white !important;
   font-weight: 400 !important;
   transition: 0.3s all ease;

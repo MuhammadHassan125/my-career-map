@@ -105,7 +105,9 @@ const CreatePath = () => {
                             <Button
                                 onClick={handleClose}
                                 sx={{
-                                    width: "100%", backgroundColor: "#3749A6", textTransform: "capitalize",
+                                    width: "100%",
+                                     backgroundColor: "var(--primary_btn-color)",
+                                      textTransform: "capitalize",
                                     '&:hover': {
                                         backgroundColor: "#2e3a8c",
                                     },

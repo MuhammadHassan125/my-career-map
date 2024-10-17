@@ -37,7 +37,7 @@ const Register = () => {
       onSuccess: (res) => {
         console.log('Register successfully', res);
         if (res.status >= 200 && res.status < 300) {
-          Snackbar(res.data.message, { variant: 'success' });
+          Snackbar(res.data.message, { variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' } });
           navigate('/login');
         } else {
           Snackbar(res.data.message || 'Registration failed', { variant: 'error' });
@@ -55,8 +55,6 @@ const Register = () => {
     const {name, value} = event.target;
     setData(name, value);
   }
-
-  console.log(errors,'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
   
 
     return (
@@ -170,7 +168,7 @@ const Register = () => {
                 style={{
                   width: '100%',
                   borderRadius: '10px',
-                  backgroundColor: '#3749A6',
+                  backgroundColor: 'var(--primary-btn-color)',
                   border: 'none',
                   padding: '10px 20px',
                   color: 'white',

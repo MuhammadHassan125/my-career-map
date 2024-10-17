@@ -23,7 +23,7 @@ const ResetPassword = () => {
       url: `${baseURL}/reset-password`,
       onSuccess: (res) => {
         console.log(res)
-        Snackbar(res.data.message, { variant: 'success' });
+        Snackbar(res.data.message, { variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' } });
         navigate('/login');
         setLoading(false);
       },
@@ -94,7 +94,24 @@ const ResetPassword = () => {
             {errors.password && <p className="error">{errors.password}</p>}
           </div>
 
-          <PrimaryBtn text="Reset Password" onClick={handleSubmit} />
+          <div style={{ width: '100%' }}>
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  borderRadius: '10px',
+                  backgroundColor:'var(--primary-btn-color)',
+                  border: 'none',
+                  padding: '10px 20px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                }}
+              >
+                Reset Password
+              </button>
+            </div>
 
 
           <div className='login-account'>

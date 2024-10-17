@@ -144,7 +144,7 @@ const EditPath = () => {
                         Authorization: `Bearer ${token}`
                     },
                 });
-                Snackbar(`File upload complete! ID: ${response.data.message}`, {variant: 'success'});
+                Snackbar(`File upload complete! ID: ${response.data.message}`, {variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' }});
                 handleSuccess();
                 setFile(null); 
                 // data();
@@ -275,8 +275,8 @@ const EditPath = () => {
                    right: 25, 
                    fontSize:'10px', 
                    padding:"3px 5px",
-                   backgroundColor:"rgb(55, 73, 166)"
-                }}
+                   backgroundColor:'var(--primary-btn-color)',
+                  }}
                 onClick={handleUpdatePathWithPrompt}
                 >Submit</Button>
             </TabPanel>
@@ -285,7 +285,11 @@ const EditPath = () => {
               {/* <FileUpload onUploadSuccess={handleSuccess}/> */}
               <div className='file-upload__section' >
             <img src='/images/upload.png' alt='upload' />
-            <label style={{padding:'5px 10px', borderBottom: '1px solid #3749A6', cursor:'pointer', color:'#3749A6'}}>
+            <label style={{
+              padding:'5px 10px', 
+              borderBottom: '1px solid #879aad', 
+              cursor:'pointer', 
+              color:'#3749A6'}}>
                 <input
                     type="file"
                     onChange={handleFileChange}
@@ -306,7 +310,7 @@ const EditPath = () => {
                     position:"absolute",
                     bottom: 15,
                     right: 25, 
-                    backgroundColor: "rgb(55, 73, 166)"
+                    backgroundColor:'var(--primary-btn-color)',
                   }}
                   onClick={handleFileUpdate}
                 >

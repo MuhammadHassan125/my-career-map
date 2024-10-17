@@ -22,7 +22,7 @@ const ForgotPassword = () => {
       url: `${baseURL}/request-for-otp`,
       onSuccess: (res) => {
         console.log('forget password successfully', res);
-        Snackbar(res.data.data.message, { variant: 'success' });
+        Snackbar(res.data.data.message, { variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' } });
         navigate('/verify-otp');
         setLoading(false);
       },
@@ -75,7 +75,7 @@ const ForgotPassword = () => {
                 style={{
                   width: '100%',
                   borderRadius: '10px',
-                  backgroundColor: '#3749A6',
+                  backgroundColor:'var(--primary-btn-color)',
                   border: 'none',
                   padding: '10px 20px',
                   color: 'white',

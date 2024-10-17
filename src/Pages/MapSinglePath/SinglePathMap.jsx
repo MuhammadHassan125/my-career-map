@@ -182,6 +182,7 @@ const SinglePathMap = ({onSelectId}) => {
                             top: "65px",
                             left: "20px",
                             backgroundColor: "rgba(255, 255, 255, 0.8)",
+                            color:"var(--primary-btn-color)",
                             borderRadius: "5px",
                             padding: "5px 10px",
                             zIndex: 1,

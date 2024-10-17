@@ -15,7 +15,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem('user-visited-dashboard');
     navigate('/login');
-    Snackbar('Logout successfully', { variant: 'success' });
+    Snackbar('Logout successfully', { variant: 'success', style: { backgroundColor:'var(--primary-btn-color)' } });
 
   }
 

@@ -40,7 +40,7 @@ const ListCareerPath = () => {
       url: `${baseURL}/check-status-of-skills/${id}`,
       onSuccess: (res) => {
         console.log(res, '')
-        Snackbar(res?.data?.message, {variant: 'success'});
+        Snackbar(res?.data?.message, {variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' }});
         if (res?.data?.status === "completed") {
           setSelectedId(id);
         } else {
@@ -67,7 +67,7 @@ const ListCareerPath = () => {
       <Loading/>
     <main className='list-section'>
       <div>
-        <h2><span>Sales Rep</span> Completed Skills</h2>
+        <h2><span style={{color:'var(--primary-btn-color)'}}>Sales Rep</span> Completed Skills</h2>
       </div>
 
       <div className='list-section__content'>
@@ -77,7 +77,7 @@ const ListCareerPath = () => {
                 <div
                   key={item.id}  
                   className='list-section__content__div'
-                  style={{ backgroundColor: selectedId === item.id || item.status === "completed" ? '#3749A6' : 'white' }}
+                  style={{ backgroundColor: selectedId === item.id || item.status === "completed" ? 'var(--primary-btn-color)' : 'white' }}
                 >
                   <div>
                     <button
@@ -89,7 +89,7 @@ const ListCareerPath = () => {
                     >
                       {selectedId === item.id || item.status === "completed" ? <IoCheckmarkSharp style={{ color: 'white' }} /> : null}
                     </button>
-                    <p style={{ color: selectedId === item.id || item.status === "completed" ? 'white' : '#5B708B' }}>{item.title}</p>
+                    <p style={{ color: selectedId === item.id || item.status === "completed" ? 'white' : 'var(--primary-btn-color)' }}>{item.title}</p>
                   </div>
     
                   <div
@@ -99,7 +99,7 @@ const ListCareerPath = () => {
                       borderRadius: '5px',
                       cursor: 'pointer',
                       color: item.status === "pending" ? 'white' : 'blue',
-                      backgroundColor: item.status === "pending" ? '#00B69B' : '#f5f6fd'
+                      backgroundColor: item.status === "pending" ? 'var(--primary-btn-color)' : '#f5f6fd'
                     }}
                   >
                     <p>{item.status}</p>

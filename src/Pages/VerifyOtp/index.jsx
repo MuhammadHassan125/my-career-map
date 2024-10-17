@@ -45,7 +45,7 @@ const VerifyOtp = () => {
 
       onSuccess: (res) => {
         console.log('OTP Verified Successfully', res);
-        Snackbar(res.data.message, { variant: 'success' });
+        Snackbar(res.data.message, { variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' } });
         navigate('/reset-password');
         setLoading(false);
       },
@@ -81,7 +81,24 @@ const VerifyOtp = () => {
             <MuiOtpInput value={otp} onChange={handleChange} length={6} />
           </div>
 
-          <PrimaryBtn text="Verify OTP" onClick={handleSubmit} />
+          <div style={{ width: '100%' }}>
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  borderRadius: '10px',
+                  backgroundColor:'var(--primary-btn-color)',
+                  border: 'none',
+                  padding: '10px 20px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                }}
+              >
+                Verify OTP
+              </button>
+            </div>
           {/* Show timer or "Resend OTP" option */}
           {showResend ? (
             <div className="login-account">

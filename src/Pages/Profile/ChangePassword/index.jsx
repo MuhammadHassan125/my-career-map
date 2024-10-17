@@ -23,7 +23,7 @@ const ChangePassword = () => {
         console.log('Login Success', res);
         if (res.data.data.AuthToken || res.data.status === true) {
           localStorage.setItem('user-visited-dashboard', res.data.data.AuthToken);
-          Snackbar(res.data.message, { variant: 'success' });
+          Snackbar(res.data.message, { variant: 'success',  style: { backgroundColor:'var(--primary-btn-color)' } });
           navigate('/');
         } else {
           Snackbar(errors || "Login Failed", { variant: 'error' });
@@ -98,7 +98,7 @@ const ChangePassword = () => {
           {/* <PrimaryBtn text="Login" /> */}
           <button 
           type="submit"
-          style={{width: '100%', borderRadius: '10px', backgroundColor: '#3749A6', border: 'none', 
+          style={{width: '100%', borderRadius: '10px', backgroundColor: 'var(--primary-btn-color)', border: 'none', 
           padding: '10px 20px', color: 'white', fontSize: '14px', fontWeight: '500', cursor: 'pointer', hover: {opacity: '0.9'}}}
           >Change Password</button>
          </div>
