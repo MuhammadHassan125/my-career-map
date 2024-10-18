@@ -70,7 +70,7 @@ const handleInputChange = (e) => {
       {/* left sales executive  */}
       <div className="gpt-section__left">
         <h5>Details</h5>
-        <h2 style={{color:'var(--primary-btn-color)'}}>{getTitle}</h2>
+        <h2 style={{color:'var(--primary-btn-color)', fontSize:'10px'}}>{getTitle}</h2>
 
         <div className="gpt-section__skills-div">
           {Array.isArray(gettingSkillsData) && gettingSkillsData.length > 0 ? (

@@ -4,10 +4,12 @@ import SinglePathMap from './SinglePathMap';
 import AddPathComponent from '../../Components/AddPathComponent';
 import GPTComponent from '../../Components/DashboardComponents/DataGrid/GptComponent';
 import './index.scss'
+import { useUser } from '../../context/context';
 
 const MapSinglePath = () => {
 
     const [selectedPathId, setSelectedPathId] = useState(null);
+    const { getTitle } = useUser();
 
     const handleIdFromChild = (id) => {
       setSelectedPathId(id);
@@ -22,7 +24,7 @@ const MapSinglePath = () => {
             <h2>Individual Path</h2>
           </div>
           <div className='map-section__btn-div'>
-            <p><strong>Sales Rep </strong>/ 19 Paths</p>
+            <p><strong>{getTitle} </strong>/ 19 Paths</p>
             <button className='map-section__btn'>
               <BiExport style={{ fontSize: "18px" }} />
               Export your Training PDF

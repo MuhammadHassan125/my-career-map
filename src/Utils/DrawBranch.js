@@ -358,64 +358,6 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             setGetTitle(`/map-career/${d.branch_id}`);
         });
 
-    // svg.selectAll('text')
-    //     .data(nodes)
-    //     .enter().append('g')
-    //     .each(function (d) {
-    //         const g = d3.select(this);
-
-    //         const isFirstNode = d.id === nodes[0].id;
-    //         const isLastNode = d.id === nodes[nodes.length - 1].id;
-    //         const isBranchEndNode = branches.some(branch => branch.steps[branch.steps.length - 1].id === d.id);
-
-    //         const fontSize = isFirstNode || isLastNode || isBranchEndNode ? '12px' : '10px';
-    //         const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
-    //         const Bold = isFirstNode || isLastNode || isBranchEndNode ? 'bold' : 'medium';
-    //         const lineValue = isFirstNode || isLastNode ? 0 : -10;
-    //         const RightShift = isLastNode || isBranchEndNode ? 120 : 0;
-    //         const LeftShift = isFirstNode ? -45 : 0;
-    //         const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
-    //         const margin = 12;
-
-    //         if (isFirstNode) {
-    //             const textElement = g.append('text')
-    //                 .attr('x', d.x + LeftShift)
-    //                 .attr('y', d.y + 26)
-    //                 .attr('text-anchor', 'middle')
-    //                 .attr('fill', Color)
-    //                 .style('font-weight', Bold)
-    //                 .style('font-size', fontSize)
-    //                 .text(d.title);
-
-    //             const textWidth = textElement.node().getBBox().width;
-    //             const textHeight = textElement.node().getBBox().height;
-
-    //             g.insert('rect', 'text')
-    //                 .attr('x', d.x + LeftShift - textWidth / 2 - 5)
-    //                 .attr('y', d.y + 8)
-    //                 .attr('width', textWidth + 10)
-    //                 .attr('height', textHeight + 10)
-    //                 .attr('fill', '#3749A626')
-    //                 .attr('rx', 5)
-    //                 .attr('ry', 5);
-    //         } else if (isLastNode || isBranchEndNode) {
-    //             const textY = d.y - 10;
-    //             wrapText(g, d.title, d.x, textY, fontSize, Color, Bold, false, null, 0, RightShift, 0);
-    //         } else {
-    //             const currentIndex = nodes.indexOf(d);
-    //             const isUp = d.y <= height / 2;
-    //             let textY;
-
-    //             if (currentIndex % 2 === 0) {
-    //                 textY = d.y - 15;
-    //             } else {
-    //                 textY = d.y + 30;
-    //             }
-
-    //             wrapText(g, d.title, d.x + margin, textY, fontSize, Color, Bold, splitText, null, lineValue, RightShift, LeftShift);
-    //         }
-    //     });
-
     svg.selectAll('text')
         .data(nodes)
         .enter().append('g')

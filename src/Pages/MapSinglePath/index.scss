@@ -199,3 +199,18 @@
         }
     }
 }
+
+.scrollable {
+    overflow-y: auto; 
+    -webkit-overflow-scrolling: touch; 
+    height: 100%; 
+}
+
+.scrollable::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollable {
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
+}

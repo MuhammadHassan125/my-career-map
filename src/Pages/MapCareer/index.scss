@@ -236,3 +236,27 @@
     }
 }
 
+
+
+.user_details-map-container{
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+    .user_details-map-container{
+        height: 200px !important;
+
+        h4{
+            font-size:9px !important;
+        }
+    }
+}
