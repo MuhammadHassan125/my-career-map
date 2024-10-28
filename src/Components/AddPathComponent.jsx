@@ -43,6 +43,7 @@ const AddPathComponent = () => {
 
   const handleNavigate = () => {
     navigate('/add-path');
+    // handleOpen()
   };
 
 

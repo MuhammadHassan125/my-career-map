@@ -12,6 +12,12 @@ import AddPathComponent from '../../Components/AddPathComponent';
 
 const MapCareer = () => {
 
+    const navigate = useNavigate();
+
+    const handleNavigate = () => {
+        navigate('/get-pdf')
+    }
+
     return (
         <React.Fragment>
             <main className='map-section'>
@@ -22,10 +28,10 @@ const MapCareer = () => {
                     </div>
                     <div className='map-section__btn-div'>
                         <p><strong>Sales Rep </strong>/ 19 Paths</p>
-                        <button className='map-section__btn'>
+                        {/* <button className='map-section__btn' onClick={handleNavigate}>
                             <BiExport style={{ fontSize: "18px" }} />
                             Export your Training PDF
-                        </button>
+                        </button> */}
                         <AddPathComponent />
                     </div>
                 </div>

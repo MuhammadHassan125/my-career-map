@@ -5,6 +5,7 @@ import AddPathComponent from '../../Components/AddPathComponent';
 import GPTComponent from '../../Components/DashboardComponents/DataGrid/GptComponent';
 import './index.scss'
 import { useUser } from '../../context/context';
+import { useNavigate } from 'react-router-dom';
 
 const MapSinglePath = () => {
 
@@ -14,6 +15,10 @@ const MapSinglePath = () => {
     const handleIdFromChild = (id) => {
       setSelectedPathId(id);
     };
+
+    const handleNavigate =()=> {
+      window.open('/get-pdf', '_blank');
+    }
 
   return (
     <React.Fragment>
@@ -25,7 +30,7 @@ const MapSinglePath = () => {
           </div>
           <div className='map-section__btn-div'>
             <p><strong>{getTitle} </strong>/ 19 Paths</p>
-            <button className='map-section__btn'>
+            <button className='map-section__btn' onClick={handleNavigate}>
               <BiExport style={{ fontSize: "18px" }} />
               Export your Training PDF
             </button>

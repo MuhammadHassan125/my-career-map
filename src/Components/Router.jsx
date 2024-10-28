@@ -19,6 +19,7 @@ import ResetPassword from "../Pages/ResetPassword"
 import VerifyOtp from "../Pages/VerifyOtp"
 import Profile from "../Pages/Profile"
 import ProfileLayout from "../Layouts/ProfileLayout"
+import ExportPdf from '../Pages/ExportPdf'
 import PaymentCheckout from "../Pages/PaymentCheckout"
 import CancelCheckout from "../Pages/PaymentCheckout/CancelCheckout"
 import Success from "../Pages/PaymentCheckout/SuccessCheckout"
@@ -52,6 +53,8 @@ const Router = () => {
           <Route path='/cancel' element={<CancelCheckout />} />
           <Route path='/success' element={<Success />} />
         </Route>
+
+        <Route path='get-pdf' element={<ExportPdf/>} target='_blank'/>
 
         <Route element={<ProfileLayout />}>
           <Route path='profile' element={<Profile />} index={true} />
