@@ -101,10 +101,71 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
 
     const { nodes, links, branches } = processSteps(branch.steps, width, height, branch.color);
 
+    // const wrapText = (svg, text, x, y, fontSize, Color, Bold, splitText, movingRight, lineValue, RightShift, LeftShift) => {
+    //     const lineHeight = 12;
+
+    //     if (!splitText) {
+    //         svg.append('text')
+    //             .attr('x', x + (RightShift !== 0 ? RightShift : LeftShift))
+    //             .attr('y', y + 15)
+    //             .attr('text-anchor', 'middle')
+    //             .attr('fill', Color)
+    //             .style('font-weight', Bold)
+    //             .style('font-size', fontSize)
+    //             .text(text);
+    //         return;
+    //     }
+
+    //     const words = text.split(' ');
+    //     const lines = [];
+
+    //     if (words[0].length > 7) {
+    //         lines.push(words[0]);
+    //         const remainingWords = words.slice(1);
+    //         for (let i = 0; i < remainingWords.length; i += 2) {
+    //             const lineWords = remainingWords.slice(i, i + 2);
+    //             lines.push(lineWords.join(' '));
+    //         }
+    //     } else {
+    //         const maxWordsPerLine = 2;
+    //         for (let i = 0; i < words.length; i += maxWordsPerLine) {
+    //             if (i + maxWordsPerLine >= words.length) {
+    //                 if (words.length > 4) {
+    //                     return;
+    //                 } else {
+    //                     lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+    //                 }
+    //             } else {
+    //                 lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
+    //             }
+    //         }
+    //     }
+
+    //     lines.forEach((line, i) => {
+    //         svg.append('text')
+    //             .attr('x', x)
+    //             .attr('y', y + i * lineHeight + lineValue)
+    //             .attr('text-anchor', 'middle')
+    //             .attr('fill', Color)
+    //             .style('font-weight', Bold)
+    //             .style('font-size', fontSize)
+    //             .text(line);
+    //     });
+    // };
+
     const wrapText = (svg, text, x, y, fontSize, Color, Bold, splitText, movingRight, lineValue, RightShift, LeftShift) => {
         const lineHeight = 12;
-
+    
+        // For non-split text (first and last nodes)
         if (!splitText) {
+            const words = text.split(' ');
+            let displayText = text;
+            
+            // If text is too long, truncate with ellipsis
+            if (words.length > 6) {
+                displayText = words.slice(0, 5).join(' ') + '...';
+            }
+    
             svg.append('text')
                 .attr('x', x + (RightShift !== 0 ? RightShift : LeftShift))
                 .attr('y', y + 15)
@@ -112,35 +173,29 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 .attr('fill', Color)
                 .style('font-weight', Bold)
                 .style('font-size', fontSize)
-                .text(text);
+                .text(displayText);
+                
+            if (displayText !== text) {
+                svg.append('title').text(text);
+            }
             return;
         }
-
+    
         const words = text.split(' ');
         const lines = [];
-
-        if (words[0].length > 7) {
-            lines.push(words[0]);
-            const remainingWords = words.slice(1);
-            for (let i = 0; i < remainingWords.length; i += 2) {
-                const lineWords = remainingWords.slice(i, i + 2);
+        
+        if (words.length > 5) {
+            const firstLine = words.slice(0, 2).join(' ');
+            const secondLine = words.slice(2, 4).join(' ') + '...';
+            lines.push(firstLine, secondLine);
+        } else {
+            for (let i = 0; i < words.length; i += 2) {
+                const lineWords = words.slice(i, i + 2);
                 lines.push(lineWords.join(' '));
             }
-        } else {
-            const maxWordsPerLine = 2;
-            for (let i = 0; i < words.length; i += maxWordsPerLine) {
-                if (i + maxWordsPerLine >= words.length) {
-                    if (words.length > 4) {
-                        return;
-                    } else {
-                        lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
-                    }
-                } else {
-                    lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
-                }
-            }
         }
-
+    
+        // Render each line
         lines.forEach((line, i) => {
             svg.append('text')
                 .attr('x', x)
@@ -151,8 +206,11 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 .style('font-size', fontSize)
                 .text(line);
         });
+    
+        if (words.length > 4) {
+            svg.append('title').text(text);
+        }
     };
-
 
     svg.selectAll('path.connection')
         .data(links)
@@ -179,7 +237,9 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             const sourceNode = nodes.find(n => n.id === d.source);
             const targetNode = nodes.find(n => n.id === d.target);
 
+            // Find the branch that contains both source and target nodes
             const relevantBranch = branches.find(branch => {
+                // Check if the branch's steps contain both nodes
                 const containsSource = branch.steps.some(step => step.id === sourceNode.id);
                 const containsTarget = branch.steps.some(step => step.id === targetNode.id);
                 return containsSource && containsTarget;
@@ -372,7 +432,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
             const Color = isFirstNode || isLastNode || isBranchEndNode ? '#354E70' : '#5B708B';
             const Bold = isFirstNode || isLastNode || isBranchEndNode ? 'bold' : 'medium';
             const lineValue = isFirstNode || isLastNode ? 0 : -10;
-            const RightShift = isLastNode || isBranchEndNode ? 150 : 0;
+            const RightShift = isLastNode || isBranchEndNode ? 130 : 0;
             const LeftShift = isFirstNode ? -45 : 0;
             const splitText = !(isFirstNode || isLastNode || isBranchEndNode);
             const margin = 12;
@@ -471,6 +531,7 @@ const DrawBranch = (svg, branch, width, height, setGetTitle, setGetDescription, 
                 wrapText(g, d.title, d.x + margin, textY, fontSize, Color, Bold, splitText, null, lineValue, RightShift, LeftShift);
             }
         });
+
 };
 
 export default DrawBranch;

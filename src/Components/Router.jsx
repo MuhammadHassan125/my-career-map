@@ -54,7 +54,7 @@ const Router = () => {
           <Route path='/success' element={<Success />} />
         </Route>
 
-        <Route path='get-pdf' element={<ExportPdf/>} target='_blank'/>
+        <Route path='get-pdf/:id' element={<ExportPdf/>} target='_blank'/>
 
         <Route element={<ProfileLayout />}>
           <Route path='profile' element={<Profile />} index={true} />

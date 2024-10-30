@@ -4,7 +4,7 @@ import Fire from "./Fire";
 import { useNavigate } from 'react-router-dom';
 
 // local ip
-// export const baseURL = "http://192.168.18.194:8001/api";
+// export const baseURL = "http://192.168.18.54:8000/api";
 
 // server ip
 export const baseURL = "http://64.23.166.88:4000/api";

@@ -175,7 +175,9 @@ const UploadDocuments = () => {
       url: `${baseURL}/create-path`,
       onSuccess: (res) => {
         console.log(res);
-        Snackbar(res.data.message, { variant: "success" });
+        Snackbar(res.data.message, { variant: "success",
+          style: { backgroundColor:'var(--primary-btn-color)' }
+         });
         setData({ title: "", prompt: "" });
         handleClose();
       },
