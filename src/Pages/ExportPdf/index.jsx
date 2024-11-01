@@ -81,7 +81,7 @@ const ExportPdf = () => {
   }, [sessionId, branchId]);
 
   return (
-    <div  style={{backgroundColor: '#f5f6fa', display:'flex', alignItems:'center', justifyContent:'center'}}>
+    <div  style={{backgroundColor: '#f5f6fa', display:'flex', height:'100vh', alignItems:'center', justifyContent:'center'}}>
             {generate === true ? 
         <PaymentSuccessModal/>
         : <p>Something went wrong!</p>

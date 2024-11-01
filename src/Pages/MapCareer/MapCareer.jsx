@@ -49,7 +49,7 @@ const MapCareer = () => {
 
             </main>
 
-            <PremiumModel open={open} handleClose={handleClose} />\
+            <PremiumModel open={open} handleClose={handleClose} />
 
         </React.Fragment>
     )
