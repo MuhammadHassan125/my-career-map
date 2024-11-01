@@ -74,33 +74,18 @@ const ExportPdf = () => {
     if (sessionId && branchId) {
       setOpen(false);
       confirmSubscription();
+      generateTrainingSteps();
     }
   }, [sessionId, branchId]);
 
   return (
-    <React.Fragment>
-      <main className="export_pdf-section">
-        <div className="main__heading">
-          <div>
-            <h2>Export Your PDF</h2>
-          </div>
-          <div className="map-section__btn-div">
-            <button
-              className="map-section__btn"
-              onClick={() => generateTrainingSteps()}
-            >
-              Generate PDF
-            </button>
-          </div>
-        </div>
-      </main>
-
+    <div  style={{backgroundColor: '#f5f6fa', display:'flex', alignItems:'center', justifyContent:'center'}}>
             {sessionId ? 
         <PaymentSuccessModal/>
         : null
       }
       
-    </React.Fragment>
+    </div>
   );
 };
 
