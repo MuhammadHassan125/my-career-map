@@ -10,6 +10,7 @@ const ExportPdf = () => {
   const [branchId, setBranchId] = useState(null);
   const [open, setOpen] = useState(false);
   const [sessionId, setSessionId] = useState(null);
+  const [generate, setGenerate] = useState(false);
 
   const params = useParams();
   const location = useLocation();
@@ -40,10 +41,10 @@ const ExportPdf = () => {
         branchId,
       },
       onSuccess: (res) => {
-        Snackbar("Subscription confirmed successfully!", {
-          variant: "success",
-          style: { backgroundColor:'var(--primary-btn-color)' }
-        });
+        // Snackbar("Subscription confirmed successfully!", {
+        //   variant: "success",
+        //   style: { backgroundColor:'var(--primary-btn-color)' }
+        // });
         setOpen(false);
       },
       onError: (err) => {
@@ -58,6 +59,7 @@ const ExportPdf = () => {
       url: `${AnalyzeURL}/generate_training_steps?branch_id=${branchId}`,
       onSuccess: (res) => {
         console.log(res);
+        setGenerate(true);
         Snackbar("Training steps generation has started", {
           variant: "success",
           style: { backgroundColor:'var(--primary-btn-color)' }
@@ -80,9 +82,9 @@ const ExportPdf = () => {
 
   return (
     <div  style={{backgroundColor: '#f5f6fa', display:'flex', alignItems:'center', justifyContent:'center'}}>
-            {sessionId ? 
+            {generate === true ? 
         <PaymentSuccessModal/>
-        : null
+        : <p>Something went wrong!</p>
       }
       
     </div>

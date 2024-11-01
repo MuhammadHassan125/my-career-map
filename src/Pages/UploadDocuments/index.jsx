@@ -97,17 +97,16 @@ const UploadDocuments = () => {
     setSuccess(false);
   };
 
-  const checkSubscription = () => {
+  const checkingSubscription = () => {
     setLoading(true);
     Fire.get({
       url: `${baseURL}/check-user-subscription`,
 
       onSuccess: (res) => {
         setLoading(false);
-        data();
-        getUploadDataList();
         if (res?.data?.Subscription_Status === false) {
-          // navigate(-1, { state: setCheckSubscription(true)  });
+          setCheckSubscription(false);
+          navigate(-1);
         }
         return;
       },
@@ -158,12 +157,6 @@ const UploadDocuments = () => {
     }
   };
 
-  //   useEffect(() => {
-  //     if (file) {
-  //         handleFileUpload();
-  //     }
-  // }, [file]);
-
   const handleInput = (e) => {
     const { name, value } = e.target;
     setData(name, value);
@@ -196,7 +189,7 @@ const UploadDocuments = () => {
       }, 4000);
       return () => clearTimeout(timer);
     }
-    checkSubscription();
+    checkingSubscription();
   }, [success]);
 
   useEffect(() => {

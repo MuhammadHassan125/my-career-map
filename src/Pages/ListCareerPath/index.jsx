@@ -66,8 +66,14 @@ const ListCareerPath = () => {
     <React.Fragment>
       <Loading/>
     <main className='list-section'>
-      <div>
-        <h2><span style={{color:'var(--primary-btn-color)'}}>Sales Rep</span> Completed Skills</h2>
+    <div className='main__heading'>
+        <div>
+          <h2><span style={{color:'var(--primary-btn-color)'}}>Sales Rep</span> Completed Skills</h2>
+        </div>
+
+        <div className='map-section__btn-div'>
+          <button className="map-section__btn">Add Skill</button>
+        </div>
       </div>
 
       <div className='list-section__content'>

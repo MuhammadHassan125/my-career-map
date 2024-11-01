@@ -111,7 +111,7 @@ const EditPath = () => {
         data();
         getUploadDataList();
         if (res?.data?.Subscription_Status === false) {
-          // navigate(-1, { state: setCheckSubscription(true)  });
+          navigate(-1, { state: setCheckSubscription(true)  });
         }return;
 
       },

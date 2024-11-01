@@ -1,16 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './index.scss'
 import { useNavigate } from 'react-router-dom';
 import UserDetailsMap from './UserDetailsMap';
 import AddPathComponent from '../../Components/AddPathComponent';
+import { useUser } from '../../context/context';
+import PremiumModel from '../../Components/PremiumModel';
 
 const MapCareer = () => {
+  
+    const {checkSubscription} = useUser();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
     const navigate = useNavigate();
 
     const handleNavigate = () => {
         navigate('/get-pdf')
     }
+
+    
+
+  useEffect(() => {
+    if (checkSubscription === false) {
+        handleOpen();
+    } else {
+        handleClose();
+    }
+}, [checkSubscription]);
 
     return (
         <React.Fragment>
@@ -31,6 +48,8 @@ const MapCareer = () => {
                 {/* <GPTComponent /> */}
 
             </main>
+
+            <PremiumModel open={open} handleClose={handleClose} />\
 
         </React.Fragment>
     )

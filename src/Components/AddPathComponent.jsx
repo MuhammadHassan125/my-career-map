@@ -14,6 +14,8 @@ import { IoMdClose } from "react-icons/io";
 import { Button } from '@mui/material';
 import useFire, { baseURL } from '../Fire/useFire';
 import { Snackbar } from '../Utils/SnackbarUtils';
+import Fire from '../Fire/Fire';
+import { useLocation } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -36,29 +38,16 @@ const style = {
 const AddPathComponent = () => {
 
   const navigate = useNavigate();
-  const {checkSubscription, setCheckSubscription} = useUser();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const handleNavigate = () => {
-    navigate('/add-path');
-    // handleOpen()
+      navigate('/add-path');
   };
 
-
-  useEffect(() => {
-    if(checkSubscription === false){
-      navigate('/documents-upload');
-
-    } else {setCheckSubscription(true);}
-  }, []);
 
   return (
     <>
       <Loading />
       <PrimaryBtn text={"Add Path"} icon={<FiPlus />} onClick={handleNavigate} />
-      {/* <PremiumModel open={open} handleClose={handleClose} /> */}
 
       {/* <Modal
         aria-labelledby="transition-modal-title"
