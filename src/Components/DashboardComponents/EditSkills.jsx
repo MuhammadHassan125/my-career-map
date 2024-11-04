@@ -106,18 +106,12 @@ const EditSkills = ({
               }}
               onChange={(e) => setTitle(e.target.value)}
               value={title}
-            />
-
-            <TextField
-              id="outlined-basic"
-              label="Step Id"
-              variant="outlined"
-              sx={{
-                height: 40,
-                width: "100%",
-                mb: 3,
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault(); 
+                  handEditSkills();
+                }
               }}
-              value={skillId}
             />
 
             <Button

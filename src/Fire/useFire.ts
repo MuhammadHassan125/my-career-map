@@ -4,10 +4,10 @@ import Fire from "./Fire";
 import { useNavigate } from 'react-router-dom';
 
 // local ip
-export const baseURL = "http://192.168.0.112:8000/api";
+// export const baseURL = "http://192.168.18.62:5000/api";
 
 // server ip
-// export const baseURL = "http://64.23.166.88:4000/api";
+export const baseURL = "http://64.23.166.88:4000/api";
 export const AnalyzeURL = "http://64.23.166.88:3500";
 
 const useFire = <T extends Record<string, any> = Record<string, any>>(initialState: T, initialProcessing?: boolean) => {

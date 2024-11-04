@@ -175,7 +175,6 @@ const EditPath = () => {
         console.log(res);
         Snackbar(res.data.message, {variant: 'success'})
         setData({ title: '', prompt: '' });
-        // setData((prevState) => ({ ...prevState, title: location.state?.title || '', prompt: '' }));
         navigate('/path')
         handleClose();
       },
@@ -233,7 +232,7 @@ const EditPath = () => {
           onChange={handleInput}
           name="title"
           value={data.title || location.state?.title}
-
+          
           />
           <TabContext value={value}>
             <Box>
